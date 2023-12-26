@@ -49,3 +49,4 @@ application-production.yml
 **/log/
 
 .DS_Store
+.jqwik-database
