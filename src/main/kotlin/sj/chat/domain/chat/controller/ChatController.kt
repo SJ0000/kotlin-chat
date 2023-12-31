@@ -7,8 +7,5 @@ import org.springframework.stereotype.Controller
 @Controller
 class ChatController {
 
-    @MessageMapping("/")
-    @SendTo("/")
-    fun
 
 }

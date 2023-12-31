@@ -12,9 +12,10 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer{
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         registry.enableSimpleBroker("/topic")
+        registry.setApplicationDestinationPrefixes("/app")
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/")
+        registry.addEndpoint("/ws-connect")
     }
 }
