@@ -1,13 +1,11 @@
 package sj.chat.domain.security.controller
 
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import sj.chat.domain.security.dto.SignUp
+import sj.chat.domain.security.dto.SignUpDto
 import sj.chat.domain.security.dto.UserDto
 import sj.chat.domain.security.service.UserService
 import java.net.URI
@@ -25,7 +23,7 @@ class UserController(
     }
 
     @PostMapping("/signup")
-    fun signUp(signUp: SignUp): ResponseEntity<UserDto> {
+    fun signUp(signUp: SignUpDto): ResponseEntity<UserDto> {
         val userId = userService.signUpUser(signUp)
         val user = userService.findUser(userId)
 

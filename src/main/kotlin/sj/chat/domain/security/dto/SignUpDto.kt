@@ -1,10 +1,9 @@
 package sj.chat.domain.security.dto
 
 import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
 
-data class SignUp(
+data class SignUpDto(
     @Email
     val email : String,
     @Size(min = 1, max = 20)

@@ -5,13 +5,11 @@ import sj.chat.global.domain.BaseEntity
 
 @Entity
 @Table(name = "USERS")
-class User (
-    var name : String,
-    var email : String,
-    var password : String,
+class User(
+    var name: String,
+    var email: String,
+    var password: String,
 ) : BaseEntity() {
-
-
 
 
 }
