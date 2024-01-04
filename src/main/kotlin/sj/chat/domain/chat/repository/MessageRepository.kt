@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository
 import sj.chat.domain.chat.domain.Message
 
 @Repository
-interface MessageRepository : CrudRepository<Message, String> {
+interface MessageRepository : CrudRepository<Message, String?> {
 
 }
