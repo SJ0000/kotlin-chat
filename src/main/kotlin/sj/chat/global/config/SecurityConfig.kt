@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
 
@@ -15,6 +17,7 @@ class SecurityConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { csrf -> csrf.disable() }
+        http.cors { cors-> cors.disable() }
         http.headers { headers -> headers.frameOptions { frameOptions -> frameOptions.disable() } }
         http.formLogin { formLogin -> formLogin.disable() }
 
@@ -22,5 +25,10 @@ class SecurityConfig(
         http.httpBasic { httpBasic -> httpBasic.disable() }
 
         return http.build()
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder{
+        return BCryptPasswordEncoder();
     }
 }

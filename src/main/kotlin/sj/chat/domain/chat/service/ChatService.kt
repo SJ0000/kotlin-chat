@@ -7,6 +7,7 @@ import sj.chat.domain.chat.domain.Message
 import sj.chat.domain.chat.dto.MessageDto
 import sj.chat.domain.chat.repository.ChatRoomRepository
 import sj.chat.domain.chat.repository.MessageRepository
+import java.time.LocalDateTime
 
 
 @Service
@@ -32,14 +33,13 @@ class ChatService(
 
 
     fun joinChatRoom(chatRoomId: Long, userId: Long) {
-        // STOMP Subscribe
 
     }
 
     fun createChatRoom(name: String, maxCapacity: Int): Long {
         val chatRoom = ChatRoom(name = name, maxCapacity = maxCapacity)
         chatRoomRepository.save(chatRoom)
-        return chatRoom.id!!
+        return chatRoom.id ?: throw RuntimeException("created chatroom id is null")
     }
 
 }

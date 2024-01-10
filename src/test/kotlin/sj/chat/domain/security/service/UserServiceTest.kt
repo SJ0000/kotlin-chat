@@ -17,4 +17,14 @@ class UserServiceTest(
         val findUser = userService.findUser(userId)
         print("${findUser.name} ${findUser.email} ${findUser.password}")
     }
+
+    @Test
+    fun x(){
+        val kotlinLogo = """
+|  //
+| //
+|/ \
+"""
+        println(kotlinLogo)
+    }
 }
