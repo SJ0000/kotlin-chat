@@ -3,32 +3,51 @@ package sj.chat.global.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(
+class SecurityConfig {
 
-) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf { csrf -> csrf.disable() }
-        http.cors { cors-> cors.disable() }
-        http.headers { headers -> headers.frameOptions { frameOptions -> frameOptions.disable() } }
-        http.formLogin { formLogin -> formLogin.disable() }
-
-        // RFC 7235에 정의된 WWW-Authenticate 헤더를 이용한 인증을 사용하지 않는다.
-        http.httpBasic { httpBasic -> httpBasic.disable() }
+        http {
+            csrf { disable() }
+            cors { disable() }
+            headers {
+                frameOptions {
+                    disable()
+                }
+            }
+            formLogin { disable() }
+            httpBasic { disable() } // RFC 7235 WWW-Authenticate 인증 미사용
+            sessionManagement {
+                sessionCreationPolicy = SessionCreationPolicy.STATELESS
+                apply {
+                    CustomJwtConfigurer()
+                }
+            }
+        }
 
         return http.build()
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder{
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder();
+    }
+}
+
+class CustomJwtConfigurer : AbstractHttpConfigurer<CustomJwtConfigurer, HttpSecurity>() {
+    override fun configure(builder: HttpSecurity?) {
+        // jwt 인증, 인가 필터 등록
+
+
     }
 }
