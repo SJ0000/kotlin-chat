@@ -1,10 +1,10 @@
-package sj.chat.domain.security.controller
+package sj.chat.domain.user.controller
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import sj.chat.domain.security.dto.SignUpDto
-import sj.chat.domain.security.dto.UserDto
-import sj.chat.domain.security.service.UserService
+import sj.chat.domain.user.dto.SignUpDto
+import sj.chat.domain.user.dto.UserDto
+import sj.chat.domain.user.service.UserService
 import java.net.URI
 
 @RestController

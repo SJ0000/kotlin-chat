@@ -1,4 +1,4 @@
-package sj.chat.domain.security.dto
+package sj.chat.domain.user.dto
 
 import kotlin.jvm.internal.Ref.LongRef
 

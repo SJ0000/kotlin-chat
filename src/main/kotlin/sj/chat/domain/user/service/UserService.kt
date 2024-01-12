@@ -1,19 +1,19 @@
-package sj.chat.domain.security.service
+package sj.chat.domain.user.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import sj.chat.domain.security.domain.User
-import sj.chat.domain.security.dto.SignUpDto
-import sj.chat.domain.security.repository.UserRepository
+import sj.chat.domain.user.domain.User
+import sj.chat.domain.user.dto.SignUpDto
+import sj.chat.domain.user.repository.UserRepository
 
 @Service
 class UserService (
     val userRepository: UserRepository,
     val passwordEncoder: PasswordEncoder,
 ){
-    fun findUser(id : Long) : User{
+    fun findUser(id : Long) : User {
         return userRepository.findByIdOrNull(id) ?: throw RuntimeException("id $id not found")
     }
 

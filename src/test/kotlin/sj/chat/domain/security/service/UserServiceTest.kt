@@ -3,7 +3,8 @@ package sj.chat.domain.security.service
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import sj.chat.domain.security.dto.SignUpDto
+import sj.chat.domain.user.dto.SignUpDto
+import sj.chat.domain.user.service.UserService
 
 @SpringBootTest
 class UserServiceTest(

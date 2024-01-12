@@ -1,4 +1,4 @@
-package sj.chat.domain.security.dto
+package sj.chat.domain.user.dto
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Size

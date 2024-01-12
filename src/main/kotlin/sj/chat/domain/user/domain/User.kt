@@ -1,4 +1,4 @@
-package sj.chat.domain.security.domain
+package sj.chat.domain.user.domain
 
 import jakarta.persistence.*
 import sj.chat.global.domain.BaseEntity
