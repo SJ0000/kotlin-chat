@@ -16,7 +16,7 @@ class JwtProvider(
         Claims.AUDIENCE to "simple-messenger-client"
     )
 
-    private val key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode("12345"));
+    private val key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode("12345678901234567890123456789012345678901234567890"));
 
     fun createAccessToken(userId: Long): String {
         return Jwts.builder()
