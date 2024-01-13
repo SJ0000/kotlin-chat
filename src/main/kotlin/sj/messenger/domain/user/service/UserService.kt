@@ -4,6 +4,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import sj.messenger.domain.security.dto.LoginRequest
 import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.repository.UserRepository
@@ -13,8 +14,14 @@ class UserService (
     val userRepository: UserRepository,
     val passwordEncoder: PasswordEncoder,
 ){
+    @Transactional
     fun findUser(id : Long) : User {
-        return userRepository.findByIdOrNull(id) ?: throw RuntimeException("id $id not found")
+        return userRepository.findByIdOrNull(id) ?: throw RuntimeException("user not found. id = ${id}")
+    }
+
+    @Transactional
+    fun findUser(email : String) : User {
+        return userRepository.findByEmailOrNull(email) ?: throw RuntimeException("user not found. email =  ${email}")
     }
 
     @Transactional
@@ -28,6 +35,13 @@ class UserService (
         val user = User(name = signUp.name, email = signUp.email, password = encodedPassword)
         userRepository.save(user)
         return user.id!!
+    }
+
+    @Transactional
+    fun validateLogin(loginRequest: LoginRequest){
+        val user = findUser(loginRequest.email)
+        if(!user.isCorrectPassword(loginRequest.password))
+            throw RuntimeException("login failed - incorrect password. email = ${loginRequest.email}")
     }
 
     private fun existsEmail(email: String) : Boolean{

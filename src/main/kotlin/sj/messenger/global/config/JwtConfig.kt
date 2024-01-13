@@ -1,19 +1,31 @@
 package sj.messenger.global.config
 
+import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.security.Keys
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.security.jwt.JwtProperties
 import sj.messenger.domain.security.jwt.JwtProvider
+import javax.crypto.SecretKey
 
 @Configuration
 @EnableConfigurationProperties(JwtProperties::class)
 class JwtConfig(
     private val properties: JwtProperties,
 ) {
+
+    private val secretKey: SecretKey by lazy { Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(properties.secret)) }
+
     @Bean
     fun jwtProvider(): JwtProvider {
-        return JwtProvider(properties)
+        val expirationPeriodMillis = properties.expirationPeriodMinutes * 60 * 1000
+        return JwtProvider(secretKey, expirationPeriodMillis)
     }
 
+    @Bean
+    fun jwtParser(): JwtParser {
+        return JwtParser(secretKey)
+    }
 }

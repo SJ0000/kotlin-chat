@@ -5,4 +5,5 @@ import sj.messenger.domain.user.domain.User
 
 interface UserRepository : JpaRepository<User,Long?> {
     fun existsByEmail(email : String) : Boolean;
+    fun findByEmailOrNull(email : String) : User?
 }

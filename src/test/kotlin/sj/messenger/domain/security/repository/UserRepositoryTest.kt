@@ -10,13 +10,22 @@ import sj.messenger.domain.user.repository.UserRepository
 @DataJpaTest
 class UserRepositoryTest (
     @Autowired val userRepository: UserRepository
-){
+) {
 
     @Test
-    fun existsByEmailTest(){
+    fun existsByEmailTest() {
         val email = "alpha@beta.com"
-        userRepository.save(User("user",email,"1"))
+        userRepository.save(User("user", email, "1"))
         val result = userRepository.existsByEmail(email)
         assertThat(result).isTrue()
+    }
+
+    @Test
+    fun findByEmailTest(){
+        val email = "alpha@beta.com"
+        userRepository.save(User("user",email,"1"))
+
+        val user = userRepository.findByEmail(email)
+        assertThat(user?.email).isEqualTo(email)
     }
 }

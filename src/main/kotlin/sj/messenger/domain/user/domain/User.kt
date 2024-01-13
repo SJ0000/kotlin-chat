@@ -12,4 +12,7 @@ class User(
 ) : BaseEntity() {
 
 
+    fun isCorrectPassword(password: String) : Boolean{
+        return this.password == password
+    }
 }

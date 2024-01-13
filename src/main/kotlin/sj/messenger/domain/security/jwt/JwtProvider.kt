@@ -5,9 +5,11 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import java.util.*
+import javax.crypto.SecretKey
 
 class JwtProvider(
-    private val properties : JwtProperties,
+    private val secretKey : SecretKey,
+    private val expirationPeriodMillis : Long,
 ) {
     private val registeredClaim = mapOf(
         Claims.ISSUER to "api.simple-messenger",
@@ -15,15 +17,13 @@ class JwtProvider(
         Claims.AUDIENCE to "simple-messenger-client"
     )
 
-    private val key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(properties.secret));
-
     fun createAccessToken(userId: Long): String {
         return Jwts.builder()
             .claims(registeredClaim)
             .claim("userId", userId)
             .issuedAt(Date())
-            .expiration(Date(System.currentTimeMillis() + properties.expirationPeriodMillis))
-            .signWith(key)
+            .expiration(Date(System.currentTimeMillis() + expirationPeriodMillis))
+            .signWith(secretKey)
             .compact()
     }
 }

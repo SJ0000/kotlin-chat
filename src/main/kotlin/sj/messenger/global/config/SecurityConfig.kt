@@ -46,7 +46,7 @@ class SecurityConfig {
 
 class CustomJwtConfigurer : AbstractHttpConfigurer<CustomJwtConfigurer, HttpSecurity>() {
     override fun configure(builder: HttpSecurity?) {
-        // jwt 인증, 인가 필터 등록
+        // jwt 로그인, 인증,인가 필터 등록
 
 
     }
