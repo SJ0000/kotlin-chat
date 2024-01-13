@@ -1,11 +1,13 @@
 package sj.chat.domain.security.jwt
 
-import jakarta.validation.constraints.Size
+import org.hibernate.validator.constraints.Length
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.validation.annotation.Validated
 
+@Validated
 @ConfigurationProperties("jwt")
-data class JwtProperties(
-    @Size(min = 34)
+class JwtProperties(
+    @field:Length(min = 48)
     val secret : String,
     val expirationPeriodMinutes : Long,
 ){
