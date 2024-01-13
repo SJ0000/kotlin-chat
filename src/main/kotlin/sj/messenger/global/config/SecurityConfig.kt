@@ -10,10 +10,19 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import sj.messenger.domain.security.filter.JwtProvideLoginFilter
+import sj.messenger.domain.security.jwt.JwtParser
+import sj.messenger.domain.security.jwt.JwtProvider
+import sj.messenger.domain.user.service.UserService
 
 @Configuration
-@EnableWebSecurity
-class SecurityConfig {
+@EnableWebSecurity(debug = true)
+class SecurityConfig (
+    private val jwtProvider: JwtProvider,
+    private val jwtParser: JwtParser,
+    private val userService: UserService
+) {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -33,14 +42,11 @@ class SecurityConfig {
                     CustomJwtConfigurer()
                 }
             }
+
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtProvideLoginFilter(jwtProvider,userService))
         }
 
         return http.build()
-    }
-
-    @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder();
     }
 }
 

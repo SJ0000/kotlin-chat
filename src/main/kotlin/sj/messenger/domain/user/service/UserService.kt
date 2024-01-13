@@ -21,7 +21,7 @@ class UserService (
 
     @Transactional
     fun findUser(email : String) : User {
-        return userRepository.findByEmailOrNull(email) ?: throw RuntimeException("user not found. email =  ${email}")
+        return userRepository.findByEmail(email) ?: throw RuntimeException("user not found. email =  ${email}")
     }
 
     @Transactional
@@ -40,7 +40,7 @@ class UserService (
     @Transactional
     fun validateLogin(loginRequest: LoginRequest){
         val user = findUser(loginRequest.email)
-        if(!user.isCorrectPassword(loginRequest.password))
+        if(!passwordEncoder.matches(loginRequest.password,user.password))
             throw RuntimeException("login failed - incorrect password. email = ${loginRequest.email}")
     }
 
