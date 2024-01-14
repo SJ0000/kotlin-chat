@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.filter.GenericFilterBean
 import org.springframework.web.filter.OncePerRequestFilter
+import sj.messenger.domain.security.authentication.UserToken
 import sj.messenger.domain.security.dto.LoginRequest
 import sj.messenger.domain.security.dto.LoginResponse
 import sj.messenger.domain.security.jwt.JwtProvider
@@ -31,12 +32,11 @@ class JwtProvideLoginFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        // post, login인지 check?  filter chain에 url 등록 기능 없다면
         val loginRequest = objectMapper.readValue<LoginRequest>(request.inputStream)
         userService.validateLogin(loginRequest)
         val loginUser = userService.findUser(loginRequest.email)
 
-        val token = jwtProvider.createAccessToken(loginUser.id!!)
+        val token = jwtProvider.createAccessToken(UserToken(id = loginUser.id!!, name = loginUser.name))
         val loginResponse = LoginResponse(token = token, user = UserDto(loginUser))
         objectMapper.writeValue(response.writer, loginResponse)
     }

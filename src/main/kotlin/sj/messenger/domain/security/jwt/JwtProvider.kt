@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import sj.messenger.domain.security.authentication.UserToken
 import java.util.*
 import javax.crypto.SecretKey
 
@@ -17,10 +18,10 @@ class JwtProvider(
         Claims.AUDIENCE to "simple-messenger-client"
     )
 
-    fun createAccessToken(userId: Long): String {
+    fun createAccessToken(userToken: UserToken): String {
         return Jwts.builder()
             .claims(registeredClaim)
-            .claim("userId", userId)
+            .claim("user", userToken)
             .issuedAt(Date())
             .expiration(Date(System.currentTimeMillis() + expirationPeriodMillis))
             .signWith(secretKey)
