@@ -1,7 +1,6 @@
 package sj.messenger.domain.security.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -9,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
-import sj.messenger.domain.security.authentication.AuthenticatedUser
 import sj.messenger.domain.security.authentication.GuestUser
 import sj.messenger.domain.security.jwt.JwtParser
 
@@ -29,7 +27,7 @@ class JwtAuthenticationFilter(
         request.getHeader(HttpHeaders.AUTHORIZATION)?.let { header ->
             {
                 val token = validateAndParseToken(header)
-                val userId = jwtParser.validateAndGetUserId(token)
+                val userId = jwtParser.validateAndGetUserClaim(token)
 
             }
 

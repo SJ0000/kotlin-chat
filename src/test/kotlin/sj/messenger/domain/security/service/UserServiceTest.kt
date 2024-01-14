@@ -19,13 +19,4 @@ class UserServiceTest(
         print("${findUser.name} ${findUser.email} ${findUser.password}")
     }
 
-    @Test
-    fun x(){
-        val kotlinLogo = """
-|  //
-| //
-|/ \
-"""
-        println(kotlinLogo)
-    }
 }

@@ -3,13 +3,14 @@ package sj.messenger.domain.security.authentication
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import sj.messenger.domain.security.jwt.UserClaim
 
 class AuthenticatedUser(
-    private val userToken : UserToken
+    private val userClaim : UserClaim
 ) : Authentication {
 
     override fun getName(): String {
-        return userToken.name
+        return userClaim.name
     }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -28,7 +29,7 @@ class AuthenticatedUser(
 
     // user 정보
     override fun getPrincipal(): Any {
-        return userToken
+        return userClaim
     }
 
     override fun isAuthenticated(): Boolean {

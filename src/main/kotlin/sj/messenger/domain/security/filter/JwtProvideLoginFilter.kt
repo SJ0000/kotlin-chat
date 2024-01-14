@@ -4,15 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import jakarta.servlet.FilterChain
-import jakarta.servlet.ServletRequest
-import jakarta.servlet.ServletResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpMethod
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.web.filter.GenericFilterBean
 import org.springframework.web.filter.OncePerRequestFilter
-import sj.messenger.domain.security.authentication.UserToken
+import sj.messenger.domain.security.jwt.UserClaim
 import sj.messenger.domain.security.dto.LoginRequest
 import sj.messenger.domain.security.dto.LoginResponse
 import sj.messenger.domain.security.jwt.JwtProvider
@@ -36,7 +33,7 @@ class JwtProvideLoginFilter(
         userService.validateLogin(loginRequest)
         val loginUser = userService.findUser(loginRequest.email)
 
-        val token = jwtProvider.createAccessToken(UserToken(id = loginUser.id!!, name = loginUser.name))
+        val token = jwtProvider.createAccessToken(UserClaim(id = loginUser.id!!, name = loginUser.name))
         val loginResponse = LoginResponse(token = token, user = UserDto(loginUser))
         objectMapper.writeValue(response.writer, loginResponse)
     }

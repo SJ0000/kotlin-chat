@@ -1,8 +1,6 @@
 package sj.messenger.domain.security.jwt
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,9 +14,9 @@ class JwtParserTest(
 ){
     @Test
     fun validateAndGetUserIdTest(){
-        val token = jwtProvider.createAccessToken(1L)
+        val token = jwtProvider.createAccessToken(UserClaim(id = 1L, name = "TestUser"))
 
-        val userId = jwtParser.validateAndGetUserId(token)
-        assertThat(userId).isEqualTo(1L)
+        val userClaim = jwtParser.validateAndGetUserClaim(token)
+        assertThat(userClaim).isEqualTo(UserClaim(id = 1L, name = "TestUser"))
     }
 }
