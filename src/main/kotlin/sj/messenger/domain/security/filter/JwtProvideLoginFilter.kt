@@ -36,6 +36,8 @@ class JwtProvideLoginFilter(
         val token = jwtProvider.createAccessToken(UserClaim(id = loginUser.id!!, name = loginUser.name))
         val loginResponse = LoginResponse(token = token, user = UserDto(loginUser))
         objectMapper.writeValue(response.writer, loginResponse)
+
+        filterChain.doFilter(request,response)
     }
 
     // POST /login 요청이 아닐 경우 필터를 무시

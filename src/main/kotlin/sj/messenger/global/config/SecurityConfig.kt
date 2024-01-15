@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import sj.messenger.domain.security.filter.JwtAuthenticationFilter
 import sj.messenger.domain.security.filter.JwtProvideLoginFilter
 import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.security.jwt.JwtProvider
@@ -41,6 +42,7 @@ class SecurityConfig (
             }
 
             addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtProvideLoginFilter(jwtProvider,userService))
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtAuthenticationFilter(jwtParser))
         }
 
         return http.build()

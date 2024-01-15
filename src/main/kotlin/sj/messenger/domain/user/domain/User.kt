@@ -11,8 +11,4 @@ class User(
     var password: String,
 ) : BaseEntity() {
 
-
-    fun isCorrectPassword(password: String) : Boolean{
-        return this.password == password
-    }
 }

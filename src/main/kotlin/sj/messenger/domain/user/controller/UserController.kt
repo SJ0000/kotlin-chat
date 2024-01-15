@@ -1,6 +1,8 @@
 package sj.messenger.domain.user.controller
 
+import org.springframework.context.annotation.Role
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UserDto
@@ -12,6 +14,7 @@ class UserController(
     val userService: UserService
 ) {
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/users/{id}")
     fun user(@PathVariable id : Long) : ResponseEntity<UserDto>{
         val user = userService.findUser(id);
