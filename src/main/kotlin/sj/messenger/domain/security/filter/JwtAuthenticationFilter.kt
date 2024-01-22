@@ -43,6 +43,6 @@ class JwtAuthenticationFilter(
     private fun validateAndParseToken(header: String): String {
         if (header.startsWith("Bearer "))
             throw RuntimeException("invalid authorization type.")
-        return header.substring(7)
+        return header.substring("Bearer ".length)
     }
 }

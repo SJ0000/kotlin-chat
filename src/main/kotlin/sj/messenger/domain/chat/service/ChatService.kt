@@ -30,13 +30,12 @@ class ChatService(
         return chatRoomRepository.findByIdOrNull(id) ?: throw RuntimeException("chat room id '$id' not found")
     }
 
-
     fun joinChatRoom(chatRoomId: Long, userId: Long) {
 
     }
 
-    fun createChatRoom(name: String, maxCapacity: Int): Long {
-        val chatRoom = ChatRoom(name = name, maxCapacity = maxCapacity)
+    fun createChatRoom(): Long {
+        val chatRoom = ChatRoom()
         chatRoomRepository.save(chatRoom)
         return chatRoom.id ?: throw RuntimeException("created chatroom id is null")
     }

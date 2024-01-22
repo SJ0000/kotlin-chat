@@ -6,8 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails
 import sj.messenger.domain.security.jwt.UserClaim
 
 class LoginUserDetails(
-    private val userClaim : UserClaim
+    private val userClaim: UserClaim
 ) : UserDetails {
+
+    fun getUserId(): Long {
+        return userClaim.id
+    }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
