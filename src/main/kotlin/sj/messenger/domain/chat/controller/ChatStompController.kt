@@ -12,9 +12,9 @@ class ChatStompController(
     private val messagingTemplate: SimpMessagingTemplate,
 ) {
 
-    @MessageMapping("/topic/chat/message")
+    @MessageMapping("/topic/chat")
     fun sendMessage(messageDto : MessageDto){
         chatService.saveMessage(messageDto)
-        messagingTemplate.convertAndSend("/chatroom/${messageDto.chatRoomId}/message",)
+        messagingTemplate.convertAndSend("/chat/${messageDto.chatRoomId}",messageDto)
     }
 }

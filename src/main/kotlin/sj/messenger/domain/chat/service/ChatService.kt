@@ -7,11 +7,13 @@ import sj.messenger.domain.chat.domain.Message
 import sj.messenger.domain.chat.dto.MessageDto
 import sj.messenger.domain.chat.repository.ChatRoomRepository
 import sj.messenger.domain.chat.repository.MessageRepository
+import sj.messenger.domain.chat.repository.ParticipantRepository
 
 
 @Service
 class ChatService(
     private val chatRoomRepository: ChatRoomRepository,
+    private val participantRepository: ParticipantRepository,
     private val messageRepository: MessageRepository,
 ) {
 
@@ -24,7 +26,6 @@ class ChatService(
         )
         messageRepository.save(message)
     }
-
 
     fun getChatRoom(id: Long): ChatRoom {
         return chatRoomRepository.findByIdOrNull(id) ?: throw RuntimeException("chat room id '$id' not found")

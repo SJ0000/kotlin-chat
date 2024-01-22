@@ -36,4 +36,11 @@ class ChatController (
         return ResponseEntity.created(URI.create("/chatrooms/${chatRoomId}"))
             .body(ChatRoomDto(chatRoomId))
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/chatrooms/me")
+    fun getMyChatRooms(@AuthenticationPrincipal userDetails: LoginUserDetails){
+        val userId = userDetails.getUserId()
+
+    }
 }

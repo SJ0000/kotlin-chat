@@ -16,6 +16,6 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer{
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/ws-connect")
+        registry.addEndpoint("/message-broker")
     }
 }
