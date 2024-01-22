@@ -22,7 +22,6 @@ class JwtParser(
 
         payload["user"] ?: throw RuntimeException("user claim not exists")
         val userClaim = objectMapper.readValue<UserClaim>(payload["user"].toString())
-        print("deserialized UserClaim = ${userClaim}")
         return userClaim
     }
 }

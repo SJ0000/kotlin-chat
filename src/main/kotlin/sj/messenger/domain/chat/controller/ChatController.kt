@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
+import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.chat.dto.ChatRoomDto
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
@@ -39,8 +40,12 @@ class ChatController (
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/chatrooms/me")
-    fun getMyChatRooms(@AuthenticationPrincipal userDetails: LoginUserDetails){
+    fun getMyChatRooms(
+        @AuthenticationPrincipal userDetails: LoginUserDetails
+    ) : ResponseEntity<List<ChatRoomDto>> {
         val userId = userDetails.getUserId()
-
+        val data = chatService.findUserChatRooms(userId)
+            .map { ChatRoomDto(it.id!!) }
+        return ResponseEntity.ok(data)
     }
 }

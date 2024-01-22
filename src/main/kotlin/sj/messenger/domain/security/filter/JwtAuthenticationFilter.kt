@@ -31,9 +31,7 @@ class JwtAuthenticationFilter(
             val token = validateAndParseToken(header)
             val userClaim = jwtParser.validateAndGetUserClaim(token)
             SecurityContextHolder.getContext().authentication = AuthenticationToken(LoginUserDetails(userClaim))
-            println("authentication success")
         } catch (e: Exception) {
-            println("error = ${e}")
             SecurityContextHolder.getContext().authentication = AuthenticationToken(GuestUserDetails())
         }finally {
             filterChain.doFilter(request,response)
@@ -41,7 +39,7 @@ class JwtAuthenticationFilter(
     }
 
     private fun validateAndParseToken(header: String): String {
-        if (header.startsWith("Bearer "))
+        if (!header.startsWith("Bearer "))
             throw RuntimeException("invalid authorization type.")
         return header.substring("Bearer ".length)
     }
