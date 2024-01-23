@@ -11,7 +11,9 @@ import sj.messenger.global.domain.BaseEntity
 @Entity
 class ChatRoom(
     @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.PERSIST])
-    val participants: MutableList<Participant> = mutableListOf()
+    val participants: MutableList<Participant> = mutableListOf(),
+    val name: String,
+    val avatarUrl: String = "",
 ) : BaseEntity() {
 
     fun join(user: User){

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.chat.domain.Message
+import sj.messenger.domain.chat.dto.ChatRoomCreate
 import sj.messenger.domain.chat.dto.MessageDto
 import sj.messenger.domain.chat.repository.ChatRoomRepository
 import sj.messenger.domain.chat.repository.MessageRepository
@@ -45,8 +46,8 @@ class ChatService(
     }
 
     @Transactional(readOnly = false)
-    fun createChatRoom(): Long {
-        val chatRoom = ChatRoom()
+    fun createChatRoom(chatRoomCreate: ChatRoomCreate): Long {
+        val chatRoom = ChatRoom(name = chatRoomCreate.name)
         chatRoomRepository.save(chatRoom)
         return chatRoom.id ?: throw RuntimeException("created chatroom id is null")
     }

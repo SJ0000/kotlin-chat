@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
 import sj.messenger.domain.chat.domain.ChatRoom
+import sj.messenger.domain.chat.dto.ChatRoomCreate
 import sj.messenger.domain.chat.dto.ChatRoomDto
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
@@ -25,8 +26,11 @@ class ChatController(
     @GetMapping("/chatrooms/{id}")
     fun getChatRoomInfo(@PathVariable id: Long): ResponseEntity<ChatRoomDto> {
         val chatRoom = chatService.getChatRoom(id)
-        val users = chatRoom.participants.map { UserDto(it.user) }
-        val chatRoomDto = ChatRoomDto(id = chatRoom.id!!, users = users)
+        val chatRoomDto = ChatRoomDto(
+            id = chatRoom.id!!,
+            name = chatRoom.name,
+            avatarUrl = chatRoom.avatarUrl,
+            users = chatRoom.participants.map { UserDto(it.user) })
 
         return ResponseEntity.ok()
             .body(chatRoomDto)
@@ -34,10 +38,13 @@ class ChatController(
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/chatrooms")
-    fun postChatRoom(@AuthenticationPrincipal userDetails: LoginUserDetails): ResponseEntity<ChatRoomDto> {
-        val chatRoomId = chatService.createChatRoom()
+    fun postChatRoom(
+        @AuthenticationPrincipal userDetails: LoginUserDetails,
+        chatRoomCreate: ChatRoomCreate,
+    ): ResponseEntity<ChatRoomDto> {
+        val chatRoomId = chatService.createChatRoom(chatRoomCreate)
         return ResponseEntity.created(URI.create("/chatrooms/${chatRoomId}"))
-            .body(ChatRoomDto(chatRoomId))
+            .build()
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -46,8 +53,25 @@ class ChatController(
         @AuthenticationPrincipal userDetails: LoginUserDetails
     ): ResponseEntity<List<ChatRoomDto>> {
         val userId = userDetails.getUserId()
-        val data = chatService.findUserChatRooms(userId)
-            .map { ChatRoomDto(it.id!!) }
-        return ResponseEntity.ok(data)
+        val chatRooms = chatService.findUserChatRooms(userId)
+            .map { ChatRoomDto(
+                id = it.id!!,
+                name = it.name,
+                avatarUrl = it.avatarUrl,
+                users = it.participants.map { UserDto(it.user) }) }
+
+        return ResponseEntity.ok(chatRooms)
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/chatrooms/{id}/join")
+    fun joinChatRoom(
+        @AuthenticationPrincipal userDetails: LoginUserDetails,
+        @PathVariable id: Long,
+    ): ResponseEntity<ChatRoomDto> {
+        val userId = userDetails.getUserId()
+        chatService.joinChatRoom(id, userId)
+        return ResponseEntity.created(URI.create("/chatrooms/${id}"))
+            .build()
     }
 }
