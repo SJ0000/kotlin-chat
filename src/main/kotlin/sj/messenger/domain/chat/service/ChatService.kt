@@ -10,6 +10,7 @@ import sj.messenger.domain.chat.repository.ChatRoomRepository
 import sj.messenger.domain.chat.repository.MessageRepository
 import sj.messenger.domain.chat.repository.ParticipantRepository
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.domain.user.service.UserService
 
 
 @Service
@@ -18,6 +19,8 @@ class ChatService(
     private val chatRoomRepository: ChatRoomRepository,
     private val participantRepository: ParticipantRepository,
     private val messageRepository: MessageRepository,
+
+    private val userService: UserService,
 ) {
     @Transactional(readOnly = false)
     fun saveMessage(messageDto: MessageDto) {
@@ -36,7 +39,9 @@ class ChatService(
 
     @Transactional(readOnly = false)
     fun joinChatRoom(chatRoomId: Long, userId: Long) {
-
+        val chatRoom = chatRoomRepository.findByIdOrNull(chatRoomId) ?: throw RuntimeException("chat room id '$chatRoomId' not found")
+        val user = userService.findUser(userId)
+        chatRoom.join(user)
     }
 
     @Transactional(readOnly = false)

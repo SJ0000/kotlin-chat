@@ -13,18 +13,20 @@ import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.chat.dto.ChatRoomDto
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
+import sj.messenger.domain.user.dto.UserDto
 import java.net.URI
 import java.security.Principal
 
 @RestController
-class ChatController (
+class ChatController(
     private val chatService: ChatService,
-){
+) {
 
     @GetMapping("/chatrooms/{id}")
-    fun getChatRoomInfo(@PathVariable id : Long) : ResponseEntity<ChatRoomDto>{
+    fun getChatRoomInfo(@PathVariable id: Long): ResponseEntity<ChatRoomDto> {
         val chatRoom = chatService.getChatRoom(id)
-        val chatRoomDto = ChatRoomDto(id = chatRoom.id!!)
+        val users = chatRoom.participants.map { UserDto(it.user) }
+        val chatRoomDto = ChatRoomDto(id = chatRoom.id!!, users = users)
 
         return ResponseEntity.ok()
             .body(chatRoomDto)
@@ -32,7 +34,7 @@ class ChatController (
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/chatrooms")
-    fun postChatRoom(@AuthenticationPrincipal userDetails: LoginUserDetails) : ResponseEntity<ChatRoomDto>{
+    fun postChatRoom(@AuthenticationPrincipal userDetails: LoginUserDetails): ResponseEntity<ChatRoomDto> {
         val chatRoomId = chatService.createChatRoom()
         return ResponseEntity.created(URI.create("/chatrooms/${chatRoomId}"))
             .body(ChatRoomDto(chatRoomId))
@@ -42,7 +44,7 @@ class ChatController (
     @GetMapping("/chatrooms/me")
     fun getMyChatRooms(
         @AuthenticationPrincipal userDetails: LoginUserDetails
-    ) : ResponseEntity<List<ChatRoomDto>> {
+    ): ResponseEntity<List<ChatRoomDto>> {
         val userId = userDetails.getUserId()
         val data = chatService.findUserChatRooms(userId)
             .map { ChatRoomDto(it.id!!) }
