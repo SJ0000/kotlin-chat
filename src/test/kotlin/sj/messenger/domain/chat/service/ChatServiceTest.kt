@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
+import sj.messenger.domain.chat.dto.ChatRoomCreate
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.service.UserService
 
@@ -21,7 +22,7 @@ class ChatServiceTest(
     fun joinUserTest(){
         // given
         val userId = userService.signUpUser(SignUpDto("alpha@beta.com", "abcd", "1234567890"))
-        val chatRoomId = chatService.createChatRoom();
+        val chatRoomId = chatService.createChatRoom(ChatRoomCreate(name = "TESTCHATROOM"));
 
         // when
         chatService.joinChatRoom(chatRoomId,userId)

@@ -56,4 +56,8 @@ class ChatService(
         val participants = participantRepository.getParticipantsByUserId(userId)
         return participants.map { it.chatRoom }
     }
+
+    fun findChatRoom(chatRoomId: Long): ChatRoom{
+        return chatRoomRepository.findByIdOrNull(chatRoomId) ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
+    }
 }

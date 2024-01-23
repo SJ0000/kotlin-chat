@@ -26,14 +26,14 @@ class ChatController(
     @GetMapping("/chatrooms/{id}")
     fun getChatRoomInfo(@PathVariable id: Long): ResponseEntity<ChatRoomDto> {
         val chatRoom = chatService.getChatRoom(id)
-        val chatRoomDto = ChatRoomDto(
+        val data = ChatRoomDto(
             id = chatRoom.id!!,
             name = chatRoom.name,
             avatarUrl = chatRoom.avatarUrl,
             users = chatRoom.participants.map { UserDto(it.user) })
 
         return ResponseEntity.ok()
-            .body(chatRoomDto)
+            .body(data)
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -43,8 +43,14 @@ class ChatController(
         chatRoomCreate: ChatRoomCreate,
     ): ResponseEntity<ChatRoomDto> {
         val chatRoomId = chatService.createChatRoom(chatRoomCreate)
+        val chatRoom = chatService.findChatRoom(chatRoomId)
+        val data = ChatRoomDto(
+            id = chatRoom.id!!,
+            name = chatRoom.name,
+            avatarUrl = chatRoom.avatarUrl,
+            users = chatRoom.participants.map { UserDto(it.user) })
         return ResponseEntity.created(URI.create("/chatrooms/${chatRoomId}"))
-            .build()
+            .body(data)
     }
 
     @PreAuthorize("hasRole('USER')")
