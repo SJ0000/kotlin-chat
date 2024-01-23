@@ -20,7 +20,7 @@ import sj.messenger.domain.user.service.UserService
 
 @Configuration
 @EnableMethodSecurity
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity()
 class SecurityConfig (
     private val jwtProvider: JwtProvider,
     private val jwtParser: JwtParser,
