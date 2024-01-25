@@ -6,11 +6,10 @@ import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.chat.domain.Message
 import sj.messenger.domain.chat.dto.ChatRoomCreate
-import sj.messenger.domain.chat.dto.MessageDto
+import sj.messenger.domain.chat.dto.SentMessageDto
 import sj.messenger.domain.chat.repository.ChatRoomRepository
 import sj.messenger.domain.chat.repository.MessageRepository
 import sj.messenger.domain.chat.repository.ParticipantRepository
-import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
 
 
@@ -24,14 +23,15 @@ class ChatService(
     private val userService: UserService,
 ) {
     @Transactional(readOnly = false)
-    fun saveMessage(messageDto: MessageDto) {
+    fun saveMessage(sentMessageDto: SentMessageDto) : String? {
         val message = Message(
-            senderId = messageDto.senderId,
-            chatRoomId = messageDto.chatRoomId,
-            content = messageDto.content,
-            sentAt = messageDto.sentAt
+            senderId = sentMessageDto.senderId,
+            chatRoomId = sentMessageDto.chatRoomId,
+            content = sentMessageDto.content,
+            sentAt = sentMessageDto.sentAt
         )
         messageRepository.save(message)
+        return message.id?.toHexString()
     }
 
     fun getChatRoom(id: Long): ChatRoom {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.chat.dto.ChatRoomCreate
@@ -40,7 +41,7 @@ class ChatController(
     @PostMapping("/chatrooms")
     fun postChatRoom(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
-        chatRoomCreate: ChatRoomCreate,
+        @RequestBody chatRoomCreate: ChatRoomCreate,
     ): ResponseEntity<ChatRoomDto> {
         val chatRoomId = chatService.createChatRoom(chatRoomCreate)
         val chatRoom = chatService.findChatRoom(chatRoomId)
