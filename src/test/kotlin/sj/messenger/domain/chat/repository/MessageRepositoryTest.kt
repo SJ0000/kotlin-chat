@@ -17,6 +17,6 @@ class MessageRepositoryTest (
     fun saveTest(){
         val message = Message(senderId = 1L, chatRoomId = 1L, content =  "123", sentAt =  LocalDateTime.now())
         val savedMessage = messageRepository.save(message)
-        println(savedMessage.id)
+        println(savedMessage.id?.toString())
     }
 }

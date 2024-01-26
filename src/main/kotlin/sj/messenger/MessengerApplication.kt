@@ -9,15 +9,7 @@ import sj.messenger.domain.user.service.UserService
 
 
 @SpringBootApplication
-class MessengerApplication(
-	private val userService: UserService
-){
-	@Profile("local")
-	@PostConstruct
-	fun createTestAccount(){
-		userService.signUpUser(SignUpDto("123@123.com","123","1234567890"))
-	}
-}
+class MessengerApplication
 
 fun main(args: Array<String>) {
 	runApplication<MessengerApplication>(*args)
