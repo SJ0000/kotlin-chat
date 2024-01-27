@@ -61,11 +61,14 @@ class ChatController(
     ): ResponseEntity<List<ChatRoomDto>> {
         val userId = userDetails.getUserId()
         val chatRooms = chatService.findUserChatRooms(userId)
-            .map { ChatRoomDto(
-                id = it.id!!,
-                name = it.name,
-                avatarUrl = it.avatarUrl,
-                users = it.participants.map { UserDto(it.user) }) }
+            .map {
+                ChatRoomDto(
+                    id = it.id!!,
+                    name = it.name,
+                    avatarUrl = it.avatarUrl,
+                    users = it.participants.map { UserDto(it.user) })
+            }
+
 
         return ResponseEntity.ok(chatRooms)
     }
@@ -78,7 +81,13 @@ class ChatController(
     ): ResponseEntity<ChatRoomDto> {
         val userId = userDetails.getUserId()
         chatService.joinChatRoom(id, userId)
+        val chatRoom = chatService.findChatRoomWithParticipants(id)
+        val dto = ChatRoomDto(
+            id = chatRoom.id!!,
+            name = chatRoom.name,
+            avatarUrl = chatRoom.avatarUrl,
+            users = chatRoom.participants.map { UserDto(it.user) })
         return ResponseEntity.created(URI.create("/chatrooms/${id}"))
-            .build()
+            .body(dto)
     }
 }

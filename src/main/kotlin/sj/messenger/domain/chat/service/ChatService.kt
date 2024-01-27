@@ -60,4 +60,8 @@ class ChatService(
     fun findChatRoom(chatRoomId: Long): ChatRoom{
         return chatRoomRepository.findByIdOrNull(chatRoomId) ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
     }
+
+    fun findChatRoomWithParticipants(chatRoomId: Long): ChatRoom{
+        return chatRoomRepository.findWithParticipantsById(chatRoomId) ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
+    }
 }
