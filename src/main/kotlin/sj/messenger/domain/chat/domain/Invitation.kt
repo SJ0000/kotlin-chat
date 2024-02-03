@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 @RedisHash
 class Invitation(
     @Id
-    val key: String,
+    val id: String,
     val chatRoomId: Long,
     val inviterId: Long,
     @TimeToLive
