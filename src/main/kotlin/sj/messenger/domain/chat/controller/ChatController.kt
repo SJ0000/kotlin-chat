@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import sj.messenger.domain.chat.domain.ChatRoom
+import sj.messenger.domain.chat.domain.Invitation
 import sj.messenger.domain.chat.dto.ChatRoomCreate
 import sj.messenger.domain.chat.dto.ChatRoomDto
+import sj.messenger.domain.chat.service.ChatInviteService
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
@@ -22,6 +24,7 @@ import java.security.Principal
 @RestController
 class ChatController(
     private val chatService: ChatService,
+    private val chatInviteService: ChatInviteService
 ) {
 
     @GetMapping("/chatrooms/{id}")
@@ -89,5 +92,15 @@ class ChatController(
             users = chatRoom.participants.map { UserDto(it.user) })
         return ResponseEntity.created(URI.create("/chatrooms/${id}"))
             .body(dto)
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/chatrooms/{id}/invites")
+    fun postInviteChatroom(
+        @AuthenticationPrincipal userDetails: LoginUserDetails,
+        @PathVariable id: Long,
+    ) : ResponseEntity<Invitation>{
+        val invitation = chatInviteService.createInvitation(userDetails.getUserId(), id)
+        return ResponseEntity.ok(invitation)
     }
 }

@@ -20,4 +20,10 @@ class ChatRoom(
         val participant = Participant(user, this)
         participants.add(participant)
     }
+
+    fun isParticipant(userId : Long) : Boolean{
+        return participants.any {
+            it.user.id == userId
+        }
+    }
 }
