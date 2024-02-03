@@ -1,12 +1,18 @@
 package sj.messenger.domain.chat.domain
 
+import org.springframework.data.annotation.Id
+import org.springframework.data.redis.core.RedisHash
+import org.springframework.data.redis.core.TimeToLive
 import java.time.LocalDateTime
 
-class Invitation (
+@RedisHash
+class Invitation(
+    @Id
     val key: String,
-    val chatRoomId : Long,
-    val inviterId : Long,
-    val expiredAt: LocalDateTime
-){
+    val chatRoomId: Long,
+    val inviterId: Long,
+    @TimeToLive
+    val timeToLiveSeconds: Long = 7 * 24 * 60 * 60
+) {
 
 }
