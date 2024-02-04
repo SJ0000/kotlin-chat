@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service
 import sj.messenger.domain.chat.domain.Invitation
 import sj.messenger.domain.chat.repository.ChatRoomRepository
 import sj.messenger.domain.chat.repository.InvitationRepository
+import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.domain.user.service.UserService
 import java.time.LocalDateTime
 
 @Service
@@ -13,7 +15,7 @@ class ChatInviteService(
     private val invitationRepository: InvitationRepository
 ) {
 
-    fun createInvitation(userId: Long, chatRoomId: Long): Invitation {
+    fun createInvitation(userId: Long, userName: String, chatRoomId: Long): Invitation {
         val chatRoom = chatRoomRepository.findWithParticipantsById(chatRoomId)
             ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
 
@@ -25,6 +27,7 @@ class ChatInviteService(
             id = key,
             chatRoomId = chatRoomId,
             inviterId = userId,
+            inviterName = userName,
         )
         invitationRepository.save(invitation)
         return invitation

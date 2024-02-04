@@ -15,6 +15,7 @@ import sj.messenger.domain.chat.service.ChatInviteService
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
+import sj.messenger.domain.user.service.UserService
 import java.net.URI
 import java.time.LocalDateTime
 
@@ -97,11 +98,13 @@ class ChatController(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<InvitationDto> {
-        val invitation = chatInviteService.createInvitation(userDetails.getUserId(), id)
+        val invitation = chatInviteService.createInvitation(userDetails.getUserId(), userDetails.username, id)
+        val chatRoom = chatService.findChatRoom(id)
         val dto = InvitationDto(
             id = invitation.id,
             chatRoomId = invitation.chatRoomId,
-            inviterId = invitation.inviterId,
+            chatRoomName = chatRoom.name,
+            inviterName = invitation.inviterName,
             expiredAt = LocalDateTime.now().plusMinutes(invitation.timeToLiveSeconds)
         )
         return ResponseEntity.ok(dto)
@@ -111,12 +114,14 @@ class ChatController(
     @GetMapping("/chat/invites/{invitationId}")
     fun getInvitation(
         @PathVariable invitationId: String
-    ): ResponseEntity<InvitationDto>{
+    ): ResponseEntity<InvitationDto> {
         val invitation = chatInviteService.getInvitation(invitationId)
+        val chatRoom = chatService.getChatRoom(invitation.chatRoomId)
         val dto = InvitationDto(
             id = invitation.id,
             chatRoomId = invitation.chatRoomId,
-            inviterId = invitation.inviterId,
+            chatRoomName = chatRoom.name,
+            inviterName = invitation.inviterName,
             expiredAt = LocalDateTime.now().plusMinutes(invitation.timeToLiveSeconds)
         )
         return ResponseEntity.ok(dto)

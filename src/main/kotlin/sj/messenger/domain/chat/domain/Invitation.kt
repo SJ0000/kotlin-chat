@@ -11,6 +11,7 @@ class Invitation(
     val id: String,
     val chatRoomId: Long,
     val inviterId: Long,
+    val inviterName: String,
     @TimeToLive
     val timeToLiveSeconds: Long = 7 * 24 * 60 * 60
 ) {
