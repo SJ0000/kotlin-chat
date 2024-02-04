@@ -3,23 +3,20 @@ package sj.messenger.domain.chat.controller
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import sj.messenger.domain.chat.domain.ChatRoom
-import sj.messenger.domain.chat.domain.Invitation
 import sj.messenger.domain.chat.dto.ChatRoomCreate
 import sj.messenger.domain.chat.dto.ChatRoomDto
+import sj.messenger.domain.chat.dto.InvitationDto
 import sj.messenger.domain.chat.service.ChatInviteService
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
 import java.net.URI
-import java.security.Principal
+import java.time.LocalDateTime
 
 @RestController
 class ChatController(
@@ -99,8 +96,14 @@ class ChatController(
     fun postInviteChatroom(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable id: Long,
-    ) : ResponseEntity<Invitation>{
+    ): ResponseEntity<InvitationDto> {
         val invitation = chatInviteService.createInvitation(userDetails.getUserId(), id)
-        return ResponseEntity.ok(invitation)
+        val dto = InvitationDto(
+            id = invitation.id,
+            chatRoomId = invitation.chatRoomId,
+            inviterId = invitation.inviterId,
+            expiredAt = LocalDateTime.now().plusMinutes(invitation.timeToLiveSeconds)
+        )
+        return ResponseEntity.ok(dto)
     }
 }

@@ -25,7 +25,6 @@ class ChatStompController(
             content = sentMessageDto.content,
             receivedAt = LocalDateTime.now()
         )
-        println(data)
         return data
     }
 }
