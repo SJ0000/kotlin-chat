@@ -106,4 +106,19 @@ class ChatController(
         )
         return ResponseEntity.ok(dto)
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/chat/invites/{invitationId}")
+    fun getInvitation(
+        @PathVariable invitationId: String
+    ): ResponseEntity<InvitationDto>{
+        val invitation = chatInviteService.getInvitation(invitationId)
+        val dto = InvitationDto(
+            id = invitation.id,
+            chatRoomId = invitation.chatRoomId,
+            inviterId = invitation.inviterId,
+            expiredAt = LocalDateTime.now().plusMinutes(invitation.timeToLiveSeconds)
+        )
+        return ResponseEntity.ok(dto)
+    }
 }

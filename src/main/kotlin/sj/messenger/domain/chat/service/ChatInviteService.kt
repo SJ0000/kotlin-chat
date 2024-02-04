@@ -1,5 +1,6 @@
 package sj.messenger.domain.chat.service
 
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import sj.messenger.domain.chat.domain.Invitation
 import sj.messenger.domain.chat.repository.ChatRoomRepository
@@ -28,6 +29,11 @@ class ChatInviteService(
         invitationRepository.save(invitation)
         return invitation
     }
+
+    fun getInvitation(id: String) : Invitation{
+        return invitationRepository.findByIdOrNull(id) ?: throw RuntimeException("Invitation not found. id = ${id}")
+    }
+
     // 경우의 수 : (대문자 수 26+ 소문자 수 26)^8 = 53,459,728,531,456
     private fun generateRandomString(): String {
         val chars = ('a'..'z') + ('A'..'Z')
