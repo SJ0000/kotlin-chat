@@ -23,15 +23,15 @@ class ChatService(
     private val userService: UserService,
 ) {
     @Transactional(readOnly = false)
-    fun saveMessage(sentMessageDto: SentMessageDto) : String? {
+    fun saveMessage(sentMessageDto: SentMessageDto) : String {
         val message = Message(
             senderId = sentMessageDto.senderId,
             chatRoomId = sentMessageDto.chatRoomId,
             content = sentMessageDto.content,
             sentAt = sentMessageDto.sentAt
         )
-        messageRepository.save(message)
-        return message.id?.toHexString()
+        val savedMessage = messageRepository.save(message)
+        return savedMessage.id!!.toHexString()
     }
 
     fun getChatRoom(id: Long): ChatRoom {

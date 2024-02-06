@@ -10,7 +10,7 @@ data class SentMessageDto(
 )
 
 data class ReceivedMessageDto(
-    val id: String?,
+    val id: String,
     val chatRoomId : Long,
     val senderId : Long,
     val content : String,
