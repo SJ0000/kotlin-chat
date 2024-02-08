@@ -1,9 +1,6 @@
 package sj.messenger.domain.temp
 
 import org.junit.jupiter.api.Test
-import java.awt.Window
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 
 data class Person(val name: String, val age: Int)
 

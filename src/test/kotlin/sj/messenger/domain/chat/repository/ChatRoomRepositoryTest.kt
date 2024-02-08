@@ -3,17 +3,12 @@ package sj.messenger.domain.chat.repository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.chat.domain.ChatRoom
-import sj.messenger.domain.chat.domain.Message
-import sj.messenger.domain.chat.domain.Participant
 import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.repository.UserRepository
-import java.time.LocalDateTime
 
 @DataJpaTest
 class ChatRoomRepositoryTest (

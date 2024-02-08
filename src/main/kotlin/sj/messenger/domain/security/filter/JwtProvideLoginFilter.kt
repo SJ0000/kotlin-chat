@@ -9,10 +9,10 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpMethod
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.filter.OncePerRequestFilter
-import sj.messenger.domain.security.jwt.UserClaim
 import sj.messenger.domain.security.dto.LoginRequest
 import sj.messenger.domain.security.dto.LoginResponse
 import sj.messenger.domain.security.jwt.JwtProvider
+import sj.messenger.domain.security.jwt.UserClaim
 import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.service.UserService
 

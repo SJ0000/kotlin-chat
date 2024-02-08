@@ -1,6 +1,7 @@
 package sj.messenger.domain.user.domain
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import sj.messenger.global.domain.BaseEntity
 
 @Entity

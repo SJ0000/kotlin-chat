@@ -2,7 +2,6 @@ package sj.messenger.domain.chat.controller
 
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 import sj.messenger.domain.chat.dto.ReceivedMessageDto
 import sj.messenger.domain.chat.dto.SentMessageDto

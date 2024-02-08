@@ -2,8 +2,6 @@ package sj.messenger.domain.chat.domain
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
 import sj.messenger.domain.user.domain.User
 import sj.messenger.global.domain.BaseEntity

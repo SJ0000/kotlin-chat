@@ -1,7 +1,6 @@
 package sj.messenger.domain.chat.dto
 
 import jakarta.validation.constraints.NotEmpty
-import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.user.dto.UserDto
 
 data class ChatRoomDto(

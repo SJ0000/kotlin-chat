@@ -3,11 +3,7 @@ package sj.messenger.domain.chat.controller
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import sj.messenger.domain.chat.dto.ChatRoomCreate
 import sj.messenger.domain.chat.dto.ChatRoomDto
 import sj.messenger.domain.chat.dto.InvitationDto
@@ -15,7 +11,6 @@ import sj.messenger.domain.chat.service.ChatInviteService
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
-import sj.messenger.domain.user.service.UserService
 import java.net.URI
 import java.time.LocalDateTime
 

@@ -5,9 +5,6 @@ import org.springframework.stereotype.Service
 import sj.messenger.domain.chat.domain.Invitation
 import sj.messenger.domain.chat.repository.ChatRoomRepository
 import sj.messenger.domain.chat.repository.InvitationRepository
-import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.domain.user.service.UserService
-import java.time.LocalDateTime
 
 @Service
 class ChatInviteService(
