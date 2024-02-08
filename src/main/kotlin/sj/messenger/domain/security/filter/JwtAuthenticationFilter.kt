@@ -1,12 +1,12 @@
 package sj.messenger.domain.security.filter
 
+import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.core.Authentication
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.filter.OncePerRequestFilter
 import sj.messenger.domain.security.authentication.AuthenticatedToken
 import sj.messenger.domain.security.authentication.JwtAuthenticationToken
 import sj.messenger.domain.security.authentication.principal.GuestUserDetails
@@ -14,21 +14,23 @@ import sj.messenger.domain.security.authentication.principal.GuestUserDetails
 
 class JwtAuthenticationFilter(
     private val authenticationManager: AuthenticationManager,
-) : AbstractAuthenticationProcessingFilter(AntPathRequestMatcher("/**"), authenticationManager) {
+) : OncePerRequestFilter() {
 
-    override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication {
-        // Edge case: request null, Authorization header null, invalid token
-        if(request == null){
-            return AuthenticatedToken(GuestUserDetails())
+    override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
+    ) {
+        try{
+            val header = request.getHeader(HttpHeaders.AUTHORIZATION) ?: throw RuntimeException("Authorization header not exists.")
+            val bearerToken = parseBearerToken(header)
+            val authentication = authenticationManager.authenticate(JwtAuthenticationToken(bearerToken))
+            SecurityContextHolder.getContext().authentication = authentication
+        }catch(e: Exception) {
+            SecurityContextHolder.getContext().authentication = AuthenticatedToken(GuestUserDetails())
+        }finally{
+            filterChain.doFilter(request,response)
         }
-
-        val header = request.getHeader(HttpHeaders.AUTHORIZATION)
-        if(header.isNullOrBlank()){
-            return AuthenticatedToken(GuestUserDetails())
-        }
-
-        val jwtToken = parseBearerToken(header)
-        return authenticationManager.authenticate(JwtAuthenticationToken(jwtToken))
     }
 
     private fun parseBearerToken(header: String): String {
