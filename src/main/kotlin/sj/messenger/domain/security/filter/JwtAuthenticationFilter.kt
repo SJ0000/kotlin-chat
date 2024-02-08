@@ -1,44 +1,37 @@
 package sj.messenger.domain.security.filter
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.kotlinModule
-import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.filter.OncePerRequestFilter
-import sj.messenger.domain.security.authentication.AuthenticationToken
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import sj.messenger.domain.security.authentication.AuthenticatedToken
+import sj.messenger.domain.security.authentication.JwtAuthenticationToken
 import sj.messenger.domain.security.authentication.principal.GuestUserDetails
-import sj.messenger.domain.security.authentication.principal.LoginUserDetails
-import sj.messenger.domain.security.jwt.JwtParser
 
 
 class JwtAuthenticationFilter(
-    private val jwtParser: JwtParser
-) : OncePerRequestFilter() {
+    private val authenticationManager: AuthenticationManager,
+) : AbstractAuthenticationProcessingFilter(AntPathRequestMatcher("/**"), authenticationManager) {
 
-    private val objectMapper = ObjectMapper().registerModules(kotlinModule())
-
-    override fun doFilterInternal(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        filterChain: FilterChain
-    ) {
-        try {
-            val header = request.getHeader(HttpHeaders.AUTHORIZATION)
-            val token = validateAndParseToken(header)
-            val userClaim = jwtParser.validateAndGetUserClaim(token)
-            SecurityContextHolder.getContext().authentication = AuthenticationToken(LoginUserDetails(userClaim))
-        } catch (e: Exception) {
-            SecurityContextHolder.getContext().authentication = AuthenticationToken(GuestUserDetails())
-        }finally {
-            filterChain.doFilter(request,response)
+    override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication {
+        // Edge case: request null, Authorization header null, invalid token
+        if(request == null){
+            return AuthenticatedToken(GuestUserDetails())
         }
+
+        val header = request.getHeader(HttpHeaders.AUTHORIZATION)
+        if(header.isNullOrBlank()){
+            return AuthenticatedToken(GuestUserDetails())
+        }
+
+        val jwtToken = parseBearerToken(header)
+        return authenticationManager.authenticate(JwtAuthenticationToken(jwtToken))
     }
 
-    private fun validateAndParseToken(header: String): String {
+    private fun parseBearerToken(header: String): String {
         if (!header.startsWith("Bearer "))
             throw RuntimeException("invalid authorization type.")
         return header.substring("Bearer ".length)
