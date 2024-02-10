@@ -8,7 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 import sj.messenger.domain.security.authentication.AuthenticatedToken
-import sj.messenger.domain.security.authentication.JwtAuthenticationToken
+import sj.messenger.domain.security.authentication.JwtPreAuthenticationToken
 import sj.messenger.domain.security.authentication.principal.GuestUserDetails
 
 
@@ -24,7 +24,7 @@ class JwtAuthenticationFilter(
         try{
             val header = request.getHeader(HttpHeaders.AUTHORIZATION) ?: throw RuntimeException("Authorization header not exists.")
             val bearerToken = parseBearerToken(header)
-            val authentication = authenticationManager.authenticate(JwtAuthenticationToken(bearerToken))
+            val authentication = authenticationManager.authenticate(JwtPreAuthenticationToken(bearerToken))
             SecurityContextHolder.getContext().authentication = authentication
         }catch(e: Exception) {
             SecurityContextHolder.getContext().authentication = AuthenticatedToken(GuestUserDetails())
