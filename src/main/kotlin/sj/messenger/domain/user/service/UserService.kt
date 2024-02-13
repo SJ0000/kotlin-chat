@@ -50,6 +50,7 @@ class UserService (
         val user = findUser(id)
         user.name = updateUser.name
         user.avatarUrl = updateUser.avatarUrl
+        user.statusMessage = updateUser.statusMessage
     }
 
     private fun existsEmail(email: String) : Boolean{

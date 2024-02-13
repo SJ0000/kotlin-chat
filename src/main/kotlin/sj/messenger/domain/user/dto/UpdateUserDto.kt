@@ -8,4 +8,5 @@ data class UpdateUserDto (
     val name: String,
     @NotBlank
     val avatarUrl: String,
+    val statusMessage: String,
 )
