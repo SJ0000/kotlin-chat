@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.security.dto.LoginRequest
 import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.dto.SignUpDto
+import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 
 @Service
@@ -42,6 +43,13 @@ class UserService (
         val user = findUser(loginRequest.email)
         if(!passwordEncoder.matches(loginRequest.password,user.password))
             throw RuntimeException("login failed - incorrect password. email = ${loginRequest.email}")
+    }
+
+    @Transactional
+    fun updateUser(id: Long,  updateUser: UpdateUserDto){
+        val user = findUser(id)
+        user.name = updateUser.name
+        user.avatarUrl = updateUser.avatarUrl
     }
 
     private fun existsEmail(email: String) : Boolean{
