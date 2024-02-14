@@ -1,14 +1,15 @@
 package sj.messenger.domain.chat.repository
 
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.transaction.annotation.Transactional
-import sj.messenger.domain.chat.domain.ChatRoom
-import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.fixture.generateChatRoom
+import sj.messenger.fixture.generateUser
 
 @DataJpaTest
 class ChatRoomRepositoryTest (
@@ -20,14 +21,14 @@ class ChatRoomRepositoryTest (
 ){
 
     @Test
-    @Transactional
+    @DisplayName("findWithParticipantsById 호출시 participants 또한 같이 조회되어야 한다.")
     fun findWithParticipantsByIdTest(){
         // given
-        val chatRoom = ChatRoom(name = "Test Chat Room")
+        val chatRoom = generateChatRoom()
         chatRoomRepository.save(chatRoom)
 
         for(num in 1..3){
-            val user = User("user${num}", "alpha${num}@beta.com", "1234")
+            val user = generateUser()
             userRepository.save(user)
             chatRoom.join(user)
         }
