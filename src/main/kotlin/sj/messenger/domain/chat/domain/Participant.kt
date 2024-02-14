@@ -1,9 +1,6 @@
 package sj.messenger.domain.chat.domain
 
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.*
 import sj.messenger.domain.user.domain.User
 import sj.messenger.global.domain.BaseEntity
 
@@ -14,7 +11,11 @@ class Participant(
     val user: User,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="chatroom_id")
-    val chatRoom: ChatRoom
-) : BaseEntity() {
+    val chatRoom: ChatRoom,
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id : Long? = null
+) {
 
 }

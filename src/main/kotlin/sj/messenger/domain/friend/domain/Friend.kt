@@ -11,7 +11,11 @@ class Friends(
 
     @Enumerated(value = EnumType.STRING)
     var status: FriendsRequestStatus = FriendsRequestStatus.PENDING,
-) : BaseEntity() {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id : Long? = null
+){
 
 }
 

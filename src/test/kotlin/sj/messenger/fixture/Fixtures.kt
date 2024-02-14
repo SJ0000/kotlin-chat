@@ -11,10 +11,8 @@ import sj.messenger.global.domain.BaseEntity
 
 val fixture = FixtureMonkey.builder().plugin(KotlinPlugin()).build()
 
-fun generateChatRoom() : ChatRoom = ChatRoom(name = fixture.giveMeOne(), avatarUrl = fixture.giveMeOne())
+fun generateChatRoom() : ChatRoom {
+    return ChatRoom(name = fixture.giveMeOne(), avatarUrl = fixture.giveMeOne())
+}
 
 fun generateUser() : User = fixture.giveMeOne()
-
-fun setEntityId(entity: BaseEntity){
-    ReflectionTestUtils.setField(entity,"id", Arbitraries.longs().greaterOrEqual(1L) )
-}

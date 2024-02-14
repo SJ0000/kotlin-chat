@@ -1,12 +1,18 @@
 package sj.messenger.domain.chat.domain
 
+import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import net.jqwik.api.Arbitraries
+import net.jqwik.web.api.EmailArbitrary
+import net.jqwik.web.api.Web
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.springframework.test.util.ReflectionTestUtils
+import sj.messenger.domain.user.domain.User
+import sj.messenger.fixture.fixture
 import sj.messenger.fixture.generateChatRoom
 import sj.messenger.fixture.generateUser
-import sj.messenger.fixture.setEntityId
 
 
 class ChatRoomTest(
@@ -32,8 +38,12 @@ class ChatRoomTest(
     fun isParticipantTest(){
         // given
         val chatRoom = generateChatRoom()
-        val user = generateUser()
-        setEntityId(user)
+        val user = User(
+            name = fixture.giveMeOne(),
+            email = Web.emails().sample(),
+            password = fixture.giveMeOne(),
+            id = Arbitraries.longs().sample()
+        )
 
         // then
         assertThat(chatRoom.isParticipant(user.id!!)).isFalse()
