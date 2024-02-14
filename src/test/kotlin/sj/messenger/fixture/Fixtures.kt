@@ -4,6 +4,7 @@ import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
+import net.jqwik.web.api.Web
 import org.springframework.test.util.ReflectionTestUtils
 import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.user.domain.User
@@ -15,4 +16,12 @@ fun generateChatRoom() : ChatRoom {
     return ChatRoom(name = fixture.giveMeOne(), avatarUrl = fixture.giveMeOne())
 }
 
-fun generateUser() : User = fixture.giveMeOne()
+fun generateUser() : User {
+    return User(
+        name = fixture.giveMeOne(),
+        email = Web.emails().fixGenSize(40).sample(),
+        password = fixture.giveMeOne(),
+        avatarUrl = Web.webDomains().sample(),
+        statusMessage = fixture.giveMeOne(),
+    )
+}
