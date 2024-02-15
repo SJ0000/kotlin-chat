@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4"
     java
     kotlin("jvm") version "1.9.20"
+    kotlin("kapt") version "1.9.20"
     kotlin("plugin.spring") version "1.9.20"
     kotlin("plugin.jpa") version "1.9.20"
     kotlin("plugin.allopen") version "1.9.22"
@@ -40,6 +41,11 @@ dependencies {
 
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
 
+    // QueryDsl
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    implementation("com.querydsl:querydsl-apt:5.0.0")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
     runtimeOnly("com.h2database:h2")
@@ -48,6 +54,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter-kotlin:1.0.6")
 }
+
+
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -65,3 +73,4 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
     annotation("jakarta.persistence.MappedSuperclass")
 }
+
