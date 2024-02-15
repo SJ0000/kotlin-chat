@@ -47,10 +47,11 @@ class UserService (
 
     @Transactional
     fun updateUser(id: Long,  updateUser: UpdateUserDto){
-        val user = findUser(id)
-        user.name = updateUser.name
-        user.avatarUrl = updateUser.avatarUrl
-        user.statusMessage = updateUser.statusMessage
+        with(findUser(id)){
+            name = updateUser.name
+            avatarUrl = updateUser.avatarUrl
+            statusMessage = updateUser.statusMessage
+        }
     }
 
     private fun existsEmail(email: String) : Boolean{
