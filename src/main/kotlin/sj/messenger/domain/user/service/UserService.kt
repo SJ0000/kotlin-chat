@@ -11,50 +11,72 @@ import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 
 @Service
-class UserService (
+class UserService(
     val userRepository: UserRepository,
     val passwordEncoder: PasswordEncoder,
-){
+) {
     @Transactional
-    fun findUser(id : Long) : User {
+    fun findUser(id: Long): User {
         return userRepository.findByIdOrNull(id) ?: throw RuntimeException("user not found. id = ${id}")
     }
 
     @Transactional
-    fun findUser(email : String) : User {
+    fun findUser(email: String): User {
         return userRepository.findByEmail(email) ?: throw RuntimeException("user not found. email =  ${email}")
     }
 
     @Transactional
-    fun signUpUser(signUp : SignUpDto) : Long{
-        // TODO : Password Encoding, 중복 email check
+    fun signUpUser(signUp: SignUpDto): Long {
         val encodedPassword = passwordEncoder.encode(signUp.password)
 
-        if(existsEmail(signUp.email))
+        if (existsEmail(signUp.email))
             throw RuntimeException("email ${signUp.email} already exists")
 
-        val user = User(name = signUp.name, email = signUp.email, password = encodedPassword)
+        val publicIdentifier = createPublicIdentifier(signUp.name)
+
+        val user = User(
+            name = signUp.name,
+            email = signUp.email,
+            password = encodedPassword,
+            publicIdentifier = publicIdentifier
+        )
         userRepository.save(user)
         return user.id!!
     }
 
     @Transactional
-    fun validateLogin(loginRequest: LoginRequest){
+    fun validateLogin(loginRequest: LoginRequest) {
         val user = findUser(loginRequest.email)
-        if(!passwordEncoder.matches(loginRequest.password,user.password))
+        if (!passwordEncoder.matches(loginRequest.password, user.password))
             throw RuntimeException("login failed - incorrect password. email = ${loginRequest.email}")
     }
 
     @Transactional
-    fun updateUser(id: Long,  updateUser: UpdateUserDto){
-        with(findUser(id)){
+    fun updateUser(id: Long, updateUser: UpdateUserDto) {
+        with(findUser(id)) {
             name = updateUser.name
             avatarUrl = updateUser.avatarUrl
             statusMessage = updateUser.statusMessage
         }
     }
 
-    private fun existsEmail(email: String) : Boolean{
+    private fun existsEmail(email: String): Boolean {
         return userRepository.existsByEmail(email);
+    }
+
+    private fun existsPublicIdentifier(identifier: String): Boolean {
+        return userRepository.existsByPublicIdentifier(identifier);
+    }
+
+    private fun createPublicIdentifier(userName: String): String {
+        var created: String
+        do {
+            created = "${userName}#${generateRandomNumbers()}"
+        } while (!existsPublicIdentifier(created))
+        return created
+    }
+
+    private fun generateRandomNumbers(): String {
+        return (1..5).map { ('0'..'9').toList().random() }.joinToString("")
     }
 }

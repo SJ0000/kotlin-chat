@@ -45,7 +45,7 @@ class FriendService (
         val friend = friendRepository.findByIdOrNull(friendId) ?: throw RuntimeException("Friend not exists. id = ${friendId}")
         // 요청을 받은 사람 인가?
         if(!friend.isReceiver(userId))
-            throw RuntimeException("is not receiver. userId = ${userId} ,receiver id = ${friend.toUser.id}")
+            throw RuntimeException("User(Id = ${userId} ) is not receiver. receiver id = ${friend.toUser.id}")
 
         friend.approve()
     }

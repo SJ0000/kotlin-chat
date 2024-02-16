@@ -8,7 +8,14 @@ data class UserDto(
     val email : String,
     val avatarUrl: String,
     val statusMessage: String,
+    val publicIdentifier: String
 ){
-    constructor(user : User) : this(id= user.id!!, name=user.name, email = user.email, avatarUrl = user.avatarUrl, statusMessage=user.statusMessage)
-
+    constructor(user : User) : this(
+        id= user.id!!,
+        name=user.name,
+        email = user.email,
+        avatarUrl = user.avatarUrl,
+        statusMessage=user.statusMessage,
+        publicIdentifier = user.publicIdentifier
+    )
 }
