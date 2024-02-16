@@ -14,7 +14,7 @@ class ChatRoom(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
-) {
+): BaseEntity() {
 
     fun join(user: User){
         val participant = Participant(user, this)

@@ -2,6 +2,7 @@ package sj.messenger.domain.friend.domain
 
 import jakarta.persistence.*
 import sj.messenger.domain.user.domain.User
+import sj.messenger.global.domain.BaseEntity
 
 @Entity
 class Friend(
@@ -12,7 +13,7 @@ class Friend(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
-) {
+): BaseEntity() {
     @Enumerated(value = EnumType.STRING)
     final var status: FriendStatus = FriendStatus.PENDING
         private set;
