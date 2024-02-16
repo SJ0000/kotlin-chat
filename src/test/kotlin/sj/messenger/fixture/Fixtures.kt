@@ -24,5 +24,6 @@ fun generateUser() : User {
         avatarUrl = Web.webDomains().sample(),
         statusMessage = fixture.giveMeOne(),
         id = Arbitraries.longs().greaterOrEqual(1).sample(),
+        publicIdentifier = fixture.giveMeOne()
     )
 }

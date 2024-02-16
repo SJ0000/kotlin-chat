@@ -42,7 +42,8 @@ class ChatRoomTest(
             name = fixture.giveMeOne(),
             email = Web.emails().sample(),
             password = fixture.giveMeOne(),
-            id = Arbitraries.longs().sample()
+            id = Arbitraries.longs().sample(),
+            publicIdentifier = fixture.giveMeOne()
         )
 
         // then

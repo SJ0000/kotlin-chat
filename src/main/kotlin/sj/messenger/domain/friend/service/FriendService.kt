@@ -15,28 +15,35 @@ class FriendService (
     private val friendRepository: FriendRepository,
 ){
 
+    fun getReceivedRequests(receiverId: Long) : List<Friend>{
+        return friendRepository.findAllByToUserId(receiverId)
+    }
+
     @Transactional
-    fun request(fromUserId: Long, toUserId: Long){
+    fun request(requesterId: Long, recipientPublicIdentifier: String){
         // 이미 친구인 경우
-        val alreadyFriends = friendRepository.existsIgnoreFromTo(fromUserId, toUserId, FriendStatus.APPROVED)
+        val toUser = userService.findUserByPublicIdentifier(recipientPublicIdentifier)
+        val toUserId = toUser.id!!
+
+        val alreadyFriends = friendRepository.existsIgnoreFromTo(requesterId, toUserId, FriendStatus.APPROVED)
         if(alreadyFriends)
             throw RuntimeException("Friends Request failed. Already friends.")
 
         // 내가 보낸 요청이 있을 경우
-        friendRepository.findByFromTo(fromUserId, toUserId, FriendStatus.PENDING)?.also{
+        friendRepository.findByFromTo(requesterId, toUserId, FriendStatus.PENDING)?.also{
             throw RuntimeException("Friends Request failed. Request Already exists.")
         }
 
         // 거절된 요청이 있는 경우
-        val rejected = friendRepository.findByFromTo(fromUserId, toUserId, FriendStatus.REJECTED)
+        val rejected = friendRepository.findByFromTo(requesterId, toUserId, FriendStatus.REJECTED)
         if(rejected != null){
             rejected.reRequest()
             return
         }
 
         // 내가 보낸 요청이 없으면 생성
-        val fromUser = userService.findUser(fromUserId)
-        val toUser = userService.findUser(toUserId)
+        val fromUser = userService.findUserById(requesterId)
+
         friendRepository.save(Friend(fromUser = fromUser, toUser = toUser))
     }
 

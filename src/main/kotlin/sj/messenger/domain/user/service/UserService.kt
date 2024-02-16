@@ -11,18 +11,22 @@ import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 
 @Service
+@Transactional(readOnly = true)
 class UserService(
     val userRepository: UserRepository,
     val passwordEncoder: PasswordEncoder,
 ) {
-    @Transactional
-    fun findUser(id: Long): User {
+
+    fun findUserById(id: Long): User {
         return userRepository.findByIdOrNull(id) ?: throw RuntimeException("user not found. id = ${id}")
     }
 
-    @Transactional
-    fun findUser(email: String): User {
+    fun findUserByEmail(email: String): User {
         return userRepository.findByEmail(email) ?: throw RuntimeException("user not found. email =  ${email}")
+    }
+
+    fun findUserByPublicIdentifier(publicIdentifier: String) : User{
+        return userRepository.findByPublicIdentifier(publicIdentifier) ?: throw RuntimeException("user not found. publicIdentifier =  ${publicIdentifier}")
     }
 
     @Transactional
@@ -44,16 +48,16 @@ class UserService(
         return user.id!!
     }
 
-    @Transactional
+
     fun validateLogin(loginRequest: LoginRequest) {
-        val user = findUser(loginRequest.email)
+        val user = findUserByEmail(loginRequest.email)
         if (!passwordEncoder.matches(loginRequest.password, user.password))
             throw RuntimeException("login failed - incorrect password. email = ${loginRequest.email}")
     }
 
     @Transactional
     fun updateUser(id: Long, updateUser: UpdateUserDto) {
-        with(findUser(id)) {
+        with(findUserById(id)) {
             name = updateUser.name
             avatarUrl = updateUser.avatarUrl
             statusMessage = updateUser.statusMessage

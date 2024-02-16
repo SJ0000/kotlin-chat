@@ -15,7 +15,7 @@ class UserServiceTest(
     @Test
     fun userTest(){
         val userId = userService.signUpUser(SignUpDto("alpha@beta.com", "dog", "123"))
-        val findUser = userService.findUser(userId)
+        val findUser = userService.findUserById(userId)
         print("${findUser.name} ${findUser.email} ${findUser.password}")
     }
 

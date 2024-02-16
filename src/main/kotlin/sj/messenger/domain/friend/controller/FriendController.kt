@@ -19,8 +19,12 @@ class FriendController(
 ) {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/friends")
-    fun getFriends(): ResponseEntity<Any> {
+    fun getFriends(
+        @AuthenticationPrincipal userDetails: LoginUserDetails
+    ): ResponseEntity<Any> {
+        friendService.getReceivedRequests(userDetails.getUserId()).map{
 
+        }
         return ResponseEntity.ok().build()
     }
 
@@ -30,7 +34,7 @@ class FriendController(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @RequestBody dto: FriendRequestDto
     ) {
-        friendService.request(dto.from, dto.to)
+        friendService.request(userDetails.getUserId(), dto.recipient)
     }
 
     @PreAuthorize("hasRole('USER')")

@@ -19,14 +19,14 @@ class UserController(
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/users/{id}")
     fun user(@PathVariable id: Long): ResponseEntity<UserDto> {
-        val user = userService.findUser(id);
+        val user = userService.findUserById(id);
         return ResponseEntity.ok(UserDto(user))
     }
 
     @PostMapping("/signup")
     fun signUp(@RequestBody signUp: SignUpDto): ResponseEntity<UserDto> {
         val userId = userService.signUpUser(signUp)
-        val user = userService.findUser(userId)
+        val user = userService.findUserById(userId)
         return ResponseEntity.created(URI.create("/users/${userId}"))
             .body(UserDto(user))
     }
@@ -40,7 +40,7 @@ class UserController(
         if (userDetails.getUserId() != id)
             throw RuntimeException("has no permission. login user id = ${userDetails.getUserId()}, change request user id = ${id}")
         userService.updateUser(id, dto)
-        val user = userService.findUser(id)
+        val user = userService.findUserById(id)
         return ResponseEntity.ok(UserDto(user));
     }
 }

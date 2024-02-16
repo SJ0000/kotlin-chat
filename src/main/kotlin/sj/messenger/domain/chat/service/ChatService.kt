@@ -41,7 +41,7 @@ class ChatService(
     @Transactional(readOnly = false)
     fun joinChatRoom(chatRoomId: Long, userId: Long) {
         val chatRoom = chatRoomRepository.findByIdOrNull(chatRoomId) ?: throw RuntimeException("chat room id '$chatRoomId' not found")
-        val user = userService.findUser(userId)
+        val user = userService.findUserById(userId)
         chatRoom.join(user)
     }
 
