@@ -61,6 +61,7 @@ class UserService(
             name = updateUser.name
             avatarUrl = updateUser.avatarUrl
             statusMessage = updateUser.statusMessage
+            publicIdentifier = updateUser.publicIdentifier
         }
     }
 
@@ -76,7 +77,7 @@ class UserService(
         var created: String
         do {
             created = "${userName}#${generateRandomNumbers()}"
-        } while (!existsPublicIdentifier(created))
+        } while (existsPublicIdentifier(created))
         return created
     }
 

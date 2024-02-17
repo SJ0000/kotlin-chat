@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import sj.messenger.domain.friend.dto.FriendDto
 import sj.messenger.domain.friend.dto.FriendRequestDto
 import sj.messenger.domain.friend.service.FriendService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
@@ -22,8 +23,8 @@ class FriendController(
     fun getFriends(
         @AuthenticationPrincipal userDetails: LoginUserDetails
     ): ResponseEntity<Any> {
-        friendService.getReceivedRequests(userDetails.getUserId()).map{
-
+        friendService.getReceivedRequests(userDetails.getUserId()).map {
+            FriendDto(it.fromUser.id!!, it.toUser.id!!, it.createdAt)
         }
         return ResponseEntity.ok().build()
     }

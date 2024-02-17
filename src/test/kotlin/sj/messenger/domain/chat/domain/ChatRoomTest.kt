@@ -2,17 +2,14 @@ package sj.messenger.domain.chat.domain
 
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
-import net.jqwik.web.api.EmailArbitrary
 import net.jqwik.web.api.Web
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.springframework.test.util.ReflectionTestUtils
 import sj.messenger.domain.user.domain.User
-import sj.messenger.fixture.fixture
-import sj.messenger.fixture.generateChatRoom
-import sj.messenger.fixture.generateUser
+import sj.messenger.util.fixture
+import sj.messenger.util.generateChatRoom
+import sj.messenger.util.generateUser
 
 
 class ChatRoomTest(

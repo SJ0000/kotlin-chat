@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.service.UserService
 
-@Profile("local")
+// @Profile("local")
 @Configuration
 class LocalTestDataConfig (
     val userService: UserService

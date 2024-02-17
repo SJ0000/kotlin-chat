@@ -1,14 +1,12 @@
-package sj.messenger.fixture
+package sj.messenger.util
 
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
 import net.jqwik.web.api.Web
-import org.springframework.test.util.ReflectionTestUtils
 import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.user.domain.User
-import sj.messenger.global.domain.BaseEntity
 
 val fixture = FixtureMonkey.builder().plugin(KotlinPlugin()).build()
 

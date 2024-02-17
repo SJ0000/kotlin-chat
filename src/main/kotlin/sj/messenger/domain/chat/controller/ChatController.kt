@@ -40,7 +40,7 @@ class ChatController(
         @RequestBody chatRoomCreate: ChatRoomCreate,
     ): ResponseEntity<ChatRoomDto> {
         val chatRoomId = chatService.createChatRoom(chatRoomCreate)
-        val chatRoom = chatService.findChatRoom(chatRoomId)
+        val chatRoom = chatService.findChatRoomWithParticipants(chatRoomId)
         val data = ChatRoomDto(
             id = chatRoom.id!!,
             name = chatRoom.name,

@@ -15,8 +15,8 @@ class Friend(
     val id: Long? = null
 ): BaseEntity() {
     @Enumerated(value = EnumType.STRING)
-    final var status: FriendStatus = FriendStatus.PENDING
-        private set;
+    var status: FriendStatus = FriendStatus.PENDING
+        protected set;
 
     fun isReceiver(userId: Long) : Boolean{
         return toUser.id == userId

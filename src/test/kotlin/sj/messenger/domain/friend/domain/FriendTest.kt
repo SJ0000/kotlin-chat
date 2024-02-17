@@ -1,13 +1,11 @@
 package sj.messenger.domain.friend.domain
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.test.util.ReflectionTestUtils
-import sj.messenger.fixture.generateUser
+import sj.messenger.util.generateUser
 
 class FriendTest {
 
