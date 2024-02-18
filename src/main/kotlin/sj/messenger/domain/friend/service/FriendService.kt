@@ -34,7 +34,7 @@ class FriendService (
 
 
     fun getReceivedRequests(receiverId: Long) : List<Friend>{
-        return friendRepository.findAllByToUserId(receiverId)
+        return friendRepository.findAllByToUserIdWithFromUser(receiverId, FriendStatus.PENDING)
     }
 
     @Transactional

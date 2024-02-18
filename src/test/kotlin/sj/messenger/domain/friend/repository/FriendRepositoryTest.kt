@@ -21,6 +21,35 @@ class FriendRepositoryTest(
 ) {
 
     @Test
+    @DisplayName("특정 사용자가 받은 친구 요청을 조회한다.")
+    fun findAllByToUserIdWithFromUserTest(){
+        // given
+        val toUser = generateUser()
+        userRepository.save(toUser)
+        val approved = (1..2).map { generateUser() }
+        val pending = (1..4).map { generateUser() }
+        userRepository.saveAll(approved)
+        userRepository.saveAll(pending)
+
+        friendRepository.saveAll(approved.map {
+            val friend = Friend(it, toUser)
+            friend.approve()
+            friend
+        })
+        friendRepository.saveAll(pending.map { Friend(it,toUser) })
+
+        // when
+        val result =
+            friendRepository.findAllByToUserIdWithFromUser(toUser.id!!, FriendStatus.PENDING)
+
+        // then
+        assertThat(result.size).isEqualTo(4)
+        assertThat(result).allMatch {
+            it.toUser == toUser
+        }
+    }
+
+    @Test
     @DisplayName("주어진 파라미터와 일치하는 Friend의 존재 유무 확인")
     fun existsTest() {
         // given
@@ -70,26 +99,6 @@ class FriendRepositoryTest(
 
         // then
         assertThat(findFriend).isEqualTo(friend)
-    }
-
-    @Test
-    @DisplayName("특정 사용자가 받은 친구 요청을 조회한다.")
-    fun findAllByToUserId() {
-        // given
-        val toUser = generateUser()
-        val users = (1..3).map { generateUser() }
-        userRepository.saveAll(users)
-        userRepository.save(toUser)
-
-        friendRepository.saveAll(users.map { Friend(it, toUser) })
-        // when
-        val result = friendRepository.findAllByToUserId(toUser.id!!)
-
-        // then
-        assertThat(result.size).isEqualTo(3)
-        assertThat(result).allMatch {
-            it.toUser == toUser
-        }
     }
 
     @Test

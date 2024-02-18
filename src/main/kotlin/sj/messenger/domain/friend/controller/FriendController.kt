@@ -31,12 +31,12 @@ class FriendController(
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/friends/request")
+    @GetMapping("/friends/requests")
     fun getFriendRequests(
         @AuthenticationPrincipal userDetails: LoginUserDetails
     ): ResponseEntity<List<FriendDto>> {
         val requests = friendService.getReceivedRequests(userDetails.getUserId()).map {
-            FriendDto(it.fromUser.id!!, it.toUser.id!!, it.createdAt)
+            FriendDto(it.id!!, UserDto(it.toUser), it.createdAt)
         }
         return ResponseEntity.ok(requests)
     }
