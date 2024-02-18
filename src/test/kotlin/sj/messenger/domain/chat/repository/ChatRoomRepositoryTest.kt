@@ -24,14 +24,16 @@ class ChatRoomRepositoryTest (
     @DisplayName("findWithParticipantsById 호출시 participants 또한 같이 조회되어야 한다.")
     fun findWithParticipantsByIdTest(){
         // given
+        val users = (1..3).map { generateUser() }
+        userRepository.saveAll(users)
         val chatRoom = generateChatRoom()
         chatRoomRepository.save(chatRoom)
-
-        for(num in 1..3){
-            val user = generateUser()
-            userRepository.save(user)
-            chatRoom.join(user)
+        users.forEach{
+         //   chatRoom.join(it)
         }
+
+        em.flush()
+        em.clear()
 
         // when
         val findChatRoom = chatRoomRepository.findWithParticipantsById(chatRoom.id!!)

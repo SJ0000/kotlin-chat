@@ -11,7 +11,7 @@ import sj.messenger.domain.user.domain.User
 val fixture = FixtureMonkey.builder().plugin(KotlinPlugin()).build()
 
 fun generateChatRoom() : ChatRoom {
-    return ChatRoom(name = fixture.giveMeOne(), avatarUrl = fixture.giveMeOne())
+    return ChatRoom(name = fixture.giveMeOne(), avatarUrl = randomUrl())
 }
 
 fun generateUser() : User {
@@ -19,9 +19,12 @@ fun generateUser() : User {
         name = fixture.giveMeOne(),
         email = Web.emails().fixGenSize(40).sample(),
         password = fixture.giveMeOne(),
-        avatarUrl = Web.webDomains().sample(),
+        avatarUrl = randomUrl(),
         statusMessage = fixture.giveMeOne(),
         id = Arbitraries.longs().greaterOrEqual(1).sample(),
         publicIdentifier = fixture.giveMeOne()
     )
 }
+
+fun randomUrl() = Web.webDomains().sample()
+

@@ -6,6 +6,6 @@ import sj.messenger.domain.chat.domain.ChatRoom
 
 interface ChatRoomRepository : JpaRepository<ChatRoom, Long?> {
 
-    @Query("select c from ChatRoom c join fetch c.participants where c.id = :id")
+    @Query("select c from ChatRoom c left join fetch c.participants where c.id = :id")
     fun findWithParticipantsById(id : Long) : ChatRoom?
 }
