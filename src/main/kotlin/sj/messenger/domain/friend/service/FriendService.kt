@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.friend.domain.Friend
 import sj.messenger.domain.friend.domain.FriendStatus
 import sj.messenger.domain.friend.repository.FriendRepository
+import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.service.UserService
 
 @Service
@@ -14,6 +15,23 @@ class FriendService (
     private val userService: UserService,
     private val friendRepository: FriendRepository,
 ){
+    fun getFriends(userId: Long) : List<User>{
+        val friends = friendRepository.findApprovedAll(userId)
+        // 조회할 user id 추출
+        val friendUserIds = extractFriendsUserId(userId, friends)
+        return userService.findUsers(friendUserIds)
+    }
+
+    private fun extractFriendsUserId(myId: Long, friends: List<Friend>) : List<Long>{
+        val ids = mutableSetOf<Long>()
+        friends.forEach{
+            ids.add(it.fromUser.id!!)
+            ids.add(it.toUser.id!!)
+        }
+        ids.remove(myId)
+        return ids.toList()
+    }
+
 
     fun getReceivedRequests(receiverId: Long) : List<Friend>{
         return friendRepository.findAllByToUserId(receiverId)

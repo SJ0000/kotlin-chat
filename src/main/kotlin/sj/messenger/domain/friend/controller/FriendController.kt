@@ -13,20 +13,32 @@ import sj.messenger.domain.friend.dto.FriendDto
 import sj.messenger.domain.friend.dto.FriendRequestDto
 import sj.messenger.domain.friend.service.FriendService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
+import sj.messenger.domain.user.dto.UserDto
 
 @RestController
 class FriendController(
     private val friendService: FriendService,
 ) {
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/friends")
     fun getFriends(
         @AuthenticationPrincipal userDetails: LoginUserDetails
-    ): ResponseEntity<Any> {
-        friendService.getReceivedRequests(userDetails.getUserId()).map {
+    ): ResponseEntity<List<UserDto>> {
+        val friends = friendService.getFriends(userDetails.getUserId())
+        val data = friends.map { UserDto(it) }
+        return ResponseEntity.ok(data)
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/friends/request")
+    fun getFriendRequests(
+        @AuthenticationPrincipal userDetails: LoginUserDetails
+    ): ResponseEntity<List<FriendDto>> {
+        val requests = friendService.getReceivedRequests(userDetails.getUserId()).map {
             FriendDto(it.fromUser.id!!, it.toUser.id!!, it.createdAt)
         }
-        return ResponseEntity.ok().build()
+        return ResponseEntity.ok(requests)
     }
 
     @PreAuthorize("hasRole('USER')")

@@ -12,4 +12,6 @@ interface FriendRepositoryCustom {
     fun existsIgnoreFromTo(fromUserId: Long, toUserId: Long, status: FriendStatus) : Boolean
 
     fun findByFromTo(fromUserId: Long, toUserId: Long, status: FriendStatus) : Friend?
+
+    fun findApprovedAll(userId: Long): List<Friend>
 }

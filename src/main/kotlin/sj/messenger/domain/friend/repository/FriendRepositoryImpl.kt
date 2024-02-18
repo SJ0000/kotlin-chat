@@ -9,23 +9,26 @@ import sj.messenger.domain.friend.domain.Friend
 import sj.messenger.domain.friend.domain.FriendStatus
 import sj.messenger.domain.friend.domain.QFriend
 import sj.messenger.domain.friend.domain.QFriend.*
+import sj.messenger.domain.user.domain.QUser
+import sj.messenger.domain.user.domain.QUser.*
+import sj.messenger.domain.user.domain.User
 
 class FriendRepositoryImpl(
     private val queryFactory: JPAQueryFactory
 ) : FriendRepositoryCustom {
 
 
-    override fun findByFromTo(fromUserId: Long, toUserId: Long, status: FriendStatus ): Friend? {
-        return getSelectQuery(fromUserId,toUserId, status)
+    override fun findByFromTo(fromUserId: Long, toUserId: Long, status: FriendStatus): Friend? {
+        return getSelectQuery(fromUserId, toUserId, status)
             .fetchOne()
     }
 
     override fun exists(fromUserId: Long, toUserId: Long, status: FriendStatus): Boolean {
-        return getSelectQuery(fromUserId,toUserId, status)
+        return getSelectQuery(fromUserId, toUserId, status)
             .fetchFirst() != null
     }
 
-    private fun getSelectQuery(fromUserId: Long, toUserId: Long, status: FriendStatus) : JPAQuery<Friend>{
+    private fun getSelectQuery(fromUserId: Long, toUserId: Long, status: FriendStatus): JPAQuery<Friend> {
         return queryFactory.select(friend)
             .from(friend)
             .where(
@@ -48,5 +51,16 @@ class FriendRepositoryImpl(
                     .and(friend.status.eq(status))
             )
             .fetchFirst() != null
+    }
+
+    override fun findApprovedAll(userId: Long): List<Friend> {
+        return queryFactory.select(friend)
+            .from(friend)
+            .where(
+                friend.fromUser.id.eq(userId).or(
+                    friend.toUser.id.eq(userId)
+                )
+            )
+            .fetch()
     }
 }

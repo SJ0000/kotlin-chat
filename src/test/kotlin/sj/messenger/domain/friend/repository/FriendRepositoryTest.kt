@@ -91,4 +91,25 @@ class FriendRepositoryTest(
             it.toUser == toUser
         }
     }
+
+    @Test
+    @DisplayName("특정 사용자의 친구 목록을 조회한다.")
+    fun findApprovedAllTest() {
+        // given
+        val user = generateUser()
+        userRepository.save(user)
+        val users = (1..10).map { generateUser() }
+        userRepository.saveAll(users)
+
+        friendRepository.saveAll(users.map {
+            val friend = Friend(user, it)
+            friend.approve()
+            friend
+        })
+
+        // when
+        val result = friendRepository.findApprovedAll(user.id!!)
+        // then
+        assertThat(result.size).isEqualTo(10)
+    }
 }

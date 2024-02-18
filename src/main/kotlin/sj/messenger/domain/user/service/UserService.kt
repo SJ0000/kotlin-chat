@@ -29,6 +29,10 @@ class UserService(
         return userRepository.findByPublicIdentifier(publicIdentifier) ?: throw RuntimeException("user not found. publicIdentifier =  ${publicIdentifier}")
     }
 
+    fun findUsers(ids : List<Long>) : List<User>{
+        return userRepository.findAllById(ids)
+    }
+
     @Transactional
     fun signUpUser(signUp: SignUpDto): Long {
         val encodedPassword = passwordEncoder.encode(signUp.password)

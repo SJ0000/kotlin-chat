@@ -29,7 +29,7 @@ class ChatRoomRepositoryTest (
         val chatRoom = generateChatRoom()
         chatRoomRepository.save(chatRoom)
         users.forEach{
-         //   chatRoom.join(it)
+         chatRoom.join(it)
         }
 
         em.flush()
