@@ -8,11 +8,11 @@ import java.time.LocalDateTime
 
 @Document
 class Message @PersistenceCreator constructor(
+    @Id val id: ObjectId? = null,
     val senderId: Long,
     val chatRoomId: Long,
     val content: String,
     val sentAt: LocalDateTime,
-    @Id val id: ObjectId? = null,
 ) {
 
 }
