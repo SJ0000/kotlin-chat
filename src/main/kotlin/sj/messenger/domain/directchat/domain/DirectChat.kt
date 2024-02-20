@@ -1,4 +1,4 @@
-package sj.messenger.domain.chat.domain
+package sj.messenger.domain.directchat.domain
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Fetch

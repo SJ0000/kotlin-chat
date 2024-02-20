@@ -20,11 +20,9 @@ import java.time.LocalDateTime
 class ChatStompController(
     private val template : SimpMessagingTemplate,
     private val chatService: ChatService,
-    private val directChatService: DirectChatService,
 ) {
 
     @MessageMapping("/chat-message")
-//    @SendTo("/topic/chat")
     fun sendMessage(
         @Payload sentMessageDto: SentMessageDto,
     ) {
@@ -38,21 +36,4 @@ class ChatStompController(
         )
         template.convertAndSend("/topic/chat/${data.chatRoomId}",data)
     }
-
-    @MessageMapping("/direct-message")
-    @SendTo("/topic/direct-chat")
-    fun sendDirectMessage(
-        @Payload messageDto: SentDirectMessageDto,
-    ) : ReceivedDirectMessageDto {
-        val messageId = directChatService.saveMessage(messageDto)
-        val data = ReceivedDirectMessageDto(
-            id = messageId,
-            directChatId = messageDto.directChatId,
-            senderId = messageDto.senderId,
-            content = messageDto.content,
-            receivedAt = LocalDateTime.now()
-        )
-        return data
-    }
-
 }
