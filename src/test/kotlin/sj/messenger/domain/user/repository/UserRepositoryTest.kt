@@ -16,12 +16,14 @@ class UserRepositoryTest (
 ) {
     @Test
     fun temp(){
-        val generateUser = generateUser()
-        println("[before save] userId = ${generateUser.id}")
-        userRepository.save(generateUser)
-        println("[after save] userId = ${generateUser.id}")
-        val findUser = userRepository.findByEmail(generateUser.email)
-        println("[after find] userId = ${findUser?.id}")
+        val users = (1..3).map { generateUser() }
+        userRepository.saveAll(users)
+
+        val userIds= users.map { it.id }.toMutableList()
+        userIds.add(999L)
+
+        val result = userRepository.findAllById(userIds)
+        println(result.size)
     }
 
     @Test

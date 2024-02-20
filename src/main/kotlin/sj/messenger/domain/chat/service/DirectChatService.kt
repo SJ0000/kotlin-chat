@@ -1,15 +1,20 @@
 package sj.messenger.domain.chat.service
 
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import sj.messenger.domain.directchat.domain.DirectChat
 import sj.messenger.domain.directchat.domain.DirectMessage
 import sj.messenger.domain.directchat.dto.DirectChatDto
-import sj.messenger.domain.chat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.dto.SentDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectChatRepository
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.user.dto.UserDto
+import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
 
 @Service
+@Transactional(readOnly = true)
 class DirectChatService(
     private val userService: UserService,
     private val directChatRepository: DirectChatRepository,
@@ -37,6 +42,16 @@ class DirectChatService(
         }
     }
 
-    fun validateExists(userId1 : Long, userId2: Long){
+    @Transactional
+    fun createDirectChat(userIds: Pair<Long, Long>) : Long{
+        validateAlreadyExists(userIds)
+        val users = userService.findUsers(userIds.toList())
+        val directChat = directChatRepository.save(DirectChat(users[0], users[1]))
+        return directChat.id!!
+    }
+
+    private fun validateAlreadyExists(userIds: Pair<Long, Long>) {
+        if (directChatRepository.existsByUserIds(userIds))
+            throw RuntimeException("DirectChat already exists. users = (${userIds.first},${userIds.second})")
     }
 }

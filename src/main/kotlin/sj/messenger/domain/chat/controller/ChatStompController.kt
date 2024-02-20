@@ -6,9 +6,7 @@ import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
-import sj.messenger.domain.chat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.chat.dto.ReceivedMessageDto
-import sj.messenger.domain.chat.dto.SentDirectMessageDto
 import sj.messenger.domain.chat.dto.SentMessageDto
 import sj.messenger.domain.chat.service.ChatService
 import sj.messenger.domain.chat.service.DirectChatService

@@ -14,7 +14,7 @@ class DirectChat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
-): BaseEntity() {
+) : BaseEntity() {
 
     fun getOtherUser(myId: Long) : User{
         if(user1.id == myId)

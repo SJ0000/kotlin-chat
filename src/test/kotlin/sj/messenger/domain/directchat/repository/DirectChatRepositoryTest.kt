@@ -1,5 +1,7 @@
-package sj.messenger.domain.chat.repository
+package sj.messenger.domain.directchat.repository
 
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import sj.messenger.RepositoryTest
@@ -12,6 +14,5 @@ class DirectChatRepositoryTest (
     @Autowired private val userRepository: UserRepository,
     @Autowired private val em: TestEntityManager,
 ){
-
 
 }

@@ -46,4 +46,5 @@ class ChatRoomTest(
         // then
         assertThat(chatRoom.isParticipant(user.id!!)).isFalse()
     }
+
 }

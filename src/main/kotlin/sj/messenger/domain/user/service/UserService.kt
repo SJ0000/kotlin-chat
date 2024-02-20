@@ -30,7 +30,14 @@ class UserService(
     }
 
     fun findUsers(ids : List<Long>) : List<User>{
-        return userRepository.findAllById(ids)
+        val users = userRepository.findAllById(ids)
+        if(users.size != ids.size){
+            val expected = ids.toSet()
+            val actual = users.map { it.id!! }.toSet()
+            val notExists = expected.subtract(actual)
+            throw RuntimeException("User not exists. ids = ${notExists}")
+        }
+        return users
     }
 
     @Transactional
