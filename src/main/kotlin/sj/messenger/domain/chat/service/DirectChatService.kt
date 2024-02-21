@@ -32,18 +32,20 @@ class DirectChatService(
         return savedMessage.id!!.toHexString()
     }
 
-    fun getUserDirectChats(userId: Long): List<DirectChatDto> {
-        val directChats = directChatRepository.findAllByUserIdWithUsers(userId)
-        return directChats.map {
-            DirectChatDto(
-                id = it.id!!,
-                otherUser = UserDto(it.getOtherUser(myId = userId))
-            )
-        }
+    fun getDirectChat(userId: Long, id: Long): DirectChat {
+        val directChat =
+            directChatRepository.findByIdWithUsers(id) ?: throw RuntimeException("DirectChat not exists. id = ${id}")
+        if(!directChat.hasAuthority(userId))
+            throw RuntimeException("User(id=${userId}) has no permission. DirectChat(id = ${id})")
+        return directChat
+    }
+
+    fun getUserDirectChats(userId: Long): List<DirectChat> {
+        return directChatRepository.findAllByUserIdWithUsers(userId)
     }
 
     @Transactional
-    fun createDirectChat(userIds: Pair<Long, Long>) : Long{
+    fun createDirectChat(userIds: Pair<Long, Long>): Long {
         validateAlreadyExists(userIds)
         val users = userService.findUsers(userIds.toList())
         val directChat = directChatRepository.save(DirectChat(users[0], users[1]))

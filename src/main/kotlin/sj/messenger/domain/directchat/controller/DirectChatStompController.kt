@@ -22,15 +22,9 @@ class DirectChatStompController(
     ) {
         when(messageDto.messageType){
             MESSAGE -> processMessage(messageDto)
-            CHAT_START -> processChatStart(messageDto)
             else -> throw RuntimeException("Not Supported Message Type.")
         }
     }
-
-    /*
-        processMessage, procesChatStart가 현재는 같은 로직이지만
-        추후 변경에 대비해 메서드를 분리
-    */
 
     private fun processMessage(message: SentDirectMessageDto){
         val messageId = directChatService.saveMessage(message)
@@ -39,18 +33,7 @@ class DirectChatStompController(
             directChatId = message.directChatId,
             senderId = message.senderId,
             content = message.content,
-            receivedAt = LocalDateTime.now()
-        )
-        template.convertAndSend("/topic/direct-chat/${message.receiverId}", data)
-    }
-
-    private fun processChatStart(message: SentDirectMessageDto){
-        val messageId = directChatService.saveMessage(message)
-        val data = ReceivedDirectMessageDto(
-            id = messageId,
-            directChatId = message.directChatId,
-            senderId = message.senderId,
-            content = message.content,
+            messageType = message.messageType,
             receivedAt = LocalDateTime.now()
         )
         template.convertAndSend("/topic/direct-chat/${message.receiverId}", data)
