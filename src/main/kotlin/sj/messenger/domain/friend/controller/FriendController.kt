@@ -36,7 +36,7 @@ class FriendController(
         @AuthenticationPrincipal userDetails: LoginUserDetails
     ): ResponseEntity<List<FriendDto>> {
         val requests = friendService.getReceivedRequests(userDetails.getUserId()).map {
-            FriendDto(it.id!!, UserDto(it.toUser), it.createdAt)
+            FriendDto(it.id!!, UserDto(it.receiver), it.createdAt)
         }
         return ResponseEntity.ok(requests)
     }

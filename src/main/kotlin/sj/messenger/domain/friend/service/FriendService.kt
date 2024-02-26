@@ -52,7 +52,7 @@ class FriendService (
 
         // 내가 보낸 요청이 없으면 생성
         val fromUser = userService.findUserById(senderId)
-        friendRequestRepository.save(FriendRequest(fromUser = fromUser, toUser = receiver))
+        friendRequestRepository.save(FriendRequest(sender = fromUser, receiver = receiver))
     }
 
     @Transactional
@@ -60,7 +60,7 @@ class FriendService (
         val request = friendRequestRepository.findByIdOrNull(requestId)?: throw RuntimeException("FriendRequest not exists. id = ${requestId}")
         // 요청을 받은 사람 인가?
         if(!request.isReceiver(userId))
-            throw RuntimeException("User(Id = ${userId} ) is not receiver. receiver id = ${request.toUser.id}")
+            throw RuntimeException("User(Id = ${userId} ) is not receiver. receiver id = ${request.receiver.id}")
         request.approve()
     }
 }

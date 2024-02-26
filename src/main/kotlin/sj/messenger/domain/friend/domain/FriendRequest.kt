@@ -7,9 +7,9 @@ import sj.messenger.global.domain.BaseEntity
 @Entity
 class FriendRequest(
     @ManyToOne(fetch = FetchType.LAZY)
-    val fromUser: User,
+    val sender: User,
     @ManyToOne(fetch = FetchType.LAZY)
-    val toUser: User,
+    val receiver: User,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
@@ -18,7 +18,7 @@ class FriendRequest(
         protected set;
 
     fun isReceiver(userId: Long) : Boolean{
-        return toUser.id == userId
+        return receiver.id == userId
     }
 
     fun approve(){

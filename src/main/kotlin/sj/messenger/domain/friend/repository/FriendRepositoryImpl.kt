@@ -13,7 +13,6 @@ class FriendRepositoryImpl(
     private val queryFactory: JPAQueryFactory
 ) : FriendRepositoryCustom {
 
-
     override fun exists(userId1: Long, userId2: Long): Boolean {
         return queryFactory.select(friend)
             .from(friend)
