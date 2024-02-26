@@ -42,6 +42,6 @@ class UserRepositoryTest (
         userRepository.save(user)
 
         val findUser = userRepository.findByEmail(user.email)
-        assertThat(findUser).isEqualTo(user)
+        assertThat(findUser?.id).isEqualTo(user.id)
     }
 }

@@ -1,17 +1,13 @@
 package sj.messenger.domain.friend.repository
 
 import sj.messenger.domain.friend.domain.Friend
-import sj.messenger.domain.friend.domain.FriendStatus
+import sj.messenger.domain.friend.domain.FriendRequest
 
 
 // query 정의
 interface FriendRepositoryCustom {
 
-    fun exists(fromUserId: Long, toUserId: Long, status: FriendStatus) : Boolean
+    fun findAll(userId: Long): List<Friend>
 
-    fun existsIgnoreFromTo(fromUserId: Long, toUserId: Long, status: FriendStatus) : Boolean
-
-    fun findByFromTo(fromUserId: Long, toUserId: Long, status: FriendStatus) : Friend?
-
-    fun findApprovedAll(userId: Long): List<Friend>
+    fun exists(userId1: Long, userId2: Long) : Boolean
 }
