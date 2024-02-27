@@ -16,4 +16,53 @@ class FriendRequestRepositoryTest(
     @Autowired private val userRepository: UserRepository,
 ) {
 
+    @Test
+    @DisplayName("특정 사용자가 다른 사용자에게 요청한 친구 요청 데이터를 조회한다.")
+    fun findByFromToTest() {
+        // given
+        val sender = generateUser()
+        val receiver = generateUser()
+        userRepository.saveAll(listOf(sender, receiver))
+        friendRequestRepository.save(FriendRequest(sender, receiver))
+
+        // when
+        val request = friendRequestRepository.findByFromTo(sender.id!!, receiver.id!!)
+
+        // then
+        assertThat(request?.sender?.id).isEqualTo(sender.id)
+        assertThat(request?.receiver?.id).isEqualTo(receiver.id)
+    }
+
+    @Test
+    @DisplayName("findByFromTo 메서드는 친구 요청이 존재하지 않는 경우 null 반환한다.")
+    fun findByFromToNullTest() {
+        // given
+        val sender = generateUser()
+        val receiver = generateUser()
+        userRepository.saveAll(listOf(sender, receiver))
+        friendRequestRepository.save(FriendRequest(sender, receiver))
+
+        // when
+        val request = friendRequestRepository.findByFromTo(receiver.id!!, sender.id!!)
+
+        // then
+        assertThat(request).isNull()
+    }
+
+    @Test
+    @DisplayName("특정 사용자가 받은 친구 요청을 조회한다.")
+    fun findReceivedAllWithSenderTest() {
+        // given
+        val senders = (1..4).map { generateUser() }
+        val receiver = generateUser()
+        userRepository.saveAll(senders)
+        userRepository.save(receiver)
+        friendRequestRepository.saveAll(senders.map { FriendRequest(it, receiver) })
+
+        // when
+        val requests = friendRequestRepository.findReceivedAllWithSender(receiver.id!!)
+
+        // then
+        assertThat(requests.size).isEqualTo(senders.size)
+    }
 }
