@@ -16,6 +16,10 @@ class DirectChat(
     val id : Long? = null
 ) : BaseEntity() {
 
+    fun getUsers() : List<User>{
+        return listOf(user1,user2)
+    }
+
     fun getOtherUser(myId: Long) : User{
         if(user1.id == myId)
             return user2

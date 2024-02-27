@@ -3,6 +3,7 @@ package sj.messenger.domain.directchat.repository
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import sj.messenger.RepositoryTest
@@ -17,7 +18,8 @@ class DirectChatRepositoryImplTest(
 ) {
 
     @Test
-    fun test() {
+    @DisplayName("existsByUserIds()는 사용자 2명의 DirectChat이 존재하는 경우 true를 반환한다.")
+    fun existsByUserIdsTest() {
         // given
         val users = (1..2).map { generateUser() }
         userRepository.saveAll(users)
@@ -30,7 +32,15 @@ class DirectChatRepositoryImplTest(
         // then
         assertThat(listOf(result1,result2))
             .allMatch { it }
-
     }
 
+    @Test
+    @DisplayName("existsByUserIds()는 사용자 2명의 DirectChat이 존재하지 않는 경우 false를 반환한다.")
+    fun notExistsByUserIdsTest() {
+        // when
+        val result = directChatRepository.existsByUserIds(Pair(1L,2L))
+
+        // then
+        assertThat(result).isFalse()
+    }
 }
