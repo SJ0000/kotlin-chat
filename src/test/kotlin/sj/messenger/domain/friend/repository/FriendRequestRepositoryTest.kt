@@ -1,5 +1,6 @@
 package sj.messenger.domain.friend.repository
 
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -7,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import sj.messenger.RepositoryTest
 import sj.messenger.domain.friend.domain.FriendRequest
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.assertEntityLoaded
 import sj.messenger.util.generateUser
 
 
 @RepositoryTest
 class FriendRequestRepositoryTest(
-    @Autowired private val friendRequestRepository: FriendRequestRepository,
-    @Autowired private val userRepository: UserRepository,
+    @Autowired val friendRequestRepository: FriendRequestRepository,
+    @Autowired val userRepository: UserRepository,
+    @Autowired val em : EntityManager
 ) {
 
     @Test
@@ -50,7 +53,7 @@ class FriendRequestRepositoryTest(
     }
 
     @Test
-    @DisplayName("특정 사용자가 받은 친구 요청을 조회한다.")
+    @DisplayName("특정 사용자가 받은 친구 요청을 조회시 sender가 같이 조회되어야 한다.")
     fun findReceivedAllWithSenderTest() {
         // given
         val senders = (1..4).map { generateUser() }
@@ -59,10 +62,14 @@ class FriendRequestRepositoryTest(
         userRepository.save(receiver)
         friendRequestRepository.saveAll(senders.map { FriendRequest(it, receiver) })
 
+        em.flush()
+        em.clear()
+
         // when
         val requests = friendRequestRepository.findReceivedAllWithSender(receiver.id!!)
 
         // then
         assertThat(requests.size).isEqualTo(senders.size)
+        assertEntityLoaded(em, *requests.map { it.sender }.toTypedArray())
     }
 }

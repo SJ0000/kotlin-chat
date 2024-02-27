@@ -1,5 +1,6 @@
 package sj.messenger.domain.chat.repository
 
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -8,14 +9,16 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import sj.messenger.RepositoryTest
 import sj.messenger.domain.chat.domain.Participant
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.assertEntityLoaded
 import sj.messenger.util.generateChatRoom
 import sj.messenger.util.generateUser
 
 @RepositoryTest
 class ParticipantRepositoryTest (
-    @Autowired private val participantRepository: ParticipantRepository,
-    @Autowired private val userRepository: UserRepository,
-    @Autowired private val chatRoomRepository: ChatRoomRepository
+    @Autowired val participantRepository: ParticipantRepository,
+    @Autowired val userRepository: UserRepository,
+    @Autowired val chatRoomRepository: ChatRoomRepository,
+    @Autowired val em: EntityManager
 ){
 
     @Test
@@ -33,8 +36,9 @@ class ParticipantRepositoryTest (
 
         // when
         val result = participantRepository.getParticipantsByUserId(user.id!!);
-
+        val chatRooms = result.map { it.chatRoom }
         // then
         Assertions.assertThat(result.size).isEqualTo(10)
+        assertEntityLoaded(em, *chatRooms.toTypedArray())
     }
 }
