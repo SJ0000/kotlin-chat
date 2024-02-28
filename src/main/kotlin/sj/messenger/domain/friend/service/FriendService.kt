@@ -23,13 +23,6 @@ class FriendService (
         return userService.findUsers(friendUserIds)
     }
 
-    private fun extractFriendsUserId(myId: Long, friends: List<Friend>) : List<Long>{
-        return friends.map{it.user1.id!!}
-            .union(friends.map { it.user2.id!! })
-            .filterNot { it == myId }
-            .toList();
-    }
-
     fun getReceivedRequests(receiverId: Long) : List<FriendRequest>{
         return friendRequestRepository.findReceivedAllWithSender(receiverId)
     }
@@ -56,10 +49,19 @@ class FriendService (
 
     @Transactional
     fun approveRequest(userId : Long, requestId: Long){
-        val request = friendRequestRepository.findByIdOrNull(requestId)?: throw RuntimeException("FriendRequest not exists. id = ${requestId}")
+        val request = friendRequestRepository.findByIdWithUsers(requestId)?: throw RuntimeException("FriendRequest not exists. id = ${requestId}")
         // 요청을 받은 사람 인가?
         if(!request.isReceiver(userId))
             throw RuntimeException("User(Id = ${userId} ) is not receiver. receiver id = ${request.receiver.id}")
+
         request.approve()
+        friendRepository.save(Friend(request.sender, request.receiver))
+    }
+
+    private fun extractFriendsUserId(myId: Long, friends: List<Friend>) : List<Long>{
+        return friends.map{it.user1.id!!}
+            .union(friends.map { it.user2.id!! })
+            .filterNot { it == myId }
+            .toList();
     }
 }
