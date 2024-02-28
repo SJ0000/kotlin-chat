@@ -12,4 +12,7 @@ interface FriendRequestRepository : JpaRepository<FriendRequest, Long?>{
     @Query("select f from FriendRequest f join fetch f.sender where f.receiver.id = :receiverId")
     fun findReceivedAllWithSender(receiverId: Long) : List<FriendRequest>
 
+    @Query("select f from FriendRequest f join fetch f.sender join fetch f.receiver where f.id = :id")
+    fun findByIdWithUsers(id: Long) : FriendRequest?
+
 }
