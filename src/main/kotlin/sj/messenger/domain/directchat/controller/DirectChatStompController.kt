@@ -4,8 +4,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
-import sj.messenger.domain.chat.service.DirectChatService
-import sj.messenger.domain.directchat.dto.DirectMessageType
+import sj.messenger.domain.directchat.service.DirectChatService
 import sj.messenger.domain.directchat.dto.DirectMessageType.*
 import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto

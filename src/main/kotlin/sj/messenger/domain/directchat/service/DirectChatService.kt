@@ -1,16 +1,12 @@
-package sj.messenger.domain.chat.service
+package sj.messenger.domain.directchat.service
 
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.directchat.domain.DirectChat
 import sj.messenger.domain.directchat.domain.DirectMessage
-import sj.messenger.domain.directchat.dto.DirectChatDto
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectChatRepository
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
-import sj.messenger.domain.user.dto.UserDto
-import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
 
 @Service
