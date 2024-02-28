@@ -32,9 +32,7 @@ class UserService(
     fun findUsers(ids : List<Long>) : List<User>{
         val users = userRepository.findAllById(ids)
         if(users.size != ids.size){
-            val expected = ids.toSet()
-            val actual = users.map { it.id!! }.toSet()
-            val notExists = expected.subtract(actual)
+            val notExists = extractNotExists(ids,users.map { it.id!! })
             throw RuntimeException("User not exists. ids = ${notExists}")
         }
         return users
@@ -94,5 +92,9 @@ class UserService(
 
     private fun generateRandomNumbers(): String {
         return (1..5).map { ('0'..'9').toList().random() }.joinToString("")
+    }
+
+    private fun <T> extractNotExists(expected: List<T>, actual: List<T>) : List<T>{
+        return expected.toSet().subtract(actual.toSet()).toList()
     }
 }

@@ -19,7 +19,6 @@ class FriendService (
 ){
     fun getFriends(userId: Long) : List<User>{
         val friends = friendRepository.findAll(userId)
-        // 조회할 user id 추출
         val friendUserIds = extractFriendsUserId(userId, friends)
         return userService.findUsers(friendUserIds)
     }
