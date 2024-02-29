@@ -40,7 +40,10 @@ class ChatService(
 
     @Transactional(readOnly = false)
     fun joinChatRoom(chatRoomId: Long, userId: Long) {
-        val chatRoom = chatRoomRepository.findByIdOrNull(chatRoomId) ?: throw RuntimeException("chat room id '$chatRoomId' not found")
+        val chatRoom = findChatRoomWithParticipants(chatRoomId)
+        if(chatRoom.isParticipant(userId))
+            throw RuntimeException("User(id = ${userId}) is already participant in ChatRoom(id = ${chatRoomId}) ")
+
         val user = userService.findUserById(userId)
         chatRoom.join(user)
     }
@@ -49,7 +52,7 @@ class ChatService(
     fun createChatRoom(chatRoomCreate: ChatRoomCreate): Long {
         val chatRoom = ChatRoom(name = chatRoomCreate.name)
         chatRoomRepository.save(chatRoom)
-        return chatRoom.id ?: throw RuntimeException("created chatroom id is null")
+        return chatRoom.id!!
     }
 
     fun findUserChatRooms(userId: Long): List<ChatRoom>{

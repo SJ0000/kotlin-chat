@@ -6,10 +6,11 @@ import sj.messenger.global.domain.BaseEntity
 
 @Entity
 class ChatRoom(
-    @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.PERSIST])
-    val participants: MutableList<Participant> = mutableListOf(),
     val name: String,
     val avatarUrl: String = "",
+
+    @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.PERSIST])
+    val participants: MutableList<Participant> = mutableListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
