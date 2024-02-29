@@ -93,7 +93,7 @@ class ChatController(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<InvitationDto> {
-        val invitation = chatInviteService.createInvitation(userDetails.getUserId(), userDetails.username, id)
+        val invitation = chatInviteService.createInvitation(userDetails.getUserId(), id)
         val chatRoom = chatService.findChatRoom(id)
         val dto = InvitationDto(
             id = invitation.id,

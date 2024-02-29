@@ -5,26 +5,30 @@ import org.springframework.stereotype.Service
 import sj.messenger.domain.chat.domain.Invitation
 import sj.messenger.domain.chat.repository.ChatRoomRepository
 import sj.messenger.domain.chat.repository.InvitationRepository
+import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.domain.user.service.UserService
 
 @Service
 class ChatInviteService(
+    private val userService: UserService,
     private val chatRoomRepository: ChatRoomRepository,
     private val invitationRepository: InvitationRepository
 ) {
 
-    fun createInvitation(userId: Long, userName: String, chatRoomId: Long): Invitation {
+    fun createInvitation(userId: Long, chatRoomId: Long): Invitation {
         val chatRoom = chatRoomRepository.findWithParticipantsById(chatRoomId)
             ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
 
         if (!chatRoom.isParticipant(userId))
             throw RuntimeException("User(id = ${userId}) is not participant in ChatRoom(id = ${chatRoomId})")
 
+        val inviter = userService.findUserById(userId)
         val key = generateRandomString() // 중복 여부 확인
         val invitation = Invitation(
             id = key,
             chatRoomId = chatRoomId,
             inviterId = userId,
-            inviterName = userName,
+            inviterName = inviter.name,
         )
         invitationRepository.save(invitation)
         return invitation
