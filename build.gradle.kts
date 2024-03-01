@@ -46,6 +46,9 @@ dependencies {
     implementation("com.querydsl:querydsl-apt:5.0.0")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 
+    // mysql
+    implementation("com.mysql:mysql-connector-j:8.3.0")
+
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
     runtimeOnly("com.h2database:h2")
@@ -53,6 +56,10 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter-kotlin:1.0.6")
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.6")
+    testImplementation("org.testcontainers:mysql:1.19.3")
+    testImplementation("org.testcontainers:mongodb:1.19.3")
 }
 
 
