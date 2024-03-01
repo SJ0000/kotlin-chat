@@ -1,7 +1,6 @@
 package sj.messenger.domain.friend.repository
 
 import sj.messenger.domain.friend.domain.Friend
-import sj.messenger.domain.friend.domain.FriendRequest
 
 
 // query 정의

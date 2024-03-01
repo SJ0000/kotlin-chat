@@ -1,17 +1,15 @@
 package sj.messenger.domain.directchat.repository
 
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
-import org.junit.jupiter.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import sj.messenger.RepositoryTest
+import sj.messenger.JpaRepositoryTest
 import sj.messenger.domain.directchat.domain.DirectChat
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.generateUser
 
-@RepositoryTest
+@JpaRepositoryTest
 class DirectChatRepositoryImplTest(
     @Autowired val directChatRepository: DirectChatRepository,
     @Autowired val userRepository: UserRepository,

@@ -1,8 +1,6 @@
 package sj.messenger.domain.directchat.repository
 
-import com.querydsl.core.types.dsl.BooleanExpression
-import com.querydsl.core.types.dsl.Expressions
-import com.querydsl.core.types.dsl.Expressions.*
+import com.querydsl.core.types.dsl.Expressions.anyOf
 import com.querydsl.jpa.impl.JPAQueryFactory
 import sj.messenger.domain.directchat.domain.QDirectChat.directChat
 

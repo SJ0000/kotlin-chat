@@ -1,13 +1,9 @@
 package sj.messenger.domain.friend.repository
 
-import com.querydsl.core.types.dsl.Expressions.*
-import com.querydsl.jpa.impl.JPAQuery
+import com.querydsl.core.types.dsl.Expressions.anyOf
 import com.querydsl.jpa.impl.JPAQueryFactory
 import sj.messenger.domain.friend.domain.Friend
-import sj.messenger.domain.friend.domain.FriendRequest
-import sj.messenger.domain.friend.domain.QFriend.*
-import sj.messenger.domain.friend.domain.QFriendRequest
-import sj.messenger.domain.friend.domain.QFriendRequest.*
+import sj.messenger.domain.friend.domain.QFriend.friend
 
 class FriendRepositoryImpl(
     private val queryFactory: JPAQueryFactory

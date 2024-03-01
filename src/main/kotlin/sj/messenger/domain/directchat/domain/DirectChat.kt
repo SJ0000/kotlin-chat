@@ -1,7 +1,6 @@
 package sj.messenger.domain.directchat.domain
 
 import jakarta.persistence.*
-import org.hibernate.annotations.Fetch
 import sj.messenger.domain.user.domain.User
 import sj.messenger.global.domain.BaseEntity
 

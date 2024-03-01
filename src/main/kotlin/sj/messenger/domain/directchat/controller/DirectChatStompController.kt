@@ -4,10 +4,10 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
-import sj.messenger.domain.directchat.service.DirectChatService
-import sj.messenger.domain.directchat.dto.DirectMessageType.*
+import sj.messenger.domain.directchat.dto.DirectMessageType.MESSAGE
 import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.service.DirectChatService
 import java.time.LocalDateTime
 
 @Controller

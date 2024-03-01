@@ -3,7 +3,7 @@ package sj.messenger.domain.chat.domain
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
 import net.jqwik.web.api.Web
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import sj.messenger.domain.user.domain.User

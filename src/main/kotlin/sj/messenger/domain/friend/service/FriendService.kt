@@ -1,6 +1,5 @@
 package sj.messenger.domain.friend.service
 
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.friend.domain.Friend

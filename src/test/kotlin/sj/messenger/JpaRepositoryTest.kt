@@ -10,4 +10,4 @@ import sj.messenger.global.config.QueryDslConfig
 @Import(QueryDslConfig::class)
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-annotation class RepositoryTest()
+annotation class JpaRepositoryTest()

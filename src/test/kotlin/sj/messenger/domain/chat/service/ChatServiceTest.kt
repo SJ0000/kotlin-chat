@@ -1,8 +1,8 @@
 package sj.messenger.domain.chat.service
 
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.chat.domain.ChatRoom
 import sj.messenger.domain.chat.dto.ChatRoomCreate
 import sj.messenger.domain.chat.repository.ChatRoomRepository
-import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.domain.user.service.UserService
 import sj.messenger.util.fixture
 import sj.messenger.util.generateChatRoom
 import sj.messenger.util.generateUser

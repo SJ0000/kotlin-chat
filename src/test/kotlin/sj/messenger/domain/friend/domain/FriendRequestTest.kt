@@ -1,9 +1,9 @@
 package sj.messenger.domain.friend.domain
 
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-
 import sj.messenger.util.generateUser
 
 class FriendRequestTest {

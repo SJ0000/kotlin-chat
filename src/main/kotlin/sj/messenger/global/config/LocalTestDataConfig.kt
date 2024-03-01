@@ -4,7 +4,6 @@ import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import sj.messenger.domain.friend.domain.Friend
-import sj.messenger.domain.friend.domain.FriendRequest
 import sj.messenger.domain.friend.repository.FriendRepository
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.service.UserService

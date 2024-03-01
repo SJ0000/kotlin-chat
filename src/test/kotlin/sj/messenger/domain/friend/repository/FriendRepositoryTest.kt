@@ -1,16 +1,15 @@
 package sj.messenger.domain.friend.repository
 
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import sj.messenger.RepositoryTest
+import sj.messenger.JpaRepositoryTest
 import sj.messenger.domain.friend.domain.Friend
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.generateUser
 
-@RepositoryTest
+@JpaRepositoryTest
 class FriendRepositoryTest(
     @Autowired val userRepository: UserRepository,
     @Autowired val friendRepository: FriendRepository,

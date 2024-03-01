@@ -1,7 +1,7 @@
 package sj.messenger.util
 
 import jakarta.persistence.EntityManager
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import sj.messenger.global.domain.BaseEntity
 
 fun assertEntityLoaded(em : EntityManager, vararg entities : BaseEntity){

@@ -5,15 +5,14 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import sj.messenger.RepositoryTest
+import sj.messenger.JpaRepositoryTest
 import sj.messenger.domain.chat.domain.Participant
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.assertEntityLoaded
 import sj.messenger.util.generateChatRoom
 import sj.messenger.util.generateUser
 
-@RepositoryTest
+@JpaRepositoryTest
 class ParticipantRepositoryTest (
     @Autowired val participantRepository: ParticipantRepository,
     @Autowired val userRepository: UserRepository,

@@ -3,7 +3,6 @@ package sj.messenger.domain.security.authentication.principal
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import java.security.Principal
 
 class GuestUserDetails : UserDetails{
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
