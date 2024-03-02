@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import sj.messenger.JpaRepositoryTest
+import sj.messenger.util.repository.annotation.JpaRepositoryTest
 import sj.messenger.domain.friend.domain.Friend
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.generateUser
