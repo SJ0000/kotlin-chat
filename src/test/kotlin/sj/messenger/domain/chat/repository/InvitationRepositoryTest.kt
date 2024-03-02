@@ -4,13 +4,12 @@ import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest
-import org.springframework.test.context.ContextConfiguration
 import sj.messenger.domain.chat.domain.Invitation
 import sj.messenger.util.fixture
-import sj.messenger.util.repository.RedisContainerInitializer
+import sj.messenger.util.testcontainer.annotation.EnableRedisContainer
 
 @DataRedisTest
-@ContextConfiguration(initializers = [RedisContainerInitializer::class])
+@EnableRedisContainer
 class InvitationRepositoryTest (
     @Autowired val invitationRepository: InvitationRepository,
 ){
