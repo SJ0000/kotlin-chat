@@ -13,8 +13,10 @@ import sj.messenger.domain.friend.repository.FriendRepository
 import sj.messenger.domain.friend.repository.FriendRequestRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.generateUser
+import sj.messenger.util.integration.EnableContainers
 
 @SpringBootTest
+@EnableContainers
 @Transactional
 class FriendServiceTest(
     @Autowired val friendService: FriendService,

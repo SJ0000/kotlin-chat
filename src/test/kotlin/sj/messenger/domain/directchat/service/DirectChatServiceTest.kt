@@ -12,8 +12,10 @@ import sj.messenger.domain.directchat.domain.DirectChat
 import sj.messenger.domain.directchat.repository.DirectChatRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.generateUser
+import sj.messenger.util.integration.EnableContainers
 
 @SpringBootTest
+@EnableContainers
 @Transactional
 class DirectChatServiceTest(
     @Autowired val directChatService: DirectChatService,

@@ -10,7 +10,7 @@ import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.assertEntityLoaded
 import sj.messenger.util.generateChatRoom
 import sj.messenger.util.generateUser
-import sj.messenger.util.repository.annotation.JpaRepositoryTest
+import sj.messenger.util.repository.JpaRepositoryTest
 
 @JpaRepositoryTest
 class ParticipantRepositoryTest (

@@ -9,7 +9,7 @@ class MongoContainerInitializer : ApplicationContextInitializer<ConfigurableAppl
 
     companion object{
         @JvmStatic
-        val mongoDBContainer: MongoDBContainer = MongoDBContainer("mongo:latest")
+        val mongoDBContainer: MongoDBContainer = MongoDBContainer("mongo:7.0.6")
             .withExposedPorts(27017)
             .withReuse(true)
     }

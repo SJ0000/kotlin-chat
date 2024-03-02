@@ -18,8 +18,10 @@ import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
 import sj.messenger.util.*
+import sj.messenger.util.integration.EnableContainers
 
 @SpringBootTest
+@EnableContainers
 @Transactional
 class UserServiceTest(
     @Autowired val userService: UserService,

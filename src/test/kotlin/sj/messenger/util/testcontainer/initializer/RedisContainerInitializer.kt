@@ -9,7 +9,7 @@ class RedisContainerInitializer : ApplicationContextInitializer<ConfigurableAppl
 
     companion object{
         @JvmStatic
-        val redisContainer = GenericContainer<Nothing>("redis:latest").apply {
+        val redisContainer = GenericContainer<Nothing>("redis:7.2.4").apply {
             withExposedPorts(6379)
         }
     }

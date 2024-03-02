@@ -16,8 +16,10 @@ import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.fixture
 import sj.messenger.util.generateChatRoom
 import sj.messenger.util.generateUser
+import sj.messenger.util.integration.EnableContainers
 
 @SpringBootTest
+@EnableContainers
 @Transactional
 class ChatServiceTest(
     @Autowired val chatService: ChatService,
