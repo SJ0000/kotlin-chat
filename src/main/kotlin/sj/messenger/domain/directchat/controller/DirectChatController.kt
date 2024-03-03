@@ -16,7 +16,7 @@ class DirectChatController(
 ) {
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/chats/direct/{id}")
+    @GetMapping("/chats/directs/{id}")
     fun getDirectChat(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable(name = "id") directChatId: Long,
@@ -30,7 +30,7 @@ class DirectChatController(
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/chats/direct/me")
+    @GetMapping("/chats/directs/me")
     fun getMyDirectChats(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
     ): ResponseEntity<List<DirectChatDto>> {
@@ -45,7 +45,7 @@ class DirectChatController(
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/chats/direct")
+    @PostMapping("/chats/directs")
     fun postDirectChat(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @RequestParam to: Long

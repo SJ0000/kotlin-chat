@@ -6,7 +6,7 @@ import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
 import net.jqwik.web.api.Web
-import sj.messenger.domain.chat.domain.ChatRoom
+import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.user.domain.User
 
 val fixture: FixtureMonkey = FixtureMonkey.builder()
@@ -14,8 +14,8 @@ val fixture: FixtureMonkey = FixtureMonkey.builder()
     .plugin(JakartaValidationPlugin())
     .build()
 
-fun generateChatRoom() : ChatRoom {
-    return ChatRoom(name = fixture.giveMeOne(), avatarUrl = randomUrl())
+fun generateChatRoom() : GroupChat {
+    return GroupChat(name = fixture.giveMeOne(), avatarUrl = randomUrl())
 }
 
 fun generateUser() : User {
