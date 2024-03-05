@@ -14,15 +14,15 @@ import sj.messenger.domain.groupchat.dto.GroupChatCreate
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.fixture
-import sj.messenger.util.generateChatRoom
+import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
 import sj.messenger.util.integration.EnableContainers
 
 @SpringBootTest
 @EnableContainers
 @Transactional
-class ChatServiceTest(
-    @Autowired val chatService: ChatService,
+class GroupChatServiceTest(
+    @Autowired val groupChatService: GroupChatService,
     @Autowired val userRepository: UserRepository,
     @Autowired val groupChatRepository: GroupChatRepository,
 
@@ -32,7 +32,7 @@ class ChatServiceTest(
     @DisplayName("존재하지 않는 chatRoom 조회시 예외 발생")
     fun getChatRoomError() {
         // expected
-        assertThatThrownBy { chatService.getChatRoom(1L) }
+        assertThatThrownBy { groupChatService.getChatRoom(1L) }
             .isInstanceOf(RuntimeException::class.java)
     }
 
@@ -45,7 +45,7 @@ class ChatServiceTest(
         val groupChat = groupChatRepository.save(GroupChat(name = fixture.giveMeOne()))
 
         // when
-        chatService.joinChatRoom(groupChat.id!!, user.id!!)
+        groupChatService.joinChatRoom(groupChat.id!!, user.id!!)
 
         // then
         val isParticipant = groupChatRepository.findByIdOrNull(groupChat.id!!)?.isParticipant(user.id!!)
@@ -63,7 +63,7 @@ class ChatServiceTest(
 
         // expected
         assertThatThrownBy {
-            chatService.joinChatRoom(groupChat.id!!,user.id!!)
+            groupChatService.joinChatRoom(groupChat.id!!,user.id!!)
         }.isInstanceOf(RuntimeException::class.java)
     }
 
@@ -74,7 +74,7 @@ class ChatServiceTest(
         val groupChatCreate = fixture.giveMeOne<GroupChatCreate>()
 
         // when
-        val chatRoomId = chatService.createChatRoom(groupChatCreate)
+        val chatRoomId = groupChatService.createChatRoom(groupChatCreate)
 
         // then
         val findChatRoom = groupChatRepository.findByIdOrNull(chatRoomId)
@@ -88,12 +88,12 @@ class ChatServiceTest(
         // given
         val user = generateUser()
         userRepository.save(user)
-        val chatRooms = (1..3).map { generateChatRoom() }
+        val chatRooms = (1..3).map { generateGroupChat() }
         chatRooms.forEach { it.join(user) }
         groupChatRepository.saveAll(chatRooms)
 
         // when
-        val userChatRooms = chatService.findUserChatRooms(user.id!!)
+        val userChatRooms = groupChatService.findUserChatRooms(user.id!!)
 
         // then
         assertThat(userChatRooms.size).isEqualTo(chatRooms.size)

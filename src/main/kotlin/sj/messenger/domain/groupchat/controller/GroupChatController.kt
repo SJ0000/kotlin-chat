@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.*
 import sj.messenger.domain.groupchat.dto.GroupChatCreate
 import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.dto.InvitationDto
-import sj.messenger.domain.groupchat.service.ChatInviteService
-import sj.messenger.domain.groupchat.service.ChatService
+import sj.messenger.domain.groupchat.service.GroupChatInviteService
+import sj.messenger.domain.groupchat.service.GroupChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
 import java.net.URI
 import java.time.LocalDateTime
 
 @RestController
-class ChatController(
-    private val chatService: ChatService,
-    private val chatInviteService: ChatInviteService
+class GroupChatController(
+    private val groupChatService: GroupChatService,
+    private val groupChatInviteService: GroupChatInviteService
 ) {
 
     @GetMapping("/chats/groups/{id}")
     fun getChatRoomInfo(@PathVariable id: Long): ResponseEntity<GroupChatDto> {
-        val chatRoom = chatService.getChatRoom(id)
+        val chatRoom = groupChatService.findChatRoomWithParticipants(id)
         val data = GroupChatDto(
             id = chatRoom.id!!,
             name = chatRoom.name,
@@ -39,8 +39,8 @@ class ChatController(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @RequestBody groupChatCreate: GroupChatCreate,
     ): ResponseEntity<GroupChatDto> {
-        val chatRoomId = chatService.createChatRoom(groupChatCreate)
-        val chatRoom = chatService.findChatRoomWithParticipants(chatRoomId)
+        val chatRoomId = groupChatService.createChatRoom(groupChatCreate)
+        val chatRoom = groupChatService.findChatRoomWithParticipants(chatRoomId)
         val data = GroupChatDto(
             id = chatRoom.id!!,
             name = chatRoom.name,
@@ -56,7 +56,7 @@ class ChatController(
         @AuthenticationPrincipal userDetails: LoginUserDetails
     ): ResponseEntity<List<GroupChatDto>> {
         val userId = userDetails.getUserId()
-        val chatRooms = chatService.findUserChatRooms(userId)
+        val chatRooms = groupChatService.findUserChatRooms(userId)
             .map {
                 GroupChatDto(
                     id = it.id!!,
@@ -76,8 +76,8 @@ class ChatController(
         @PathVariable id: Long,
     ): ResponseEntity<GroupChatDto> {
         val userId = userDetails.getUserId()
-        chatService.joinChatRoom(id, userId)
-        val chatRoom = chatService.findChatRoomWithParticipants(id)
+        groupChatService.joinChatRoom(id, userId)
+        val chatRoom = groupChatService.findChatRoomWithParticipants(id)
         val dto = GroupChatDto(
             id = chatRoom.id!!,
             name = chatRoom.name,
@@ -93,8 +93,8 @@ class ChatController(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<InvitationDto> {
-        val invitation = chatInviteService.createInvitation(userDetails.getUserId(), id)
-        val chatRoom = chatService.findChatRoom(id)
+        val invitation = groupChatInviteService.createInvitation(userDetails.getUserId(), id)
+        val chatRoom = groupChatService.findChatRoom(id)
         val dto = InvitationDto(
             id = invitation.id,
             chatRoomId = invitation.chatRoomId,
@@ -110,8 +110,8 @@ class ChatController(
     fun getInvitation(
         @PathVariable invitationId: String
     ): ResponseEntity<InvitationDto> {
-        val invitation = chatInviteService.getInvitation(invitationId)
-        val chatRoom = chatService.getChatRoom(invitation.chatRoomId)
+        val invitation = groupChatInviteService.getInvitation(invitationId)
+        val chatRoom = groupChatService.getChatRoom(invitation.chatRoomId)
         val dto = InvitationDto(
             id = invitation.id,
             chatRoomId = invitation.chatRoomId,

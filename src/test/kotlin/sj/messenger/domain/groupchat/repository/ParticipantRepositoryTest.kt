@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import sj.messenger.domain.groupchat.domain.Participant
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.assertEntityLoaded
-import sj.messenger.util.generateChatRoom
+import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
 import sj.messenger.util.repository.JpaRepositoryTest
 
@@ -28,7 +28,7 @@ class ParticipantRepositoryTest (
         userRepository.save(user)
 
         for(num in 1..10){
-            val chatRoom = generateChatRoom()
+            val chatRoom = generateGroupChat()
             groupChatRepository.save(chatRoom)
             participantRepository.save(Participant(user,chatRoom))
         }

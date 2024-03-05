@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.InvitationRepository
 import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.util.generateChatRoom
+import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
 import sj.messenger.util.testcontainer.initializer.RedisContainerInitializer
 
 @SpringBootTest
 @Transactional
 @ContextConfiguration(initializers = [RedisContainerInitializer::class])
-class ChatInviteServiceTest(
-    @Autowired val chatInviteService: ChatInviteService,
+class GroupChatInviteServiceTest(
+    @Autowired val groupChatInviteService: GroupChatInviteService,
     @Autowired val userRepository: UserRepository,
     @Autowired val invitationRepository: InvitationRepository,
     @Autowired val groupChatRepository: GroupChatRepository,
@@ -30,12 +30,12 @@ class ChatInviteServiceTest(
         // given
         val user = generateUser()
         userRepository.save(user)
-        val chatRoom = generateChatRoom()
+        val chatRoom = generateGroupChat()
         chatRoom.join(user)
         groupChatRepository.save(chatRoom)
 
         // when
-        val invitation = chatInviteService.createInvitation(user.id!!, chatRoom.id!!)
+        val invitation = groupChatInviteService.createInvitation(user.id!!, chatRoom.id!!)
 
         // then
         assertThat(invitationRepository.existsById(invitation.id)).isTrue()

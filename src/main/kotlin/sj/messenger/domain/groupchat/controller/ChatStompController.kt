@@ -6,20 +6,20 @@ import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 import sj.messenger.domain.groupchat.dto.ReceivedMessageDto
 import sj.messenger.domain.groupchat.dto.SentMessageDto
-import sj.messenger.domain.groupchat.service.ChatService
+import sj.messenger.domain.groupchat.service.GroupChatService
 import java.time.LocalDateTime
 
 @Controller
 class ChatStompController(
     private val template : SimpMessagingTemplate,
-    private val chatService: ChatService,
+    private val groupChatService: GroupChatService,
 ) {
 
     @MessageMapping("/chat-message")
     fun sendMessage(
         @Payload sentMessageDto: SentMessageDto,
     ) {
-        val messageId = chatService.saveMessage(sentMessageDto)
+        val messageId = groupChatService.saveMessage(sentMessageDto)
         val data = ReceivedMessageDto(
             id = messageId,
             chatRoomId = sentMessageDto.chatRoomId,

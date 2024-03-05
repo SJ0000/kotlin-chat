@@ -17,7 +17,7 @@ import sj.messenger.util.integration.EnableContainers
 @SpringBootTest
 @EnableContainers
 @Transactional
-class DirectChatServiceTest(
+class DirectGroupChatServiceTest(
     @Autowired val directChatService: DirectChatService,
     @Autowired val userRepository: UserRepository,
     @Autowired val directChatRepository: DirectChatRepository,

@@ -8,7 +8,7 @@ import sj.messenger.domain.groupchat.repository.InvitationRepository
 import sj.messenger.domain.user.service.UserService
 
 @Service
-class ChatInviteService(
+class GroupChatInviteService(
     private val userService: UserService,
     private val groupChatRepository: GroupChatRepository,
     private val invitationRepository: InvitationRepository

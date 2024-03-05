@@ -14,7 +14,7 @@ val fixture: FixtureMonkey = FixtureMonkey.builder()
     .plugin(JakartaValidationPlugin())
     .build()
 
-fun generateChatRoom() : GroupChat {
+fun generateGroupChat() : GroupChat {
     return GroupChat(name = fixture.giveMeOne(), avatarUrl = randomUrl())
 }
 

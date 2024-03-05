@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.assertEntityLoaded
-import sj.messenger.util.generateChatRoom
+import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
 import sj.messenger.util.repository.JpaRepositoryTest
 
@@ -26,7 +26,7 @@ class GroupChatRepositoryTest (
         // given
         val users = (1..3).map { generateUser() }
         userRepository.saveAll(users)
-        val chatRoom = generateChatRoom()
+        val chatRoom = generateGroupChat()
         groupChatRepository.save(chatRoom)
         users.forEach{
          chatRoom.join(it)

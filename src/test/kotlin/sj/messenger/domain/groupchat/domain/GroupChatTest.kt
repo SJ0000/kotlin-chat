@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import sj.messenger.domain.user.domain.User
 import sj.messenger.util.fixture
-import sj.messenger.util.generateChatRoom
+import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
 
 
@@ -19,7 +19,7 @@ class GroupChatTest(
     @DisplayName("join 호출시 participant를 생성하고 chatRoom의 participants에 추가된다.")
     fun joinTest(){
         // given
-        val chatRoom = generateChatRoom()
+        val chatRoom = generateGroupChat()
         val user = generateUser()
 
         // when
@@ -34,7 +34,7 @@ class GroupChatTest(
     @DisplayName("특정 사용자가 특정 대화방의 참여자인지 여부를 확인")
     fun isParticipantTest(){
         // given
-        val chatRoom = generateChatRoom()
+        val chatRoom = generateGroupChat()
         val user = User(
             name = fixture.giveMeOne(),
             email = Web.emails().sample(),

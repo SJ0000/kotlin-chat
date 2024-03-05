@@ -15,7 +15,7 @@ import sj.messenger.domain.user.service.UserService
 
 @Service
 @Transactional(readOnly = true)
-class ChatService(
+class GroupChatService(
     private val groupChatRepository: GroupChatRepository,
     private val participantRepository: ParticipantRepository,
     private val messageRepository: MessageRepository,
