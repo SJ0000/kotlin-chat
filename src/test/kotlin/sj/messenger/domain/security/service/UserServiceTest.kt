@@ -183,4 +183,24 @@ class UserServiceTest(
             assertThat(publicIdentifier).isEqualTo(dto.publicIdentifier)
         }
     }
+
+    @Test
+    @DisplayName("사용자 정보 수정시 PublicIdentifier는 유일해야 한다.")
+    fun updateUserError() {
+        // given
+        val user = generateUser()
+        val user2 = generateUser()
+        userRepository.saveAll(listOf(user,user2))
+
+        val dto = UpdateUserDto(
+            name = fixture.giveMeOne(),
+            avatarUrl = randomUrl(),
+            statusMessage = fixture.giveMeOne(),
+            publicIdentifier = user2.publicIdentifier
+        )
+
+        // expected
+        assertThatThrownBy { userService.updateUser(user.id!!,dto) }
+            .isInstanceOf(RuntimeException::class.java)
+    }
 }

@@ -25,14 +25,15 @@ class UserService(
         return userRepository.findByEmail(email) ?: throw RuntimeException("user not found. email =  ${email}")
     }
 
-    fun findUserByPublicIdentifier(publicIdentifier: String) : User{
-        return userRepository.findByPublicIdentifier(publicIdentifier) ?: throw RuntimeException("user not found. publicIdentifier =  ${publicIdentifier}")
+    fun findUserByPublicIdentifier(publicIdentifier: String): User {
+        return userRepository.findByPublicIdentifier(publicIdentifier)
+            ?: throw RuntimeException("user not found. publicIdentifier =  ${publicIdentifier}")
     }
 
-    fun findUsers(ids : List<Long>) : List<User>{
+    fun findUsers(ids: List<Long>): List<User> {
         val users = userRepository.findAllById(ids)
-        if(users.size != ids.size){
-            val notExists = extractNotExists(ids,users.map { it.id!! })
+        if (users.size != ids.size) {
+            val notExists = extractNotExists(ids, users.map { it.id!! })
             throw RuntimeException("User not exists. ids = ${notExists}")
         }
         return users
@@ -66,7 +67,12 @@ class UserService(
 
     @Transactional
     fun updateUser(id: Long, updateUser: UpdateUserDto) {
-        with(findUserById(id)) {
+        // todo: publicIdentifier 중복 검사
+        val user = findUserById(id)
+        if(user.publicIdentifier != updateUser.publicIdentifier)
+            validateUniquePublicIdentifier(updateUser.publicIdentifier)
+
+        with(user) {
             name = updateUser.name
             avatarUrl = updateUser.avatarUrl
             statusMessage = updateUser.statusMessage
@@ -82,6 +88,11 @@ class UserService(
         return userRepository.existsByPublicIdentifier(identifier);
     }
 
+    private fun validateUniquePublicIdentifier(identifier: String){
+        if(existsPublicIdentifier(identifier))
+            throw RuntimeException("public identifier ${identifier} exists.")
+    }
+
     private fun createPublicIdentifier(userName: String): String {
         var created: String
         do {
@@ -94,7 +105,7 @@ class UserService(
         return (1..5).map { ('0'..'9').toList().random() }.joinToString("")
     }
 
-    private fun <T> extractNotExists(expected: List<T>, actual: List<T>) : List<T>{
+    private fun <T> extractNotExists(expected: List<T>, actual: List<T>): List<T> {
         return expected.toSet().subtract(actual.toSet()).toList()
     }
 }
