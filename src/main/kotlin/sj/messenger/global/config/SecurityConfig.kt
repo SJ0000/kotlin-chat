@@ -1,5 +1,6 @@
 package sj.messenger.global.config
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -28,6 +29,7 @@ class SecurityConfig (
 ) {
 
     @Bean
+    @Qualifier("SecurityConfig")
     fun filterChain(http: HttpSecurity, authenticationManager: AuthenticationManager): SecurityFilterChain {
         http {
             csrf { disable() }
