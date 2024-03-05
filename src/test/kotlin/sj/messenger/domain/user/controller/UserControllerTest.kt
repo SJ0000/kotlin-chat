@@ -1,5 +1,6 @@
 package sj.messenger.domain.user.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.ContentType
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.hamcrest.Matchers.equalTo
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.client.match.MockRestRequestMatchers.content
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import sj.messenger.domain.security.jwt.JwtProvider
 import sj.messenger.domain.security.jwt.UserClaim
 import sj.messenger.domain.user.dto.SignUpDto
+import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
 import sj.messenger.util.config.WithMockAccessToken
@@ -36,6 +39,7 @@ import sj.messenger.util.integration.EnableMockAuthentication
 class UserControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val userRepository: UserRepository,
+    @Autowired val om: ObjectMapper,
 ) {
 
     @Test
@@ -68,12 +72,34 @@ class UserControllerTest(
         // expected
         mockMvc.post("/signup"){
             contentType = MediaType.APPLICATION_JSON
-            content = signUp
+            content = om.writeValueAsString(signUp)
         }.andExpect {
             status { isCreated() }
             content {
                 jsonPath("name",signUp.name)
                 jsonPath("email",signUp.email)
+            }
+        }
+    }
+
+    @Test
+    @WithMockAccessToken
+    fun patchUser(){
+        // given
+        val user = userRepository.findAll()[0]
+        val updateUser : UpdateUserDto = fixture.giveMeOne()
+
+        // expected
+        mockMvc.patch("/users/${user.id!!}"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(updateUser)
+        }.andExpect {
+            status { isOk() }
+            content {
+                jsonPath("name",updateUser.name)
+                jsonPath("avatarUrl",updateUser.avatarUrl)
+                jsonPath("statusMessage",updateUser.statusMessage)
+                jsonPath("publicIdentifier",updateUser.publicIdentifier)
             }
         }
     }

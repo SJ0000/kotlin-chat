@@ -33,6 +33,16 @@ class MockAuthenticationConfig(
         currentJwtProvider = jwtProvider
         currentUserService = userService
     }
+
+    @PostConstruct
+    fun prepareMockUser(){
+        val signUp = SignUpDto(
+            email = "test@test.com",
+            name = "test",
+            password = "1234567890"
+        )
+        currentUserService.signUpUser(signUp)
+    }
 }
 
 @Target(AnnotationTarget.FUNCTION)
@@ -55,13 +65,8 @@ class AccessTokenProvideExtension : BeforeTestExecutionCallback{
     }
 
     private fun mockAuthorizationHeader(){
-        val signUp = SignUpDto(
-            email = "test@test.com",
-            name = "test",
-            password = "1234567890"
-        )
-        val userId = currentUserService.signUpUser(signUp)
-        val accessToken = currentJwtProvider.createAccessToken(UserClaim(userId, signUp.name))
+        val user = currentUserService.findUserByEmail("test@test.com")
+        val accessToken = currentJwtProvider.createAccessToken(UserClaim(user.id!!, user.name))
         addAccessTokenProvideFilter(accessToken)
     }
 
