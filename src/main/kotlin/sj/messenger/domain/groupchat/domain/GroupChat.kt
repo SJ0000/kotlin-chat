@@ -27,4 +27,8 @@ class GroupChat(
             it.user.id == userId
         }
     }
+
+    fun getParticipantUserIds() : List<Long>{
+        return participants.map { it.user.id!! }
+    }
 }

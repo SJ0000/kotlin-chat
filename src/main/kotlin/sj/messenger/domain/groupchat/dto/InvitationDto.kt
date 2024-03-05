@@ -4,8 +4,8 @@ import java.time.LocalDateTime
 
 data class InvitationDto(
     val id : String,
-    val chatRoomId : Long,
-    val chatRoomName: String,
+    val groupChatId : Long,
+    val groupChatName: String,
     val inviterName : String,
     val expiredAt : LocalDateTime
 )

@@ -34,13 +34,13 @@ class GroupChatService(
         return savedMessage.id!!.toHexString()
     }
 
-    fun getChatRoom(id: Long): GroupChat {
+    fun getDirectChat(id: Long): GroupChat {
         return groupChatRepository.findByIdOrNull(id) ?: throw RuntimeException("chat room id '$id' not found")
     }
 
     @Transactional(readOnly = false)
-    fun joinChatRoom(chatRoomId: Long, userId: Long) {
-        val chatRoom = findChatRoomWithParticipants(chatRoomId)
+    fun joinDirectChat(chatRoomId: Long, userId: Long) {
+        val chatRoom = findGroupChatWithParticipants(chatRoomId)
         if(chatRoom.isParticipant(userId))
             throw RuntimeException("User(id = ${userId}) is already participant in ChatRoom(id = ${chatRoomId}) ")
 
@@ -49,22 +49,22 @@ class GroupChatService(
     }
 
     @Transactional(readOnly = false)
-    fun createChatRoom(groupChatCreate: GroupChatCreate): Long {
+    fun createGroupChat(groupChatCreate: GroupChatCreate): Long {
         val groupChat = GroupChat(name = groupChatCreate.name)
         groupChatRepository.save(groupChat)
         return groupChat.id!!
     }
 
-    fun findUserChatRooms(userId: Long): List<GroupChat>{
+    fun findUserGroupChats(userId: Long): List<GroupChat>{
         val participants = participantRepository.getParticipantsByUserId(userId)
         return participants.map { it.groupChat }
     }
 
-    fun findChatRoom(chatRoomId: Long): GroupChat{
+    fun findGroupChat(chatRoomId: Long): GroupChat{
         return groupChatRepository.findByIdOrNull(chatRoomId) ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
     }
 
-    fun findChatRoomWithParticipants(chatRoomId: Long): GroupChat{
+    fun findGroupChatWithParticipants(chatRoomId: Long): GroupChat{
         return groupChatRepository.findWithParticipantsById(chatRoomId) ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
     }
 }

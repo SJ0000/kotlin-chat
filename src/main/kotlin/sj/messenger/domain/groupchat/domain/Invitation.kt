@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.TimeToLive
 class Invitation(
     @Id
     val id: String,
-    val chatRoomId: Long,
+    val groupChatId: Long,
     val inviterId: Long,
     val inviterName: String,
     @TimeToLive

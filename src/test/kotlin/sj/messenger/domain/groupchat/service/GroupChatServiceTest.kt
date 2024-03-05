@@ -32,7 +32,7 @@ class GroupChatServiceTest(
     @DisplayName("존재하지 않는 chatRoom 조회시 예외 발생")
     fun getChatRoomError() {
         // expected
-        assertThatThrownBy { groupChatService.getChatRoom(1L) }
+        assertThatThrownBy { groupChatService.getDirectChat(1L) }
             .isInstanceOf(RuntimeException::class.java)
     }
 
@@ -45,7 +45,7 @@ class GroupChatServiceTest(
         val groupChat = groupChatRepository.save(GroupChat(name = fixture.giveMeOne()))
 
         // when
-        groupChatService.joinChatRoom(groupChat.id!!, user.id!!)
+        groupChatService.joinDirectChat(groupChat.id!!, user.id!!)
 
         // then
         val isParticipant = groupChatRepository.findByIdOrNull(groupChat.id!!)?.isParticipant(user.id!!)
@@ -63,7 +63,7 @@ class GroupChatServiceTest(
 
         // expected
         assertThatThrownBy {
-            groupChatService.joinChatRoom(groupChat.id!!,user.id!!)
+            groupChatService.joinDirectChat(groupChat.id!!,user.id!!)
         }.isInstanceOf(RuntimeException::class.java)
     }
 
@@ -74,7 +74,7 @@ class GroupChatServiceTest(
         val groupChatCreate = fixture.giveMeOne<GroupChatCreate>()
 
         // when
-        val chatRoomId = groupChatService.createChatRoom(groupChatCreate)
+        val chatRoomId = groupChatService.createGroupChat(groupChatCreate)
 
         // then
         val findChatRoom = groupChatRepository.findByIdOrNull(chatRoomId)
@@ -93,7 +93,7 @@ class GroupChatServiceTest(
         groupChatRepository.saveAll(chatRooms)
 
         // when
-        val userChatRooms = groupChatService.findUserChatRooms(user.id!!)
+        val userChatRooms = groupChatService.findUserGroupChats(user.id!!)
 
         // then
         assertThat(userChatRooms.size).isEqualTo(chatRooms.size)

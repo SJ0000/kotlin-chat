@@ -40,7 +40,7 @@ class GroupChatInviteServiceTest(
         // then
         assertThat(invitationRepository.existsById(invitation.id)).isTrue()
         with(invitation){
-            assertThat(chatRoomId).isEqualTo(chatRoom.id!!)
+            assertThat(groupChatId).isEqualTo(chatRoom.id!!)
             assertThat(inviterId).isEqualTo(user.id!!)
             assertThat(inviterName).isEqualTo(user.name)
         }

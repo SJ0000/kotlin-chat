@@ -11,52 +11,54 @@ import sj.messenger.domain.groupchat.service.GroupChatInviteService
 import sj.messenger.domain.groupchat.service.GroupChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
+import sj.messenger.domain.user.service.UserService
 import java.net.URI
 import java.time.LocalDateTime
 
 @RestController
 class GroupChatController(
     private val groupChatService: GroupChatService,
-    private val groupChatInviteService: GroupChatInviteService
+    private val groupChatInviteService: GroupChatInviteService,
+    private val userService: UserService,
 ) {
 
     @GetMapping("/chats/groups/{id}")
-    fun getChatRoomInfo(@PathVariable id: Long): ResponseEntity<GroupChatDto> {
-        val chatRoom = groupChatService.findChatRoomWithParticipants(id)
+    fun getGroupChatInfo(@PathVariable id: Long): ResponseEntity<GroupChatDto> {
+        val groupChat = groupChatService.findGroupChatWithParticipants(id)
+        val userIds = groupChat.getParticipantUserIds()
         val data = GroupChatDto(
-            id = chatRoom.id!!,
-            name = chatRoom.name,
-            avatarUrl = chatRoom.avatarUrl,
-            users = chatRoom.participants.map { UserDto(it.user) })
-
+            id = groupChat.id!!,
+            name = groupChat.name,
+            avatarUrl = groupChat.avatarUrl,
+            users = userService.findUsers(userIds).map { UserDto(it) })
         return ResponseEntity.ok()
             .body(data)
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/chats/groups")
-    fun postChatRoom(
+    fun postGroupChat(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @RequestBody groupChatCreate: GroupChatCreate,
     ): ResponseEntity<GroupChatDto> {
-        val chatRoomId = groupChatService.createChatRoom(groupChatCreate)
-        val chatRoom = groupChatService.findChatRoomWithParticipants(chatRoomId)
+        val chatRoomId = groupChatService.createGroupChat(groupChatCreate)
+        val groupChat = groupChatService.findGroupChatWithParticipants(chatRoomId)
         val data = GroupChatDto(
-            id = chatRoom.id!!,
-            name = chatRoom.name,
-            avatarUrl = chatRoom.avatarUrl,
-            users = chatRoom.participants.map { UserDto(it.user) })
+            id = groupChat.id!!,
+            name = groupChat.name,
+            avatarUrl = groupChat.avatarUrl,
+            users = groupChat.participants.map { UserDto(it.user) })
         return ResponseEntity.created(URI.create("/chatrooms/${chatRoomId}"))
             .body(data)
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/chats/groups/me")
-    fun getMyChatRooms(
+    fun getMyGroupChats(
         @AuthenticationPrincipal userDetails: LoginUserDetails
     ): ResponseEntity<List<GroupChatDto>> {
         val userId = userDetails.getUserId()
-        val chatRooms = groupChatService.findUserChatRooms(userId)
+        val groupChats = groupChatService.findUserGroupChats(userId)
             .map {
                 GroupChatDto(
                     id = it.id!!,
@@ -66,39 +68,39 @@ class GroupChatController(
             }
 
 
-        return ResponseEntity.ok(chatRooms)
+        return ResponseEntity.ok(groupChats)
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/chats/groups/{id}/join")
-    fun joinChatRoom(
+    fun joinGroupChat(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<GroupChatDto> {
         val userId = userDetails.getUserId()
-        groupChatService.joinChatRoom(id, userId)
-        val chatRoom = groupChatService.findChatRoomWithParticipants(id)
+        groupChatService.joinDirectChat(id, userId)
+        val groupChat = groupChatService.findGroupChatWithParticipants(id)
         val dto = GroupChatDto(
-            id = chatRoom.id!!,
-            name = chatRoom.name,
-            avatarUrl = chatRoom.avatarUrl,
-            users = chatRoom.participants.map { UserDto(it.user) })
+            id = groupChat.id!!,
+            name = groupChat.name,
+            avatarUrl = groupChat.avatarUrl,
+            users = groupChat.participants.map { UserDto(it.user) })
         return ResponseEntity.created(URI.create("/chatrooms/${id}"))
             .body(dto)
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/chats/groups/{id}/invites")
-    fun postInviteChatroom(
+    fun postInviteGroupChat(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable id: Long,
     ): ResponseEntity<InvitationDto> {
         val invitation = groupChatInviteService.createInvitation(userDetails.getUserId(), id)
-        val chatRoom = groupChatService.findChatRoom(id)
+        val chatRoom = groupChatService.findGroupChat(id)
         val dto = InvitationDto(
             id = invitation.id,
-            chatRoomId = invitation.chatRoomId,
-            chatRoomName = chatRoom.name,
+            groupChatId = invitation.groupChatId,
+            groupChatName = chatRoom.name,
             inviterName = invitation.inviterName,
             expiredAt = LocalDateTime.now().plusMinutes(invitation.timeToLiveSeconds)
         )
@@ -111,11 +113,11 @@ class GroupChatController(
         @PathVariable invitationId: String
     ): ResponseEntity<InvitationDto> {
         val invitation = groupChatInviteService.getInvitation(invitationId)
-        val chatRoom = groupChatService.getChatRoom(invitation.chatRoomId)
+        val groupChat = groupChatService.getDirectChat(invitation.groupChatId)
         val dto = InvitationDto(
             id = invitation.id,
-            chatRoomId = invitation.chatRoomId,
-            chatRoomName = chatRoom.name,
+            groupChatId = invitation.groupChatId,
+            groupChatName = groupChat.name,
             inviterName = invitation.inviterName,
             expiredAt = LocalDateTime.now().plusMinutes(invitation.timeToLiveSeconds)
         )

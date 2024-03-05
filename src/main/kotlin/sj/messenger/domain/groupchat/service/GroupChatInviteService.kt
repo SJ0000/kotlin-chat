@@ -25,7 +25,7 @@ class GroupChatInviteService(
         val key = generateRandomString() // 중복 여부 확인
         val invitation = Invitation(
             id = key,
-            chatRoomId = chatRoomId,
+            groupChatId = chatRoomId,
             inviterId = userId,
             inviterName = inviter.name,
         )

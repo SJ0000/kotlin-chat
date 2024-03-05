@@ -18,7 +18,7 @@ class InvitationRepositoryTest (
     fun add(){
         invitationRepository.save(Invitation(
             id = fixture.giveMeOne(),
-            chatRoomId = fixture.giveMeOne(),
+            groupChatId = fixture.giveMeOne(),
             inviterId = fixture.giveMeOne(),
             inviterName = fixture.giveMeOne()
         ))
