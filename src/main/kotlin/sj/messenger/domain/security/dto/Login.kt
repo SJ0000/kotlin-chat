@@ -5,7 +5,8 @@ import jakarta.validation.constraints.Size
 import sj.messenger.domain.user.dto.UserDto
 
 data class LoginRequest(
-    @Email
+    @field:Email
+    @field:Size(max=255)
     val email : String,
     @Size(min = 10, max = 20)
     val password : String,

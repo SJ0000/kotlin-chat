@@ -12,6 +12,6 @@ data class GroupChatDto(
 }
 
 data class GroupChatCreate(
-    @NotEmpty
+    @field:NotEmpty
     val name: String
 )
