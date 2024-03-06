@@ -51,7 +51,7 @@ class DirectChatController(
         @RequestParam to: Long
     ): ResponseEntity<Long> {
         val directChatId = directChatService.createDirectChat(Pair(userDetails.getUserId(), to))
-        return ResponseEntity.created(URI.create("/chats/direct/${directChatId}"))
+        return ResponseEntity.created(URI.create("/chats/directs/${directChatId}"))
             .body(directChatId)
     }
 }

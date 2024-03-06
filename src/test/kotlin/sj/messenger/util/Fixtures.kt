@@ -15,11 +15,11 @@ val fixture: FixtureMonkey = FixtureMonkey.builder()
     .plugin(JakartaValidationPlugin())
     .build()
 
-fun generateGroupChat() : GroupChat {
+fun generateGroupChat(): GroupChat {
     return GroupChat(name = fixture.giveMeOne(), avatarUrl = randomUrl())
 }
 
-fun generateUser() : User {
+fun generateUser(): User {
     return User(
         name = fixture.giveMeOne(),
         email = Web.emails().fixGenSize(40).sample(),
@@ -31,7 +31,7 @@ fun generateUser() : User {
     )
 }
 
-fun generateInvitation(groupChat: GroupChat) : Invitation{
+fun generateInvitation(groupChat: GroupChat): Invitation {
     return Invitation(
         id = Arbitraries.strings().alpha().numeric().fixGenSize(8).sample(),
         groupChatId = groupChat.id!!,
@@ -42,6 +42,10 @@ fun generateInvitation(groupChat: GroupChat) : Invitation{
 
 fun randomUrl() = Web.webDomains().sample()
 
-fun randomEmail() = Web.emails().fixGenSize(40).sample()
+fun randomEmail(): String {
+    val id = Arbitraries.strings().numeric().alpha().ofMinLength(5).ofMaxLength(15).sample()
+    val domain = Arbitraries.strings().numeric().alpha().ofMinLength(5).ofMaxLength(15).sample()
+    return "${id}@${domain}.com".lowercase()
+}
 
 fun randomPassword() = Arbitraries.strings().ascii().numeric().ofMinLength(10).ofMaxLength(20).sample()
