@@ -7,5 +7,5 @@ import sj.messenger.domain.groupchat.domain.Participant
 interface ParticipantRepository : JpaRepository<Participant, Long?> {
 
     @Query("select p from Participant p join fetch p.groupChat where p.user.id = :userId")
-    fun getParticipantsByUserId(userId: Long) : List<Participant>
+    fun getParticipantsWithGroupChatByUserId(userId: Long) : List<Participant>
 }

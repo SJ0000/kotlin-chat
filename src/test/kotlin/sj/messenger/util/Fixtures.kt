@@ -7,6 +7,7 @@ import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
 import net.jqwik.web.api.Web
 import sj.messenger.domain.groupchat.domain.GroupChat
+import sj.messenger.domain.groupchat.domain.Invitation
 import sj.messenger.domain.user.domain.User
 
 val fixture: FixtureMonkey = FixtureMonkey.builder()
@@ -27,6 +28,15 @@ fun generateUser() : User {
         statusMessage = fixture.giveMeOne(),
         id = Arbitraries.longs().greaterOrEqual(1).sample(),
         publicIdentifier = fixture.giveMeOne()
+    )
+}
+
+fun generateInvitation(groupChat: GroupChat) : Invitation{
+    return Invitation(
+        id = Arbitraries.strings().alpha().numeric().fixGenSize(8).sample(),
+        groupChatId = groupChat.id!!,
+        inviterId = fixture.giveMeOne(),
+        inviterName = fixture.giveMeOne()
     )
 }
 

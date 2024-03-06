@@ -1,12 +1,17 @@
 package sj.messenger.util.integration
 
-import sj.messenger.util.testcontainer.annotation.EnableMongoContainer
-import sj.messenger.util.testcontainer.annotation.EnableMySqlContainer
-import sj.messenger.util.testcontainer.annotation.EnableRedisContainer
+import org.springframework.test.context.ContextConfiguration
+import sj.messenger.util.testcontainer.initializer.MongoContainerInitializer
+import sj.messenger.util.testcontainer.initializer.MySqlContainerInitializer
+import sj.messenger.util.testcontainer.initializer.RedisContainerInitializer
 
-@EnableMySqlContainer
-@EnableMongoContainer
-@EnableRedisContainer
+@ContextConfiguration(
+    initializers = [
+        MySqlContainerInitializer::class,
+        MongoContainerInitializer::class,
+        RedisContainerInitializer::class
+    ]
+)
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class EnableContainers()

@@ -34,7 +34,7 @@ class ParticipantRepositoryTest (
         }
 
         // when
-        val result = participantRepository.getParticipantsByUserId(user.id!!);
+        val result = participantRepository.getParticipantsWithGroupChatByUserId(user.id!!);
         val chatRooms = result.map { it.groupChat }
         // then
         Assertions.assertThat(result.size).isEqualTo(10)

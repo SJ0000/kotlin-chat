@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.domain.Message
-import sj.messenger.domain.groupchat.dto.GroupChatCreate
+import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.SentMessageDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.MessageRepository
@@ -49,14 +49,14 @@ class GroupChatService(
     }
 
     @Transactional(readOnly = false)
-    fun createGroupChat(groupChatCreate: GroupChatCreate): Long {
-        val groupChat = GroupChat(name = groupChatCreate.name)
+    fun createGroupChat(groupChatCreateDto: GroupChatCreateDto): Long {
+        val groupChat = GroupChat(name = groupChatCreateDto.name)
         groupChatRepository.save(groupChat)
         return groupChat.id!!
     }
 
     fun findUserGroupChats(userId: Long): List<GroupChat>{
-        val participants = participantRepository.getParticipantsByUserId(userId)
+        val participants = participantRepository.getParticipantsWithGroupChatByUserId(userId)
         return participants.map { it.groupChat }
     }
 

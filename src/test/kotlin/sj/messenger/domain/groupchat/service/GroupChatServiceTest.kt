@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
-import sj.messenger.domain.groupchat.dto.GroupChatCreate
+import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.fixture
@@ -71,15 +71,15 @@ class GroupChatServiceTest(
     @DisplayName("대화방 정상 생성")
     fun createChatRoom(){
         // given
-        val groupChatCreate = fixture.giveMeOne<GroupChatCreate>()
+        val groupChatCreateDto = fixture.giveMeOne<GroupChatCreateDto>()
 
         // when
-        val chatRoomId = groupChatService.createGroupChat(groupChatCreate)
+        val chatRoomId = groupChatService.createGroupChat(groupChatCreateDto)
 
         // then
         val findChatRoom = groupChatRepository.findByIdOrNull(chatRoomId)
         assertThat(findChatRoom).isNotNull
-        assertThat(findChatRoom?.name).isEqualTo(groupChatCreate.name)
+        assertThat(findChatRoom?.name).isEqualTo(groupChatCreateDto.name)
     }
 
     @Test
