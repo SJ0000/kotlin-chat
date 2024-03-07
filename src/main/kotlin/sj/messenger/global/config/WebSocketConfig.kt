@@ -25,11 +25,11 @@ class WebSocketConfig(
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/message-broker").setAllowedOrigins(clientUrl)
+        registry.addEndpoint("/message-broker").setAllowedOriginPatterns(clientUrl, "http://localhost:[*]")
     }
 
-    override fun configureClientInboundChannel(registration: ChannelRegistration) {
-        val authenticationInterceptor = AuthenticationChannelInterceptor(authenticationManager)
-        registration.interceptors(authenticationInterceptor)
-    }
+//    override fun configureClientInboundChannel(registration: ChannelRegistration) {
+//        val authenticationInterceptor = AuthenticationChannelInterceptor(authenticationManager)
+//        registration.interceptors(authenticationInterceptor)
+//    }
 }

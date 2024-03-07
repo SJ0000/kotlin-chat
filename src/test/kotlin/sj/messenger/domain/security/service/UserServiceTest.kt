@@ -34,7 +34,7 @@ class UserServiceTest(
     fun findUserByIdError() {
         // expected
         assertThatThrownBy {
-            userService.findUserById(1L)
+            userService.findUserById(9999)
         }.isInstanceOf(RuntimeException::class.java)
     }
 

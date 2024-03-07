@@ -16,9 +16,10 @@ class DirectChatStompController(
     private val directChatService: DirectChatService,
 ) {
     @MessageMapping("/direct-message")
-    fun sendDirectMessage(
+    fun directMessage(
         @Payload messageDto: SentDirectMessageDto,
     ) {
+        println("messageDto = ${messageDto}")
         when(messageDto.messageType){
             MESSAGE -> processMessage(messageDto)
             else -> throw RuntimeException("Not Supported Message Type.")

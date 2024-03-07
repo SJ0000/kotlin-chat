@@ -32,7 +32,7 @@ class GroupChatServiceTest(
     @DisplayName("존재하지 않는 chatRoom 조회시 예외 발생")
     fun getChatRoomError() {
         // expected
-        assertThatThrownBy { groupChatService.getDirectChat(1L) }
+        assertThatThrownBy { groupChatService.getDirectChat(9999) }
             .isInstanceOf(RuntimeException::class.java)
     }
 
