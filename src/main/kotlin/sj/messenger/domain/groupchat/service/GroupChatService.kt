@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.domain.Message
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
-import sj.messenger.domain.groupchat.dto.SentMessageDto
+import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.MessageRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
@@ -23,12 +23,12 @@ class GroupChatService(
     private val userService: UserService,
 ) {
     @Transactional(readOnly = false)
-    fun saveMessage(sentMessageDto: SentMessageDto) : String {
+    fun saveMessage(sentGroupMessageDto: SentGroupMessageDto) : String {
         val message = Message(
-            senderId = sentMessageDto.senderId,
-            chatRoomId = sentMessageDto.chatRoomId,
-            content = sentMessageDto.content,
-            sentAt = sentMessageDto.sentAt
+            senderId = sentGroupMessageDto.senderId,
+            chatRoomId = sentGroupMessageDto.groupChatId,
+            content = sentGroupMessageDto.content,
+            sentAt = sentGroupMessageDto.sentAt
         )
         val savedMessage = messageRepository.save(message)
         return savedMessage.id!!.toHexString()

@@ -28,7 +28,6 @@ class TestStompClientConfig(
     }
 }
 
-
 class TestStompClient(
     val connectionUrl: String,
     objectMapper: ObjectMapper,
@@ -54,7 +53,6 @@ class TestStompClient(
                 override fun handleFrame(headers: StompHeaders, payload: Any?) {
                     val dto = payload as T
                     try {
-                        println("payload = ${dto}")
                         received.set(dto)
                     } catch (t: Throwable) {
                         failure.set(t)
@@ -67,7 +65,6 @@ class TestStompClient(
 
             try {
                 session.send(source, message)
-                println("sent message = ${message}")
             } catch (t: Throwable) {
                 failure.set(t)
                 latch.countDown()
