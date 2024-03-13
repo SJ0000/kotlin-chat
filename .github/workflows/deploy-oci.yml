@@ -23,7 +23,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Setup Docker
-        run:
+        run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose        
       
