@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./
+      APPLICATION: ${{ secrets.APPLICATION }}
     
     steps:
       # repository code pull
@@ -18,6 +21,12 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Copy application.yml
+        uses: actions/checkout@v2
+        run: |
+          touch ./src/main/resources/application.yml
+          echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml          
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
