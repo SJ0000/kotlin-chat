@@ -3,6 +3,8 @@ name: deploy OCI
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
+
 
 jobs:
   build:
@@ -24,6 +26,7 @@ jobs:
 
       - name: Copy application.yml
         run: |
+          mkdir -p ./src/main/resources
           touch ./src/main/resources/application.yml
           echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml          
 
