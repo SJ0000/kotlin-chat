@@ -10,15 +10,15 @@ import java.time.LocalDateTime
 
 @DataMongoTest
 @EnableMongoContainer
-class MessageRepositoryTest (
-    @Autowired private val messageRepository: MessageRepository
+class GroupMessageRepositoryTest (
+    @Autowired private val groupMessageRepository: GroupMessageRepository
 ){
 
     @Test
     @Rollback
     fun saveTest(){
         val message = Message(senderId = 1L, chatRoomId = 1L, content =  "123", sentAt =  LocalDateTime.now())
-        val savedMessage = messageRepository.save(message)
+        val savedMessage = groupMessageRepository.save(message)
         println(savedMessage.id?.toString())
     }
 }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository
 import sj.messenger.domain.groupchat.domain.Message
 
 @Repository
-interface MessageRepository : MongoRepository<Message, ObjectId?> {
+interface GroupMessageRepository : MongoRepository<Message, ObjectId?> {
 
 }

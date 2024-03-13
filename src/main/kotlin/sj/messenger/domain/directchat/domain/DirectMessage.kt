@@ -14,6 +14,4 @@ class DirectMessage @PersistenceCreator constructor(
     val sentAt: LocalDateTime,
     @Id val id: ObjectId? = null,
 ) {
-
-
 }

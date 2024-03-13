@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
-import sj.messenger.domain.directchat.dto.DirectMessageType
-import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
-import sj.messenger.domain.directchat.dto.SentDirectMessageDto
 import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
 import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
+import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.util.config.TestStompClient
 import sj.messenger.util.config.TestStompClientConfig
 import sj.messenger.util.integration.EnableContainers
@@ -19,7 +17,8 @@ import java.time.LocalDateTime
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @EnableContainers
 class GroupChatStompControllerTest(
-    @Autowired val client : TestStompClient
+    @Autowired val client : TestStompClient,
+    @Autowired val groupMessageRepository: GroupMessageRepository,
 ){
 
     @Test
@@ -39,5 +38,7 @@ class GroupChatStompControllerTest(
             Assertions.assertThat(senderId).isEqualTo(message.senderId)
             Assertions.assertThat(content).isEqualTo(message.content)
         }
+
+
     }
 }

@@ -8,7 +8,7 @@ import sj.messenger.domain.groupchat.domain.Message
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
-import sj.messenger.domain.groupchat.repository.MessageRepository
+import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.service.UserService
 
@@ -18,7 +18,7 @@ import sj.messenger.domain.user.service.UserService
 class GroupChatService(
     private val groupChatRepository: GroupChatRepository,
     private val participantRepository: ParticipantRepository,
-    private val messageRepository: MessageRepository,
+    private val groupMessageRepository: GroupMessageRepository,
 
     private val userService: UserService,
 ) {
@@ -30,7 +30,7 @@ class GroupChatService(
             content = sentGroupMessageDto.content,
             sentAt = sentGroupMessageDto.sentAt
         )
-        val savedMessage = messageRepository.save(message)
+        val savedMessage = groupMessageRepository.save(message)
         return savedMessage.id!!.toHexString()
     }
 

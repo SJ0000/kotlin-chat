@@ -52,6 +52,8 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
     runtimeOnly("com.h2database:h2")
+    // oracle
+    runtimeOnly("com.oracle.database.jdbc:ojdbc8")
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
