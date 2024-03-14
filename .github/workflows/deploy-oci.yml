@@ -12,6 +12,7 @@ jobs:
     env:
       working-directory: ./
       APPLICATION: ${{ secrets.APPLICATION }}
+      APPLICATION_TEST: ${{ secrets.APPLICATION_TEST }}
     
     steps:
       # repository code pull
@@ -27,8 +28,11 @@ jobs:
       - name: Copy application.yml
         run: |
           mkdir -p ./src/main/resources
+          mkdir -p ./src/test/resources
           touch ./src/main/resources/application.yml
-          echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml          
+          echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
+          touch ./src/test/resources/application.yml
+          echo "${{env.APPLICATION_TEST}}" > ./src/test/resources/application.yml
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -40,4 +44,6 @@ jobs:
       
       - name: Execute Gradle Build
         run: ./gradlew build
+
+      - name: Upload build artifacts
         
