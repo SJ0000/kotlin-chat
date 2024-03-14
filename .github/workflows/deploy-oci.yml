@@ -44,6 +44,3 @@ jobs:
       
       - name: Execute Gradle Build
         run: ./gradlew build
-
-      - name: Upload build artifacts
-        
