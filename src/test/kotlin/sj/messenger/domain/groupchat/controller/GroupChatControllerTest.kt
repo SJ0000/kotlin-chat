@@ -114,6 +114,7 @@ class GroupChatControllerTest(
     @WithMockAccessToken
     fun joinGroupChat(){
         // given
+        val user = userRepository.findByEmail("test@test.com")!!
         val groupChat = generateGroupChat()
         groupChatRepository.save(groupChat)
 
@@ -130,7 +131,6 @@ class GroupChatControllerTest(
             }
         }
 
-        val user = userRepository.findAll()[0]
         val findGroupChat = groupChatRepository.findWithParticipantsById(groupChat.id!!)
         assertThat(findGroupChat?.isParticipant(user.id!!)).isTrue()
     }

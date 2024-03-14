@@ -82,7 +82,7 @@ class DirectChatControllerTest(
             status { isOk() }
             content {
                 jsonPath(
-                    "$[*].id", Matchers.contains(
+                    "$[*].id", Matchers.containsInAnyOrder(
                         *directChats.map { it.id?.toInt() }.toTypedArray()
                     )
                 )

@@ -22,12 +22,12 @@ fun generateGroupChat(): GroupChat {
 fun generateUser(): User {
     return User(
         name = fixture.giveMeOne(),
-        email = Web.emails().fixGenSize(40).sample(),
+        email = randomEmail(),
         password = randomPassword(),
         avatarUrl = randomUrl(),
-        statusMessage = fixture.giveMeOne(),
+        statusMessage = randomString(10,255),
         id = Arbitraries.longs().greaterOrEqual(1).sample(),
-        publicIdentifier = fixture.giveMeOne()
+        publicIdentifier = randomString(10,255)
     )
 }
 
@@ -49,3 +49,5 @@ fun randomEmail(): String {
 }
 
 fun randomPassword() = Arbitraries.strings().ascii().numeric().ofMinLength(10).ofMaxLength(20).sample()
+
+fun randomString(minLength: Int, maxLength: Int) = Arbitraries.strings().ofMinLength(minLength).ofMaxLength(maxLength).sample()

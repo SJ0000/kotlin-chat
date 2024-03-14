@@ -1,6 +1,7 @@
 package sj.messenger.domain.friend.repository
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +15,11 @@ class FriendRepositoryTest(
     @Autowired val userRepository: UserRepository,
     @Autowired val friendRepository: FriendRepository,
 ) {
+
+    @BeforeEach
+    fun clearTestData(){
+        friendRepository.deleteAll()
+    }
 
     @Test
     @DisplayName("특정 사용자의 모든 친구를 조회한다.")

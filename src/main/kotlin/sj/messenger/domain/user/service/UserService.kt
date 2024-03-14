@@ -80,7 +80,7 @@ class UserService(
         }
     }
 
-    private fun existsEmail(email: String): Boolean {
+    fun existsEmail(email: String): Boolean {
         return userRepository.existsByEmail(email);
     }
 

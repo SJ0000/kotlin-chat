@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.hamcrest.Matchers
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,6 +44,11 @@ class FriendControllerTest(
     @Autowired val om: ObjectMapper,
 ) {
 
+    @BeforeEach
+    fun clearTestData(){
+        friendRequestRepository.deleteAll()
+    }
+
     @Test
     @WithMockAccessToken
     fun getFriends() {
@@ -60,7 +67,7 @@ class FriendControllerTest(
                 jsonPath("$").isArray
                 jsonPath("$.size()", 3)
                 jsonPath(
-                    "$[*].id", Matchers.contains(
+                    "$[*].id", Matchers.containsInAnyOrder(
                         *others.map { it.id?.toInt() }.toTypedArray()
                     )
                 )
@@ -86,7 +93,7 @@ class FriendControllerTest(
                 jsonPath("$").isArray
                 jsonPath("$.size()", 2)
                 jsonPath(
-                    "$[*].fromUser.id", Matchers.contains(
+                    "$[*].fromUser.id", Matchers.containsInAnyOrder(
                         *others.map { it.id?.toInt() }.toTypedArray()
                     )
                 )

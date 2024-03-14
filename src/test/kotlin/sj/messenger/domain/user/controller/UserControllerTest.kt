@@ -46,7 +46,7 @@ class UserControllerTest(
     @WithMockAccessToken
     fun user() {
         // given
-        val user = userRepository.findAll()[0]
+        val user = userRepository.findByEmail("test@test.com")!!
 
         // expected
         mockMvc.get("/users/${user.id!!}"){
@@ -86,7 +86,7 @@ class UserControllerTest(
     @WithMockAccessToken
     fun patchUser(){
         // given
-        val user = userRepository.findAll()[0]
+        val user = userRepository.findByEmail("test@test.com")!!
         val updateUser : UpdateUserDto = fixture.giveMeOne()
 
         // expected

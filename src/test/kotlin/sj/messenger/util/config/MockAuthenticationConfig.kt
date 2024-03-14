@@ -28,14 +28,14 @@ class MockAuthenticationConfig(
     private val userService: UserService,
 ) {
     @PostConstruct
-    fun initializeLateInitBeans(){
+    fun initializeLateInitBeans() {
         currentSecurityFilterChain = securityFilterChain
         currentJwtProvider = jwtProvider
         currentUserService = userService
     }
 
-    @PostConstruct
-    fun prepareMockUser(){
+//    @PostConstruct
+    fun prepareMockUser() {
         val signUp = SignUpDto(
             email = "test@test.com",
             name = "test",
@@ -55,24 +55,40 @@ annotation class WithMockAccessToken()
     email = test@test.com
     password = 1234567890
  */
-class AccessTokenProvideExtension : BeforeTestExecutionCallback{
+class AccessTokenProvideExtension : BeforeTestExecutionCallback {
 
     override fun beforeTestExecution(context: ExtensionContext?) {
         val method = context?.testMethod?.get()!!
-        if(method.isAnnotationPresent(WithMockAccessToken::class.java)){
+        if (method.isAnnotationPresent(WithMockAccessToken::class.java)) {
+            createMockUserIfNotExists()
             mockAuthorizationHeader()
         }
     }
 
-    private fun mockAuthorizationHeader(){
+    private fun mockAuthorizationHeader() {
         val user = currentUserService.findUserByEmail("test@test.com")
         val accessToken = currentJwtProvider.createAccessToken(UserClaim(user.id!!, user.name))
         addAccessTokenProvideFilter(accessToken)
     }
 
-    private fun addAccessTokenProvideFilter(accessToken: String){
+    private fun addAccessTokenProvideFilter(accessToken: String) {
         val filters = currentSecurityFilterChain.filters
-        filters.add(0,AccessTokenProvideFilter(accessToken))
+        if (!filters.any { it is AccessTokenProvideFilter })
+            filters.add(0, AccessTokenProvideFilter(accessToken))
+    }
+
+    private fun createMockUserIfNotExists(){
+        val signUp = SignUpDto(
+            email = "test@test.com",
+            name = "test",
+            password = "1234567890"
+        )
+        if(currentUserService.existsEmail(signUp.email)){
+            println("mockUser already exists")
+            return
+        }
+
+        currentUserService.signUpUser(signUp)
     }
 }
 
