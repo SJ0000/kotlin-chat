@@ -8,8 +8,6 @@ import io.jsonwebtoken.security.Keys
 import net.jqwik.api.Arbitraries
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.codec.Utf8
 import javax.crypto.SecretKey
 

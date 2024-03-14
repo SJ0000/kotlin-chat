@@ -1,6 +1,6 @@
 package sj.messenger.domain.directchat.controller
 
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +16,6 @@ import sj.messenger.util.config.TestStompClientConfig
 import sj.messenger.util.integration.EnableContainers
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalUnit
 
 @Import(TestStompClientConfig::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)

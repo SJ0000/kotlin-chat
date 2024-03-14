@@ -1,14 +1,10 @@
 package sj.messenger.domain.security.jwt
 
-import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import net.jqwik.api.Arbitraries
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import sj.messenger.util.fixture
 import javax.crypto.SecretKey
 
 class JwtParserTest(){

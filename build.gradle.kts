@@ -63,6 +63,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.19.6")
     testImplementation("org.testcontainers:mysql:1.19.3")
     testImplementation("org.testcontainers:mongodb:1.19.3")
+    testImplementation("org.testcontainers:oracle-free:1.19.3")
 }
 
 

@@ -2,13 +2,10 @@ package sj.messenger.domain.friend.controller
 
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -17,14 +14,12 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.friend.domain.Friend
 import sj.messenger.domain.friend.domain.FriendRequest
 import sj.messenger.domain.friend.dto.FriendRequestDto
 import sj.messenger.domain.friend.repository.FriendRepository
 import sj.messenger.domain.friend.repository.FriendRequestRepository
-import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.config.WithMockAccessToken
 import sj.messenger.util.generateUser

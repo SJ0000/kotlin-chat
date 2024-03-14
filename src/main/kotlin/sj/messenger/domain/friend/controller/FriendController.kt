@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
-import sj.messenger.domain.friend.dto.ReceivedFriendRequestDto
 import sj.messenger.domain.friend.dto.FriendRequestDto
+import sj.messenger.domain.friend.dto.ReceivedFriendRequestDto
 import sj.messenger.domain.friend.service.FriendService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto

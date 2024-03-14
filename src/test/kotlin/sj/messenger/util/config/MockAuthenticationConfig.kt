@@ -62,6 +62,8 @@ class AccessTokenProvideExtension : BeforeTestExecutionCallback {
         if (method.isAnnotationPresent(WithMockAccessToken::class.java)) {
             createMockUserIfNotExists()
             mockAuthorizationHeader()
+        }else{
+            removeAccessTokenProvideFilter()
         }
     }
 
@@ -75,6 +77,14 @@ class AccessTokenProvideExtension : BeforeTestExecutionCallback {
         val filters = currentSecurityFilterChain.filters
         if (!filters.any { it is AccessTokenProvideFilter })
             filters.add(0, AccessTokenProvideFilter(accessToken))
+    }
+
+    private fun removeAccessTokenProvideFilter(){
+        val filters = currentSecurityFilterChain.filters
+        if (filters.any { it is AccessTokenProvideFilter })
+            filters.removeIf{
+                it is AccessTokenProvideFilter
+            }
     }
 
     private fun createMockUserIfNotExists(){
@@ -110,6 +120,7 @@ class HeaderAddWrapper(
         if (name == header.first) {
             return header.second
         }
+        println("HeaderAddWrapper.getHeader name = ${name}, value = ${super.getHeader(name)}")
         return super.getHeader(name)
     }
 }
