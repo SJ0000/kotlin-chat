@@ -4,22 +4,17 @@ import org.assertj.core.api.Assertions.assertThat
 import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Import
 import org.springframework.data.repository.findByIdOrNull
 import sj.messenger.domain.directchat.dto.DirectMessageType
 import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.util.config.TestStompClient
-import sj.messenger.util.config.TestStompClientConfig
-import sj.messenger.util.integration.EnableContainers
+import sj.messenger.util.integration.IntegrationTest
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-@Import(TestStompClientConfig::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@EnableContainers
+@IntegrationTest
 class DirectChatStompControllerTest(
     @Autowired val client: TestStompClient,
     @Autowired val directMessageRepository: DirectMessageRepository,

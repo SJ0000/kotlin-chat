@@ -12,7 +12,7 @@ import org.springframework.security.crypto.codec.Utf8
 import javax.crypto.SecretKey
 
 
-class JwtProviderTest{
+class JwtProviderTest {
     private val secret = Arbitraries.strings().alpha().ofLength(48).sample()
     private val key: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secret))
     private val jwtProvider: JwtProvider = JwtProvider(key, 240000)
@@ -23,11 +23,9 @@ class JwtProviderTest{
     fun createToken() {
         val userClaim = UserClaim(id = 1L, name = "TestUser")
         val token = jwtProvider.createAccessToken(userClaim)
-        val (header,payload,signature) = token.split(".")
-        println(payload)
+        val payload = token.split(".")[1] // header, payload, signature
         val bytes = Decoders.BASE64URL.decode(payload)
         val payloadJson = Utf8.decode(bytes)
-        println(payloadJson)
         val map = objectMapper.readValue(payloadJson, Map::class.java)
         val claimInToken = objectMapper.readValue<UserClaim>(map["user"].toString())
         assertThat(claimInToken).isEqualTo(userClaim)

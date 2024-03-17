@@ -7,8 +7,6 @@ import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
@@ -23,14 +21,10 @@ import sj.messenger.domain.friend.repository.FriendRequestRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.config.WithMockAccessToken
 import sj.messenger.util.generateUser
-import sj.messenger.util.integration.EnableContainers
-import sj.messenger.util.integration.EnableMockAuthentication
+import sj.messenger.util.integration.IntegrationTest
 
 
-@SpringBootTest
-@EnableContainers
-@EnableMockAuthentication
-@AutoConfigureMockMvc
+@IntegrationTest
 class FriendControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val friendRepository: FriendRepository,

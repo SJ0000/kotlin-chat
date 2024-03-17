@@ -43,7 +43,7 @@ class TestStompClient(
         val failure = AtomicReference<Throwable>()
         val latch = CountDownLatch(1)
 
-        val handler = TestSessionHandler(failure) { session, header ->
+        val handler = TestSessionHandler(failure) { session, _ ->
             session.subscribe(destination, object : StompFrameHandler {
 
                 override fun getPayloadType(headers: StompHeaders): Type {

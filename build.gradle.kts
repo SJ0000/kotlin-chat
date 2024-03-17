@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("org.springframework.boot") version "3.2.0"
@@ -66,22 +67,27 @@ dependencies {
     testImplementation("org.testcontainers:oracle-free:1.19.3")
 }
 
-
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "17"
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
 allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.Embeddable")
     annotation("jakarta.persistence.MappedSuperclass")
 }
 
+tasks{
+    withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs += "-Xjsr305=strict"
+            jvmTarget = "17"
+        }
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
+    }
+
+    withType<BootJar>{
+        enabled = true
+        archiveFileName = "simple-messenger-server.jar"
+    }
+
+}

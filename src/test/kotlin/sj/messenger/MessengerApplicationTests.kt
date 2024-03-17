@@ -1,11 +1,9 @@
 package sj.messenger
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-import sj.messenger.util.integration.EnableContainers
+import sj.messenger.util.integration.IntegrationTest
 
-@SpringBootTest
-@EnableContainers
+@IntegrationTest
 class MessengerApplicationTests {
 
 	@Test
