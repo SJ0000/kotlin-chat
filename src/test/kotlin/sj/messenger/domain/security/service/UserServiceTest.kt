@@ -91,7 +91,7 @@ class UserServiceTest(
     @DisplayName("회원가입 성공 테스트")
     fun signUpUser() {
         // given
-        val dto = SignUpDto(randomEmail(), fixture.giveMeOne(), fixture.giveMeOne())
+        val dto = SignUpDto(randomEmail(), randomString(5,10), randomString(10,15))
 
         // when
         val userId = userService.signUpUser(dto)
@@ -111,8 +111,8 @@ class UserServiceTest(
         userRepository.save(user)
         val dto = SignUpDto(
             email = user.email,
-            name = fixture.giveMeOne(),
-            password = fixture.giveMeOne()
+            name = randomString(1,20),
+            password = randomString(10,20)
         )
 
         // expected
@@ -124,13 +124,13 @@ class UserServiceTest(
     @DisplayName("로그인 요청시 비밀번호가 일치할 경우 예외 발생하지 않음")
     fun validateLogin() {
         // given
-        val rawPassword: String = fixture.giveMeOne()
+        val rawPassword: String = randomString(10,20)
         val encryptedPassword = passwordEncoder.encode(rawPassword)
         val user = User(
-            name = fixture.giveMeOne(),
+            name = randomString(5,255),
             email = randomEmail(),
             password = encryptedPassword,
-            publicIdentifier = fixture.giveMeOne()
+            publicIdentifier = randomString(20,20)
         )
         userRepository.save(user)
         val loginRequest = LoginRequest(user.email, rawPassword)
@@ -145,10 +145,10 @@ class UserServiceTest(
         val rawPassword = randomPassword()
         val encryptedPassword = passwordEncoder.encode(rawPassword)
         val user = User(
-            name = fixture.giveMeOne(),
+            name = randomString(5,255),
             email = randomEmail(),
             password = encryptedPassword,
-            publicIdentifier = fixture.giveMeOne()
+            publicIdentifier = randomString(5,255)
         )
         userRepository.save(user)
         val loginRequest = LoginRequest(user.email, rawPassword+"1")
@@ -166,10 +166,10 @@ class UserServiceTest(
         userRepository.save(user)
 
         val dto = UpdateUserDto(
-            name = fixture.giveMeOne(),
+            name = randomString(5,25),
             avatarUrl = randomUrl(),
-            statusMessage = fixture.giveMeOne(),
-            publicIdentifier = fixture.giveMeOne()
+            statusMessage = randomString(5,255),
+            publicIdentifier = randomString(5,255)
         )
 
         // when
@@ -193,9 +193,9 @@ class UserServiceTest(
         userRepository.saveAll(listOf(user,user2))
 
         val dto = UpdateUserDto(
-            name = fixture.giveMeOne(),
+            name = randomString(1,255),
             avatarUrl = randomUrl(),
-            statusMessage = fixture.giveMeOne(),
+            statusMessage = randomString(0,255),
             publicIdentifier = user2.publicIdentifier
         )
 

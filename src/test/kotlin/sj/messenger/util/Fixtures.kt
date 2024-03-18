@@ -21,7 +21,7 @@ fun generateGroupChat(): GroupChat {
 
 fun generateUser(): User {
     return User(
-        name = fixture.giveMeOne(),
+        name = randomString(10,255),
         email = randomEmail(),
         password = randomPassword(),
         avatarUrl = randomUrl(),

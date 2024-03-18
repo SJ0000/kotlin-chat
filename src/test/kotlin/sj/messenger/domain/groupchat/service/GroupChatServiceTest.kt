@@ -17,6 +17,7 @@ import sj.messenger.util.fixture
 import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
 import sj.messenger.util.integration.EnableContainers
+import sj.messenger.util.randomString
 
 @SpringBootTest
 @EnableContainers
@@ -58,7 +59,7 @@ class GroupChatServiceTest(
         // given
         val user = generateUser()
         userRepository.save(user)
-        val groupChat = groupChatRepository.save(GroupChat(name = fixture.giveMeOne()))
+        val groupChat = groupChatRepository.save(GroupChat(name = randomString(1,255)))
         groupChat.join(user)
 
         // expected

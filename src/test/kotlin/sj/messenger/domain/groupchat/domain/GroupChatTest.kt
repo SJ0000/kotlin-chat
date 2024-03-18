@@ -10,6 +10,7 @@ import sj.messenger.domain.user.domain.User
 import sj.messenger.util.fixture
 import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
+import sj.messenger.util.randomString
 
 
 class GroupChatTest(
@@ -35,13 +36,7 @@ class GroupChatTest(
     fun isParticipantTest(){
         // given
         val chatRoom = generateGroupChat()
-        val user = User(
-            name = fixture.giveMeOne(),
-            email = Web.emails().sample(),
-            password = fixture.giveMeOne(),
-            id = Arbitraries.longs().sample(),
-            publicIdentifier = fixture.giveMeOne()
-        )
+        val user = generateUser()
 
         // then
         assertThat(chatRoom.isParticipant(user.id!!)).isFalse()

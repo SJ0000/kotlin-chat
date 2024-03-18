@@ -8,6 +8,8 @@ data class UpdateUserDto (
     val name: String,
     @field:NotBlank
     val avatarUrl: String,
+    @field:Size(min = 1, max = 255)
     val statusMessage: String,
+    @field:Size(min = 1, max = 255)
     val publicIdentifier: String,
 )
