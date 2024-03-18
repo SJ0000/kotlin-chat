@@ -84,7 +84,9 @@ jobs:
       - name: move to Object Storage
         uses: oracle-actions/run-oci-cli-command@v1.1.1
         with:
-          command: oci os object put --bucket-name simple-messenger-bucket --file /tmp/artifact.zip --namespace "${{ env.OCI_CLI_BUCKET_NAMESPACE }}"
+          command: |
+            oci os object delete --bucket-name simple-messenger-bucket --name artifact.zip --force
+            oci os object put --bucket-name simple-messenger-bucket --file /tmp/artifact.zip --namespace "${{ env.OCI_CLI_BUCKET_NAMESPACE }}"            
 
   run-on-oci-instance:
     runs-on: ubuntu-latest
