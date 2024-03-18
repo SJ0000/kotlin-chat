@@ -18,7 +18,7 @@ import sj.messenger.domain.groupchat.dto.InvitationDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.InvitationRepository
 import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.util.config.WithMockAccessToken
+import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
 import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateInvitation
@@ -59,7 +59,7 @@ class GroupChatControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun postGroupChat(){
         // given
         val dto : GroupChatCreateDto = fixture.giveMeOne()
@@ -83,7 +83,7 @@ class GroupChatControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun getMyGroupChats(){
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -105,7 +105,7 @@ class GroupChatControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun joinGroupChat(){
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -130,7 +130,7 @@ class GroupChatControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun postInviteGroupChat(){
         // given
         val user = userRepository.findByEmail("test@test.com")!!

@@ -4,7 +4,6 @@ package sj.messenger.domain.friend.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -19,7 +18,7 @@ import sj.messenger.domain.friend.dto.FriendRequestDto
 import sj.messenger.domain.friend.repository.FriendRepository
 import sj.messenger.domain.friend.repository.FriendRequestRepository
 import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.util.config.WithMockAccessToken
+import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.generateUser
 import sj.messenger.util.integration.IntegrationTest
 
@@ -33,13 +32,8 @@ class FriendControllerTest(
     @Autowired val om: ObjectMapper,
 ) {
 
-    @BeforeEach
-    fun clearTestData(){
-        friendRequestRepository.deleteAll()
-    }
-
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun getFriends() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -65,7 +59,7 @@ class FriendControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun getFriendRequests() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -91,7 +85,7 @@ class FriendControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun postFriends() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -112,7 +106,7 @@ class FriendControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun patchFriends() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!

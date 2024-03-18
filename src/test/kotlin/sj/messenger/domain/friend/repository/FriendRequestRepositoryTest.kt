@@ -2,7 +2,6 @@ package sj.messenger.domain.friend.repository
 
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,11 +18,6 @@ class FriendRequestRepositoryTest(
     @Autowired val userRepository: UserRepository,
     @Autowired val em : EntityManager
 ) {
-
-    @BeforeEach
-    fun clearTestData(){
-        friendRequestRepository.deleteAll()
-    }
 
     @Test
     @DisplayName("특정 사용자가 다른 사용자에게 요청한 친구 요청 데이터를 조회한다.")

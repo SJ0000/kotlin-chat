@@ -40,7 +40,7 @@ class UserServiceTest(
 
     @Test
     @DisplayName("findUserById()에 존재하지 않는 user의 id가 입력된 경우 예외 발생")
-    fun finUserByEmailError() {
+    fun findUserByEmailError() {
         // expected
         assertThatThrownBy {
             userService.findUserByEmail(randomEmail())

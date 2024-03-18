@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.util.config.WithMockAccessToken
+import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
 import sj.messenger.util.integration.IntegrationTest
 
@@ -26,7 +26,7 @@ class UserControllerTest(
 ) {
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun user() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -66,7 +66,7 @@ class UserControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun patchUser(){
         // given
         val user = userRepository.findByEmail("test@test.com")!!

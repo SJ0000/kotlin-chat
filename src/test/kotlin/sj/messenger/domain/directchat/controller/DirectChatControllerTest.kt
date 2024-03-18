@@ -3,7 +3,6 @@ package sj.messenger.domain.directchat.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -14,7 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import sj.messenger.domain.directchat.domain.DirectChat
 import sj.messenger.domain.directchat.repository.DirectChatRepository
 import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.util.config.WithMockAccessToken
+import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.generateUser
 import sj.messenger.util.integration.IntegrationTest
 
@@ -25,13 +24,9 @@ class DirectChatControllerTest(
     @Autowired val directChatRepository: DirectChatRepository,
     @Autowired val om : ObjectMapper
 ) {
-    @BeforeEach
-    fun clearTestData(){
-        directChatRepository.deleteAll()
-    }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun getDirectChat() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -56,7 +51,7 @@ class DirectChatControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun getMyDirectChats() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
@@ -81,7 +76,7 @@ class DirectChatControllerTest(
     }
 
     @Test
-    @WithMockAccessToken
+    @InjectAccessToken
     fun postDirectChat() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!

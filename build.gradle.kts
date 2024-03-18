@@ -90,4 +90,8 @@ tasks{
         archiveFileName = "simple-messenger-server.jar"
     }
 
+    named<Jar>("jar"){
+        enabled = false
+    }
+
 }

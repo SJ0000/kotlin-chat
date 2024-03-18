@@ -51,7 +51,7 @@ class FriendService (
         val request = friendRequestRepository.findByIdWithUsers(requestId)?: throw RuntimeException("FriendRequest not exists. id = ${requestId}")
         // 요청을 받은 사람 인가?
         if(!request.isReceiver(userId))
-            throw RuntimeException("User(Id = ${userId} ) is not receiver. receiver id = ${request.receiver.id}")
+            throw RuntimeException("User(Id = ${userId}) is not receiver. receiver id = ${request.receiver.id}")
 
         request.approve()
         friendRepository.save(Friend(request.sender, request.receiver))
