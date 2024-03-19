@@ -105,4 +105,4 @@ jobs:
           username: ${{ secrets.OCI_INSTANCE_USERNAME }}
           key: ${{ secrets.OCI_INSTANCE_KEY }}
           script: |
-            sh "${{ env.DEPLOY_DIR }}/deploy.sh"
+            bash "${{ env.DEPLOY_DIR }}/deploy.sh"
