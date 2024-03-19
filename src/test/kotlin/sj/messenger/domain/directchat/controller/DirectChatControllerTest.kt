@@ -1,6 +1,5 @@
 package sj.messenger.domain.directchat.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -22,7 +21,6 @@ class DirectChatControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val userRepository: UserRepository,
     @Autowired val directChatRepository: DirectChatRepository,
-    @Autowired val om : ObjectMapper
 ) {
 
     @Test

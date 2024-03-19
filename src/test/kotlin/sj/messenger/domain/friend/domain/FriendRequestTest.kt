@@ -12,8 +12,8 @@ class FriendRequestTest {
     @DisplayName("인자로 받은 사용자가 친구 요청을 받은 사용자인지 확인")
     fun isReceiver() {
         // given
-        val sender = generateUser()
-        val receiver = generateUser()
+        val sender = generateUser(1L)
+        val receiver = generateUser(2L)
         val friend = FriendRequest(sender, receiver)
 
         // when

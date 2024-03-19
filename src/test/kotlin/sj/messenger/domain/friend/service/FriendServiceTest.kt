@@ -24,12 +24,27 @@ class FriendServiceTest(
     @Autowired val friendRepository: FriendRepository,
     @Autowired val friendRequestRepository: FriendRequestRepository,
 ) {
+
+    @Test
+    fun temp(){
+        val user = generateUser(1L)
+        val user2 = generateUser(1L)
+        userRepository.saveAll(listOf(user,user2))
+        println(user.name)
+        println(user2.name)
+
+        val find = userRepository.findAll()
+        find.map {
+            println("id = ${it.id}, name = ${it.name}")
+        }
+    }
+
     @Test
     @DisplayName("특정 사용자의 친구 조회")
     fun getFriends() {
         // given
-        val user = generateUser()
-        val friends = (1..5).map { generateUser() }
+        val user = generateUser(10L)
+        val friends = (1L..5L).map { generateUser() }
         userRepository.saveAll(listOf(user) + friends)
         friendRepository.saveAll(friends.map { Friend(user, it) })
 
@@ -46,8 +61,8 @@ class FriendServiceTest(
     @DisplayName("친구 요청 성공")
     fun request() {
         // given
-        val sender = generateUser()
-        val receiver = generateUser()
+        val sender = generateUser(1L)
+        val receiver = generateUser(2L)
         userRepository.saveAll(listOf(sender, receiver))
 
         // when

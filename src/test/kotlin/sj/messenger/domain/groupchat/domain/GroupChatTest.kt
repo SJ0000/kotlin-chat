@@ -1,16 +1,10 @@
 package sj.messenger.domain.groupchat.domain
 
-import com.navercorp.fixturemonkey.kotlin.giveMeOne
-import net.jqwik.api.Arbitraries
-import net.jqwik.web.api.Web
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import sj.messenger.domain.user.domain.User
-import sj.messenger.util.fixture
 import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
-import sj.messenger.util.randomString
 
 
 class GroupChatTest(
@@ -36,7 +30,7 @@ class GroupChatTest(
     fun isParticipantTest(){
         // given
         val chatRoom = generateGroupChat()
-        val user = generateUser()
+        val user = generateUser(1L)
 
         // then
         assertThat(chatRoom.isParticipant(user.id!!)).isFalse()

@@ -20,20 +20,24 @@ fun generateGroupChat(): GroupChat {
 }
 
 fun generateUser(): User {
+    return generateUser(null)
+}
+
+fun generateUser(id: Long?): User {
     return User(
         name = randomString(10,255),
         email = randomEmail(),
         password = randomPassword(),
         avatarUrl = randomUrl(),
         statusMessage = randomString(10,255),
-        id = Arbitraries.longs().greaterOrEqual(1).sample(),
+        id = id,
         publicIdentifier = randomString(10,255)
     )
 }
 
 fun generateInvitation(groupChat: GroupChat): Invitation {
     return Invitation(
-        id = Arbitraries.strings().alpha().numeric().fixGenSize(8).sample(),
+        id = Arbitraries.strings().alpha().numeric().ofLength(8).sample(),
         groupChatId = groupChat.id!!,
         inviterId = fixture.giveMeOne(),
         inviterName = fixture.giveMeOne()
