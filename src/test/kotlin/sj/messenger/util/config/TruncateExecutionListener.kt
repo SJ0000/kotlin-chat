@@ -10,11 +10,22 @@ class TruncateExecutionListener : TestExecutionListener {
 
     override fun afterTestExecution(testContext: TestContext) {
         val jdbcTemplate = getJdbcTemplate(testContext)
+        // truncateMySql(jdbcTemplate)
+        truncateOracle(jdbcTemplate)
+    }
+
+    private fun truncateMySql(jdbcTemplate: JdbcTemplate) {
         jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS=0;")
         tables.forEach {
             jdbcTemplate.execute("TRUNCATE TABLE ${it};")
         }
         jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS=1;")
+    }
+
+    private fun truncateOracle(jdbcTemplate: JdbcTemplate){
+        tables.forEach {
+            jdbcTemplate.execute("TRUNCATE TABLE ${it} CASCADE;")
+        }
     }
 
     private fun getJdbcTemplate(context: TestContext): JdbcTemplate {

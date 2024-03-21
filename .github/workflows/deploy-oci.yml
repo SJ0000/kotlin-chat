@@ -81,16 +81,10 @@ jobs:
           mkdir -p /tmp
           zip -r /tmp/artifact.zip build
 
-      - name: delete exists artifact
-        continue-on-error: true # storage에 없을 경우 실패하기 때문에
-        uses: oracle-actions/run-oci-cli-command@v1.1.1
-        with:
-          command: oci os object delete --bucket-name simple-messenger-bucket --name artifact.zip --force
-
       - name: move to Object Storage
         uses: oracle-actions/run-oci-cli-command@v1.1.1
         with:
-          command: oci os object put --bucket-name simple-messenger-bucket --file /tmp/artifact.zip --namespace "${{ env.OCI_CLI_BUCKET_NAMESPACE }}"
+          command: oci os object put --bucket-name simple-messenger-bucket --file /tmp/artifact.zip --namespace "${{ env.OCI_CLI_BUCKET_NAMESPACE }}" --force
 
   run-on-oci-instance:
     runs-on: ubuntu-latest
