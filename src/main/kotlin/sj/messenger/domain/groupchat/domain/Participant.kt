@@ -7,10 +7,11 @@ import sj.messenger.global.domain.BaseEntity
 @Entity
 class Participant(
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val user: User,
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="chatroom_id")
+    @JoinColumn(name = "group_chat_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val groupChat: GroupChat,
 
     @Id

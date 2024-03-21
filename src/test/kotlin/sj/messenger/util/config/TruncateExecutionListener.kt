@@ -24,7 +24,7 @@ class TruncateExecutionListener : TestExecutionListener {
 
     private fun truncateOracle(jdbcTemplate: JdbcTemplate){
         tables.forEach {
-            jdbcTemplate.execute("TRUNCATE TABLE ${it} CASCADE;")
+            jdbcTemplate.execute("TRUNCATE TABLE ${it}")
         }
     }
 
