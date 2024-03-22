@@ -16,7 +16,7 @@ val fixture: FixtureMonkey = FixtureMonkey.builder()
     .build()
 
 fun generateGroupChat(): GroupChat {
-    return GroupChat(name = fixture.giveMeOne(), avatarUrl = randomUrl())
+    return GroupChat(name = randomString(1,255), avatarUrl = randomUrl())
 }
 
 fun generateUser(): User {
@@ -40,7 +40,7 @@ fun generateInvitation(groupChat: GroupChat): Invitation {
         id = Arbitraries.strings().alpha().numeric().ofLength(8).sample(),
         groupChatId = groupChat.id!!,
         inviterId = fixture.giveMeOne(),
-        inviterName = fixture.giveMeOne()
+        inviterName = randomString(1,255)
     )
 }
 

@@ -7,6 +7,7 @@ import sj.messenger.global.domain.NullToEmptyStringConverter
 
 @Entity
 class GroupChat(
+
     val name: String,
     val avatarUrl: String = "https://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=identicon",
 
