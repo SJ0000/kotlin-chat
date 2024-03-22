@@ -35,6 +35,7 @@ class DirectChatStompController(
             messageType = message.messageType,
             receivedAt = LocalDateTime.now()
         )
+        template.convertAndSend("/topic/direct-chat/${message.senderId}", data)
         template.convertAndSend("/topic/direct-chat/${message.receiverId}", data)
     }
 }
