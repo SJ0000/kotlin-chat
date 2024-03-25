@@ -4,7 +4,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
-import sj.messenger.domain.groupchat.domain.Message
+import sj.messenger.domain.groupchat.domain.GroupMessage
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
@@ -24,13 +24,13 @@ class GroupChatService(
 ) {
     @Transactional(readOnly = false)
     fun saveMessage(sentGroupMessageDto: SentGroupMessageDto) : String {
-        val message = Message(
+        val groupMessage = GroupMessage(
             senderId = sentGroupMessageDto.senderId,
             chatRoomId = sentGroupMessageDto.groupChatId,
             content = sentGroupMessageDto.content,
             sentAt = sentGroupMessageDto.sentAt
         )
-        val savedMessage = groupMessageRepository.save(message)
+        val savedMessage = groupMessageRepository.save(groupMessage)
         return savedMessage.id!!.toHexString()
     }
 

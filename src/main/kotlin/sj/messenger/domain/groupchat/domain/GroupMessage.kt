@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
 @Document
-class Message @PersistenceCreator constructor(
+class GroupMessage @PersistenceCreator constructor(
     val senderId: Long,
     val chatRoomId: Long,
     val content: String,
