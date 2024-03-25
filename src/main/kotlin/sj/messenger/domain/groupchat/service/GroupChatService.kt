@@ -26,7 +26,7 @@ class GroupChatService(
     fun saveMessage(sentGroupMessageDto: SentGroupMessageDto) : String {
         val groupMessage = GroupMessage(
             senderId = sentGroupMessageDto.senderId,
-            chatRoomId = sentGroupMessageDto.groupChatId,
+            groupChatId = sentGroupMessageDto.groupChatId,
             content = sentGroupMessageDto.content,
             sentAt = sentGroupMessageDto.sentAt
         )

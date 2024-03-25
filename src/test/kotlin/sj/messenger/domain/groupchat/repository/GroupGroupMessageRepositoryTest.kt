@@ -17,7 +17,7 @@ class GroupGroupMessageRepositoryTest (
     @Test
     @Rollback
     fun saveTest(){
-        val groupMessage = GroupMessage(senderId = 1L, chatRoomId = 1L, content =  "123", sentAt =  LocalDateTime.now())
+        val groupMessage = GroupMessage(senderId = 1L, groupChatId = 1L, content =  "123", sentAt =  LocalDateTime.now())
         val savedMessage = groupMessageRepository.save(groupMessage)
         println(savedMessage.id?.toString())
     }

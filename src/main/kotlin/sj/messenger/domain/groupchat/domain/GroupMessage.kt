@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @Document
 class GroupMessage @PersistenceCreator constructor(
     val senderId: Long,
-    val chatRoomId: Long,
+    val groupChatId: Long,
     val content: String,
     val sentAt: LocalDateTime,
     @Id val id: ObjectId? = null,
