@@ -1,23 +1,17 @@
-# kotlin-chat
+# Simple Messenger Server
+웹 브라우저 환경에서 동작하는 메신저 어플리케이션 서버
 
+### 사용 기술
+- Kotlin
+- Spring boot
+- QueryDsl
+- Redis
+- MongoDB
 
-CRUD가 지겨워서 만드는 chat application
-
-- server
-  - kotlin - spring
-
-- client
-  - 미정 (vue? svelte? 검토 후 간단한거로)
-  - 최대한 갖다 쓰는걸로
-
-
-기능
-- 인증 기능
-  - spring security
-- 채팅 방 리스트
-- 채팅방 추가
-  - 공개 방
-  - 비밀 방
-- 채팅
-- 알림 (카카오톡처럼 알림 설정 해놓으면 브라우저 알림)
-
+### 주요 기능
+- Websocket, STOMP 프로토콜을 사용한 실시간 채팅
+- JWT 토큰 인증 방식을 사용한 로그인
+- 친구 기능 (친구 추가 요청 및 친구 목록 관리)
+  
+### Architecture
+<img width="1047" alt="image" src="https://github.com/SJ0000/kotlin-chat/assets/41468526/46f31788-8b13-4696-b8a0-c2863d8e29a9">
