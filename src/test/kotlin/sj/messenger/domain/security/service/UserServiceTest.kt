@@ -104,20 +104,19 @@ class UserServiceTest(
     }
 
     @Test
-    @DisplayName("회원가입시 같은 이메일 사용자가 존재하는 경우 예외 발생")
-    fun signUpUserError() {
+    @DisplayName("회원가입시 이메일의 대소문자는 무시한다")
+    fun signUpUserIgnoreCase() {
         // given
-        val user = generateUser()
-        userRepository.save(user)
-        val dto = SignUpDto(
-            email = user.email,
-            name = randomString(1,20),
-            password = randomString(10,20)
-        )
+        val upperCaseEmail = "ALPHa@Beta.COm"
+        val lowerCaseEmail = upperCaseEmail.lowercase()
+        val upperCaseDto = SignUpDto(upperCaseEmail, randomString(5,10), randomString(10,15))
+        val lowerCaseDto = SignUpDto(lowerCaseEmail, randomString(5,10), randomString(10,15))
 
-        // expected
-        assertThatThrownBy { userService.signUpUser(dto) }
-            .isInstanceOf(RuntimeException::class.java)
+        // when
+        userService.signUpUser(upperCaseDto)
+        assertThatThrownBy {
+            userService.signUpUser(lowerCaseDto)
+        }.isInstanceOf(RuntimeException::class.java)
     }
 
     @Test

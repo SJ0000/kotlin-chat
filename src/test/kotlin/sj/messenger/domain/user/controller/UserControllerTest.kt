@@ -2,6 +2,7 @@ package sj.messenger.domain.user.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -13,14 +14,17 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.domain.user.service.UserService
 import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
 import sj.messenger.util.integration.IntegrationTest
+import sj.messenger.util.randomString
 
 
 @IntegrationTest
 class UserControllerTest(
     @Autowired val mockMvc: MockMvc,
+    @Autowired val userService: UserService,
     @Autowired val userRepository: UserRepository,
     @Autowired val om: ObjectMapper,
 ) {
@@ -62,6 +66,34 @@ class UserControllerTest(
                 jsonPath("name",signUp.name)
                 jsonPath("email",signUp.email)
             }
+        }
+    }
+
+    @Test
+    @DisplayName("회원가입시 대소문자만 다른 이메일도 중복으로 처리한다.")
+    fun signUpEmailIgnoreCase(){
+        // given
+        val upperEmail = "ABCD@EFGH.com"
+
+        val lowerEmailSignUp = SignUpDto(
+            email = upperEmail.lowercase(),
+            name = randomString(5,10),
+            password = randomString(5,10)
+        )
+        userService.signUpUser(lowerEmailSignUp)
+
+        val upperEmailSignUp = SignUpDto(
+            email = upperEmail,
+            name = randomString(5,10),
+            password = randomString(5,10)
+        )
+
+        // expected
+        mockMvc.post("/signup"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(upperEmailSignUp)
+        }.andExpect {
+            status { isBadRequest() }
         }
     }
 

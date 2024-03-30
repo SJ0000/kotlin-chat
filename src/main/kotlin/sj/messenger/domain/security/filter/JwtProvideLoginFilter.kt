@@ -31,7 +31,7 @@ class JwtProvideLoginFilter(
     ) {
         val loginRequest = objectMapper.readValue<LoginRequest>(request.inputStream)
         userService.validateLogin(loginRequest)
-        val loginUser = userService.findUserByEmail(loginRequest.email)
+        val loginUser = userService.findUserByEmail(loginRequest.email.lowercase())
 
         val token = jwtProvider.createAccessToken(UserClaim(id = loginUser.id!!, name = loginUser.name))
         val loginResponse = LoginResponse(token = token, user = UserDto(loginUser))
