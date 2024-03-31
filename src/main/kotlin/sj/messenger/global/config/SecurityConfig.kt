@@ -44,7 +44,6 @@ class SecurityConfig (
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
 
-            // addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtProvideLoginFilter(jwtProvider,userService))
             addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtAuthenticationFilter(authenticationManager))
         }
 
