@@ -3,7 +3,6 @@ package sj.messenger.domain.groupchat.domain
 import jakarta.persistence.*
 import sj.messenger.domain.user.domain.User
 import sj.messenger.global.domain.BaseEntity
-import sj.messenger.global.domain.NullToEmptyStringConverter
 
 @Entity
 class GroupChat(

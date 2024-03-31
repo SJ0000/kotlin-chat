@@ -16,7 +16,6 @@ import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
-import sj.messenger.domain.user.service.UserService
 import sj.messenger.util.*
 import sj.messenger.util.integration.EnableContainers
 

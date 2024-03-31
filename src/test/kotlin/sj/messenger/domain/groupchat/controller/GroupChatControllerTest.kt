@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType

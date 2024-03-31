@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import sj.messenger.domain.security.authentication.provider.JwtAuthenticationProvider
 import sj.messenger.domain.security.filter.JwtAuthenticationFilter
-import sj.messenger.domain.security.filter.JwtProvideLoginFilter
 import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.security.jwt.JwtProvider
 import sj.messenger.domain.user.service.UserService
@@ -45,7 +44,7 @@ class SecurityConfig (
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
 
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtProvideLoginFilter(jwtProvider,userService))
+            // addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtProvideLoginFilter(jwtProvider,userService))
             addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtAuthenticationFilter(authenticationManager))
         }
 

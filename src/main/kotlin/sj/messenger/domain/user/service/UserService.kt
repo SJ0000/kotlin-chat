@@ -22,7 +22,7 @@ class UserService(
     }
 
     fun findUserByEmail(email: String): User {
-        return userRepository.findByEmail(email) ?: throw RuntimeException("user not found. email =  ${email}")
+        return userRepository.findByEmail(email) ?: throw RuntimeException("user not found. email = ${email}")
     }
 
     fun findUserByPublicIdentifier(publicIdentifier: String): User {
