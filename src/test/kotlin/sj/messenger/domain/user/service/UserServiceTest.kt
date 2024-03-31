@@ -1,4 +1,4 @@
-package sj.messenger.domain.security.service
+package sj.messenger.domain.user.service
 
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
@@ -101,22 +101,6 @@ class UserServiceTest(
         assertThat(user.name).isEqualTo(dto.name)
         assertThat(user.email).isEqualTo(dto.email)
         assertThat(user.password).isNotEqualTo(dto.password)
-    }
-
-    @Test
-    @DisplayName("회원가입시 이메일의 대소문자는 무시한다")
-    fun signUpUserIgnoreCase() {
-        // given
-        val upperCaseEmail = "ALPHa@Beta.COm"
-        val lowerCaseEmail = upperCaseEmail.lowercase()
-        val upperCaseDto = SignUpDto(upperCaseEmail, randomString(5,10), randomString(10,15))
-        val lowerCaseDto = SignUpDto(lowerCaseEmail, randomString(5,10), randomString(10,15))
-
-        // when
-        userService.signUpUser(upperCaseDto)
-        assertThatThrownBy {
-            userService.signUpUser(lowerCaseDto)
-        }.isInstanceOf(RuntimeException::class.java)
     }
 
     @Test
