@@ -1,5 +1,6 @@
 package sj.messenger.domain.groupchat.service
 
+import io.micrometer.core.annotation.Timed
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,6 +23,7 @@ class GroupChatService(
 
     private val userService: UserService,
 ) {
+    @Timed("service.group-chat.save-message")
     @Transactional(readOnly = false)
     fun saveMessage(sentGroupMessageDto: SentGroupMessageDto) : String {
         val groupMessage = GroupMessage(

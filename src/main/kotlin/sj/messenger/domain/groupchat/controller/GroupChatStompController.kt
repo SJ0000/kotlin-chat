@@ -1,5 +1,6 @@
 package sj.messenger.domain.groupchat.controller
 
+import io.micrometer.core.annotation.Timed
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
@@ -15,6 +16,7 @@ class GroupChatStompController(
     private val groupChatService: GroupChatService,
 ) {
 
+    @Timed("controller.group-chat-stomp.send-message")
     @MessageMapping("/group-message")
     fun sendMessage(
         @Payload sentGroupMessageDto: SentGroupMessageDto,
