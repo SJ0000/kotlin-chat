@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  redis:
+    image: redis:7.2.3
+    container_name: "redis"
+    restart: unless-stopped
+    ports: ["${REDIS_PORT}:6379"]
+    volumes:
+      - "./redis/data:/data"
+      - "./redis/redis.conf:/usr/local/etc/redis.conf"
+    command: ["redis-server", "/usr/local/etc/redis.conf"]
+
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: "prometheus"
+    expose: ["9090"]
+    restart: unless-stopped
+    volumes:
+      - "./prometheus/config:/etc/prometheus"
+      - "./prometheus/volume:/prometheus"
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: "grafana"
+    ports: ["${GRAFANA_PORT}:3000"]
+    restart: unless-stopped
+    environment:
+      - "GF_SECURITY_ADMIN_USER=admin"
+      - "GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}"
+    volumes:
+      - "./grafana:/var/lib/grafana"
