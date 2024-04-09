@@ -56,6 +56,10 @@ dependencies {
     // oracle
     runtimeOnly("com.oracle.database.jdbc:ojdbc8")
 
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
@@ -73,7 +77,7 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
 }
 
-tasks{
+tasks {
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += "-Xjsr305=strict"
@@ -85,12 +89,12 @@ tasks{
         useJUnitPlatform()
     }
 
-    withType<BootJar>{
+    withType<BootJar> {
         enabled = true
         archiveFileName = "simple-messenger-server.jar"
     }
 
-    named<Jar>("jar"){
+    named<Jar>("jar") {
         enabled = false
     }
 
