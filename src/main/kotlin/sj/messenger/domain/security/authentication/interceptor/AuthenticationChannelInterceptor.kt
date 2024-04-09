@@ -13,7 +13,7 @@ class AuthenticationChannelInterceptor(
     private val authenticationManager: AuthenticationManager
 ) : ChannelInterceptor {
 
-    override fun preSend(message: Message<*>, channel: MessageChannel): Message<*>? {
+    override fun preSend(message: Message<*>, channel: MessageChannel): Message<*> {
         val accessor = getAccessor(message)
         if (accessor.command == StompCommand.CONNECT) {
             val accessToken = getAuthorizationHeader(accessor)

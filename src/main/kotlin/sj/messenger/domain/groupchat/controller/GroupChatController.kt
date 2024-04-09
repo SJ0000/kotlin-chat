@@ -76,7 +76,7 @@ class GroupChatController(
         @PathVariable id: Long,
     ): ResponseEntity<GroupChatDto> {
         val userId = userDetails.getUserId()
-        groupChatService.joinDirectChat(id, userId)
+        groupChatService.joinGroupChat(id, userId)
         val groupChat = groupChatService.findGroupChatWithParticipants(id)
         val users = userService.findUsers(groupChat.getParticipantUserIds())
         val dto = GroupChatDto(

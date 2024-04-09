@@ -19,7 +19,7 @@ class DirectChatStompController(
     fun directMessage(
         @Payload messageDto: SentDirectMessageDto,
     ) {
-        when(messageDto.messageType){
+        when (messageDto.messageType) {
             MESSAGE -> processMessage(messageDto)
             else -> throw RuntimeException("Not Supported Message Type.")
         }

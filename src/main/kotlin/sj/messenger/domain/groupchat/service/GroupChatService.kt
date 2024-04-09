@@ -39,10 +39,10 @@ class GroupChatService(
     }
 
     @Transactional(readOnly = false)
-    fun joinDirectChat(chatRoomId: Long, userId: Long) {
-        val chatRoom = findGroupChatWithParticipants(chatRoomId)
+    fun joinGroupChat(groupChatId: Long, userId: Long) {
+        val chatRoom = findGroupChatWithParticipants(groupChatId)
         if(chatRoom.isParticipant(userId))
-            throw RuntimeException("User(id = ${userId}) is already participant in ChatRoom(id = ${chatRoomId}) ")
+            throw RuntimeException("User(id = ${userId}) is already participant in ChatRoom(id = ${groupChatId}) ")
 
         val user = userService.findUserById(userId)
         chatRoom.join(user)

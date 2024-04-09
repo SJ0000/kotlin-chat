@@ -46,7 +46,7 @@ class GroupChatServiceTest(
         val groupChat = groupChatRepository.save(GroupChat(name = fixture.giveMeOne()))
 
         // when
-        groupChatService.joinDirectChat(groupChat.id!!, user.id!!)
+        groupChatService.joinGroupChat(groupChat.id!!, user.id!!)
 
         // then
         val isParticipant = groupChatRepository.findByIdOrNull(groupChat.id!!)?.isParticipant(user.id!!)
@@ -64,7 +64,7 @@ class GroupChatServiceTest(
 
         // expected
         assertThatThrownBy {
-            groupChatService.joinDirectChat(groupChat.id!!,user.id!!)
+            groupChatService.joinGroupChat(groupChat.id!!,user.id!!)
         }.isInstanceOf(RuntimeException::class.java)
     }
 
