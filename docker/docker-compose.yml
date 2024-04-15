@@ -15,6 +15,7 @@ services:
     image: prom/prometheus:v2.48.0
     container_name: "prometheus"
     expose: ["9090"]
+    user: root
     restart: unless-stopped
     volumes:
       - "./prometheus/config:/etc/prometheus"
@@ -25,6 +26,8 @@ services:
     container_name: "grafana"
     ports: ["${GRAFANA_PORT}:3000"]
     restart: unless-stopped
+    depends_on:
+      - prometheus
     environment:
       - "GF_SECURITY_ADMIN_USER=admin"
       - "GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}"

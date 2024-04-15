@@ -2,7 +2,9 @@ package sj.messenger.global.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
+import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
@@ -26,8 +28,13 @@ class WebSocketConfig(
         registry.addEndpoint("/message-broker").setAllowedOriginPatterns(clientUrl, "http://localhost:[*]")
     }
 
-//    override fun configureClientInboundChannel(registration: ChannelRegistration) {
+    override fun configureClientInboundChannel(registration: ChannelRegistration) {
 //        val authenticationInterceptor = AuthenticationChannelInterceptor(authenticationManager)
 //        registration.interceptors(authenticationInterceptor)
-//    }
+        val executor = ThreadPoolTaskExecutor()
+        executor.corePoolSize = Runtime.getRuntime().availableProcessors() * 2
+        executor.maxPoolSize = Runtime.getRuntime().availableProcessors() * 4
+        executor.setAllowCoreThreadTimeOut(true)
+        registration.taskExecutor(executor)
+    }
 }
