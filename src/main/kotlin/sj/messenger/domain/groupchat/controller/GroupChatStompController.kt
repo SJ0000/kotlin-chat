@@ -7,13 +7,14 @@ import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
 import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
+import sj.messenger.domain.groupchat.service.GroupChatMessageService
 import sj.messenger.domain.groupchat.service.GroupChatService
 import java.time.LocalDateTime
 
 @Controller
 class GroupChatStompController(
     private val template : SimpMessagingTemplate,
-    private val groupChatService: GroupChatService,
+    private val groupChatMessageService: GroupChatMessageService
 ) {
 
     @Timed("controller.group-chat-stomp.send-message")
@@ -21,7 +22,7 @@ class GroupChatStompController(
     fun sendMessage(
         @Payload sentGroupMessageDto: SentGroupMessageDto,
     ) {
-        val messageId = groupChatService.saveMessage(sentGroupMessageDto)
+        val messageId = groupChatMessageService.saveMessage(sentGroupMessageDto)
         val data = ReceivedGroupMessageDto(
             id = messageId,
             groupChatId = sentGroupMessageDto.groupChatId,

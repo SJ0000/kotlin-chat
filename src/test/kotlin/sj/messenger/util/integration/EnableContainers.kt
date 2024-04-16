@@ -7,7 +7,6 @@ import sj.messenger.util.testcontainer.initializer.RedisContainerInitializer
 
 @ContextConfiguration(
     initializers = [
-        // MySqlContainerInitializer::class,
         OracleContainerInitializer::class,
         MongoContainerInitializer::class,
         RedisContainerInitializer::class

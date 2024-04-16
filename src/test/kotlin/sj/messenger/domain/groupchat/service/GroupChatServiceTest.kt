@@ -30,16 +30,16 @@ class GroupChatServiceTest(
     ) {
 
     @Test
-    @DisplayName("존재하지 않는 chatRoom 조회시 예외 발생")
-    fun getChatRoomError() {
+    @DisplayName("존재하지 않는 GroupChat 조회시 예외 발생")
+    fun getGroupChatError() {
         // expected
-        assertThatThrownBy { groupChatService.getDirectChat(9999) }
+        assertThatThrownBy { groupChatService.getGroupChat(9999) }
             .isInstanceOf(RuntimeException::class.java)
     }
 
     @Test
     @DisplayName("사용자가 대화방에 정상적으로 참여")
-    fun joinChatRoom(){
+    fun joinGroupChat(){
         // given
         val user = generateUser()
         userRepository.save(user)

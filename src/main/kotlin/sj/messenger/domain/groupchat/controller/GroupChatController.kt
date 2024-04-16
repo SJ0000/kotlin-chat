@@ -111,7 +111,7 @@ class GroupChatController(
         @PathVariable invitationId: String
     ): ResponseEntity<InvitationDto> {
         val invitation = groupChatInviteService.getInvitation(invitationId)
-        val groupChat = groupChatService.getDirectChat(invitation.groupChatId)
+        val groupChat = groupChatService.getGroupChat(invitation.groupChatId)
         val dto = InvitationDto(
             id = invitation.id,
             groupChatId = invitation.groupChatId,

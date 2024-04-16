@@ -1,15 +1,11 @@
 package sj.messenger.domain.groupchat.service
 
-import io.micrometer.core.annotation.Timed
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
-import sj.messenger.domain.groupchat.domain.GroupMessage
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
-import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
-import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.service.UserService
 
@@ -19,24 +15,10 @@ import sj.messenger.domain.user.service.UserService
 class GroupChatService(
     private val groupChatRepository: GroupChatRepository,
     private val participantRepository: ParticipantRepository,
-    private val groupMessageRepository: GroupMessageRepository,
-
     private val userService: UserService,
 ) {
-    @Timed("service.group-chat.save-message")
-    @Transactional(readOnly = false)
-    fun saveMessage(sentGroupMessageDto: SentGroupMessageDto) : String {
-        val groupMessage = GroupMessage(
-            senderId = sentGroupMessageDto.senderId,
-            groupChatId = sentGroupMessageDto.groupChatId,
-            content = sentGroupMessageDto.content,
-            sentAt = sentGroupMessageDto.sentAt
-        )
-        val savedMessage = groupMessageRepository.save(groupMessage)
-        return savedMessage.id!!.toHexString()
-    }
 
-    fun getDirectChat(id: Long): GroupChat {
+    fun getGroupChat(id: Long): GroupChat {
         return groupChatRepository.findByIdOrNull(id) ?: throw RuntimeException("chat room id '$id' not found")
     }
 
