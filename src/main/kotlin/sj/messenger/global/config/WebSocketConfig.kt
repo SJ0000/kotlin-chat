@@ -41,6 +41,13 @@ class WebSocketConfig(
         executor.setAllowCoreThreadTimeOut(true)
         registration.taskExecutor(executor)
     }
+
+    override fun configureClientOutboundChannel(registration: ChannelRegistration) {
+        val executor = ThreadPoolTaskExecutor()
+        executor.corePoolSize = properties.corePoolSize
+        executor.setAllowCoreThreadTimeOut(true)
+        registration.taskExecutor(executor)
+    }
 }
 
 @Validated
