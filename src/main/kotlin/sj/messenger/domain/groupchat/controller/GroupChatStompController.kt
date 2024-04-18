@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller
 import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
 import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
 import sj.messenger.domain.groupchat.service.GroupChatMessageService
-import sj.messenger.domain.groupchat.service.GroupChatService
 import java.time.LocalDateTime
 
 @Controller

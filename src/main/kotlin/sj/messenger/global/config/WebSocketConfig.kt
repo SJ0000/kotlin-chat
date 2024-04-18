@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
@@ -18,7 +17,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableConfigurationProperties(WebSocketProperties::class)
 class WebSocketConfig(
     private val properties: WebSocketProperties,
-    // private val authenticationManager: AuthenticationManager,
 ) : WebSocketMessageBrokerConfigurer{
 
     @Value("\${client.url}")
@@ -34,8 +32,6 @@ class WebSocketConfig(
     }
 
     override fun configureClientInboundChannel(registration: ChannelRegistration) {
-//        val authenticationInterceptor = AuthenticationChannelInterceptor(authenticationManager)
-//        registration.interceptors(authenticationInterceptor)
         val executor = ThreadPoolTaskExecutor()
         executor.corePoolSize = properties.corePoolSize
         executor.setAllowCoreThreadTimeOut(true)
