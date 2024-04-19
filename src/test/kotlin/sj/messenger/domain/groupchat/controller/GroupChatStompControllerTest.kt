@@ -33,7 +33,5 @@ class GroupChatStompControllerTest(
             Assertions.assertThat(senderId).isEqualTo(message.senderId)
             Assertions.assertThat(content).isEqualTo(message.content)
         }
-
-
     }
 }

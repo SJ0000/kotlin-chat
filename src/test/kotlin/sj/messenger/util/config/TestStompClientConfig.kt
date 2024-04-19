@@ -39,46 +39,48 @@ class TestStompClient(
     }
 
     inline fun <reified T> sendAndReceive(source: String, destination: String, message: Any): T {
-        val received = AtomicReference<T>()
-        val failure = AtomicReference<Throwable>()
-        val latch = CountDownLatch(1)
+        synchronized(this){
+            val received = AtomicReference<T>()
+            val failure = AtomicReference<Throwable>()
+            val latch = CountDownLatch(1)
 
-        val handler = TestSessionHandler(failure) { session, _ ->
-            session.subscribe(destination, object : StompFrameHandler {
+            val handler = TestSessionHandler(failure) { session, _ ->
+                session.subscribe(destination, object : StompFrameHandler {
 
-                override fun getPayloadType(headers: StompHeaders): Type {
-                    return T::class.java
-                }
-
-                override fun handleFrame(headers: StompHeaders, payload: Any?) {
-                    val dto = payload as T
-                    try {
-                        received.set(dto)
-                    } catch (t: Throwable) {
-                        failure.set(t)
-                    } finally {
-                        session.disconnect()
-                        latch.countDown()
+                    override fun getPayloadType(headers: StompHeaders): Type {
+                        return T::class.java
                     }
+
+                    override fun handleFrame(headers: StompHeaders, payload: Any?) {
+                        val dto = payload as T
+                        try {
+                            received.set(dto)
+                        } catch (t: Throwable) {
+                            failure.set(t)
+                        } finally {
+                            session.disconnect()
+                            latch.countDown()
+                        }
+                    }
+                })
+
+                try {
+                    session.send(source, message)
+                } catch (t: Throwable) {
+                    failure.set(t)
+                    latch.countDown()
                 }
-            })
-
-            try {
-                session.send(source, message)
-            } catch (t: Throwable) {
-                failure.set(t)
-                latch.countDown()
             }
-        }
 
-        stompClient.connectAsync(connectionUrl, WebSocketHttpHeaders(), handler)
+            stompClient.connectAsync(connectionUrl, WebSocketHttpHeaders(), handler)
 
-        if (latch.await(3, TimeUnit.SECONDS)) {
-            if (failure.get() != null)
-                throw RuntimeException("", failure.get())
-            return received.get()
-        } else {
-            throw RuntimeException("not received.")
+            if (latch.await(3, TimeUnit.SECONDS)) {
+                if (failure.get() != null)
+                    throw RuntimeException("", failure.get())
+                return received.get()
+            } else {
+                throw RuntimeException("not received.")
+            }
         }
     }
 }
