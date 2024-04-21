@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -33,14 +34,14 @@ class WebSocketConfig(
 
     override fun configureClientInboundChannel(registration: ChannelRegistration) {
         val executor = ThreadPoolTaskExecutor()
-        executor.corePoolSize = properties.corePoolSize
+        executor.corePoolSize = properties.inboundPoolSize
         executor.setAllowCoreThreadTimeOut(true)
         registration.taskExecutor(executor)
     }
 
     override fun configureClientOutboundChannel(registration: ChannelRegistration) {
         val executor = ThreadPoolTaskExecutor()
-        executor.corePoolSize = properties.corePoolSize
+        executor.corePoolSize = properties.outboundPoolSize
         executor.setAllowCoreThreadTimeOut(true)
         registration.taskExecutor(executor)
     }
@@ -49,5 +50,6 @@ class WebSocketConfig(
 @Validated
 @ConfigurationProperties("websocket")
 data class WebSocketProperties(
-    val corePoolSize: Int
+    val inboundPoolSize : Int,
+    val outboundPoolSize : Int,
 )
