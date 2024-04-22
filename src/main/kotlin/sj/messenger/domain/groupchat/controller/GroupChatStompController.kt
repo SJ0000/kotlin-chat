@@ -46,4 +46,20 @@ class GroupChatStompController(
         )
         template.convertAndSend("/topic/group-chat/bypass/${data.groupChatId}",data)
     }
+
+    @Timed("controller.group-chat-stomp.send-async")
+    @MessageMapping("/group-message/async")
+    fun sendMessageAsync(
+        @Payload sentGroupMessageDto: SentGroupMessageDto,
+    ) {
+        groupChatMessageService.saveMessageAsync(sentGroupMessageDto)
+        val data = ReceivedGroupMessageDto(
+            id = "not yet saved",
+            groupChatId = sentGroupMessageDto.groupChatId,
+            senderId = sentGroupMessageDto.senderId,
+            content = sentGroupMessageDto.content,
+            receivedAt = LocalDateTime.now()
+        )
+        template.convertAndSend("/topic/group-chat/async/${data.groupChatId}",data)
+    }
 }
