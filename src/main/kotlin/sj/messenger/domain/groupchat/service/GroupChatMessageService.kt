@@ -23,7 +23,7 @@ class GroupChatMessageService (
         return savedMessage.id!!.toHexString()
     }
 
-    @Async
+    @Async("threadPoolTaskExecutor")
     @Timed("service.group-chat-message.save-message-async")
     fun saveMessageAsync(sentGroupMessageDto: SentGroupMessageDto) {
         val groupMessage = GroupMessage(
