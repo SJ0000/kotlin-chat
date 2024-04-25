@@ -33,3 +33,7 @@ services:
       - "GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}"
     volumes:
       - "./grafana:/var/lib/grafana"
+
+  rabbitmq:
+    image: rabbitmq:3.13.1-management-alpine
+    ports: ["${RABBITMQ_PORT}:5672", "${RABBITMQ_MANAGE_PORT}:15672"]

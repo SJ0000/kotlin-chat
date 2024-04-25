@@ -71,6 +71,7 @@ dependencies {
     testImplementation("org.testcontainers:mysql:1.19.3")
     testImplementation("org.testcontainers:mongodb:1.19.3")
     testImplementation("org.testcontainers:oracle-xe:1.19.7")
+    testImplementation("org.testcontainers:rabbitmq:1.19.7")
 }
 
 allOpen {

@@ -5,7 +5,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import org.springframework.util.StopWatch
 import sj.messenger.domain.groupchat.domain.GroupMessage
 import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository

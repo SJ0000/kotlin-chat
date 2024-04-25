@@ -8,7 +8,6 @@ import sj.messenger.domain.directchat.dto.DirectMessageType.MESSAGE
 import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto
 import sj.messenger.domain.directchat.service.DirectChatMessageService
-import sj.messenger.domain.directchat.service.DirectChatService
 import java.time.LocalDateTime
 
 @Controller

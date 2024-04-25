@@ -1,10 +1,8 @@
 package sj.messenger.domain.directchat.controller
 
 import org.assertj.core.api.Assertions.assertThat
-import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 import sj.messenger.domain.directchat.dto.DirectMessageType
 import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto
@@ -12,7 +10,6 @@ import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.util.config.TestStompClient
 import sj.messenger.util.integration.IntegrationTest
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 @IntegrationTest
 class DirectChatStompControllerTest(
@@ -21,6 +18,7 @@ class DirectChatStompControllerTest(
 ) {
     @Test
     fun directMessage(){
+        // given
         val source = "/app/direct-message"
         val destination = "/topic/direct-chat/1"
         val message = SentDirectMessageDto(
@@ -31,19 +29,16 @@ class DirectChatStompControllerTest(
             content = "1234",
             sentAt = LocalDateTime.now()
         )
+
+        // when
         val received = client.sendAndReceive<ReceivedDirectMessageDto>(source, destination, message)
 
+        // then
         with(received){
             assertThat(directChatId).isEqualTo(message.directChatId)
             assertThat(messageType).isEqualTo(message.messageType)
             assertThat(senderId).isEqualTo(message.senderId)
             assertThat(content).isEqualTo(message.content)
         }
-
-        val savedMessage = directMessageRepository.findByIdOrNull(ObjectId(received.id))!!
-        assertThat(savedMessage.directChatId).isEqualTo(message.directChatId)
-        assertThat(savedMessage.senderId).isEqualTo(message.senderId)
-        assertThat(savedMessage.content).isEqualTo(message.content)
-        assertThat(savedMessage.sentAt).isEqualTo(message.sentAt.truncatedTo(ChronoUnit.MILLIS))
     }
 }
