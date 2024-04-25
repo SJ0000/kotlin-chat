@@ -38,9 +38,8 @@ class GroupChatMessageService (
      */
 
     @Async("threadPoolTaskExecutor")
-    fun saveRequestAsync(groupMessage: SentGroupMessageDto) {
-        println("groupMessage = ${groupMessage}")
-        batchingRabbitTemplate.convertAndSend("groupMessageSaveQueue",groupMessage)
+    fun saveRequestAsync(groupMessageDto: SentGroupMessageDto) {
+        batchingRabbitTemplate.convertAndSend("groupMessageSaveQueue",groupMessageDto)
     }
 
     @Timed("service.group-chat-message.batch-save")

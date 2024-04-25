@@ -12,7 +12,6 @@ data class SentDirectMessageDto(
 )
 
 data class ReceivedDirectMessageDto(
-    val id: String,
     val directChatId : Long,
     val messageType: DirectMessageType,
     val senderId : Long,

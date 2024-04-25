@@ -7,13 +7,14 @@ import org.springframework.stereotype.Controller
 import sj.messenger.domain.directchat.dto.DirectMessageType.MESSAGE
 import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.service.DirectChatMessageService
 import sj.messenger.domain.directchat.service.DirectChatService
 import java.time.LocalDateTime
 
 @Controller
 class DirectChatStompController(
     private val template : SimpMessagingTemplate,
-    private val directChatService: DirectChatService,
+    private val directChatMessageService: DirectChatMessageService,
 ) {
     @MessageMapping("/direct-message")
     fun directMessage(
@@ -26,9 +27,8 @@ class DirectChatStompController(
     }
 
     private fun processMessage(message: SentDirectMessageDto){
-        val messageId = directChatService.saveMessage(message)
+        directChatMessageService.saveRequestAsync(message)
         val data = ReceivedDirectMessageDto(
-            id = messageId,
             directChatId = message.directChatId,
             senderId = message.senderId,
             content = message.content,
