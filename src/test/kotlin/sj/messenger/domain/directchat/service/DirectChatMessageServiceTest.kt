@@ -8,6 +8,8 @@ import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Example
+import sj.messenger.domain.directchat.domain.DirectMessage
 import sj.messenger.domain.directchat.dto.SentDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.util.fixture
@@ -22,10 +24,9 @@ class DirectChatMessageServiceTest(
 ){
 
     @Test
-    @DisplayName("RabbitMQ의 directMessageSaveQueue에 있는 메시지를 batch로 읽어와 저장한다")
+    @DisplayName("RabbitMQ의 directMessageSaveQueue로부터 메시지를 읽어와 저장")
     fun saveAllReceivedMessage(){
         // given
-        val countBeforeSave =  directMessageRepository.count()
         val messageDto : SentDirectMessageDto = fixture.giveMeOne()
 
         // when
@@ -33,8 +34,15 @@ class DirectChatMessageServiceTest(
         Thread.sleep(5000)
 
         // then
-        val countAfterSave = directMessageRepository.count()
-        assertThat(countAfterSave).isEqualTo(countBeforeSave+1)
+        val example = Example.of(
+            DirectMessage(
+                senderId = messageDto.senderId,
+                directChatId = messageDto.directChatId,
+                content = messageDto.content,
+                sentAt = messageDto.sentAt
+            )
+        )
+        val findOptional = directMessageRepository.findOne(example)
+        assertThat(findOptional.isPresent).isTrue()
     }
-
 }

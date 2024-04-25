@@ -9,6 +9,8 @@ import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Example
+import sj.messenger.domain.groupchat.domain.GroupMessage
 import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.util.fixture
@@ -23,10 +25,9 @@ class GroupChatMessageServiceTest(
 ){
 
     @Test
-    @DisplayName("RabbitMQ의 groupMessageSaveQueue에 있는 메시지를 batch로 읽어와 저장한다")
+    @DisplayName("RabbitMQ의 groupMessageSaveQueue로부터 메시지를 읽어서 저장")
     fun saveAllReceivedMessage(){
         // given
-        val countBeforeSave =  groupMessageRepository.count()
         val messageDto : SentGroupMessageDto = fixture.giveMeOne()
 
         // when
@@ -34,7 +35,15 @@ class GroupChatMessageServiceTest(
         Thread.sleep(5000)
 
         // then
-        val countAfterSave = groupMessageRepository.count()
-        assertThat(countAfterSave).isEqualTo(countBeforeSave+1)
+        val example = Example.of(
+            GroupMessage(
+                senderId = messageDto.senderId,
+                groupChatId = messageDto.groupChatId,
+                content = messageDto.content,
+                sentAt = messageDto.sentAt
+            )
+        )
+        val findOptional = groupMessageRepository.findOne(example)
+        assertThat(findOptional.isPresent).isTrue()
     }
 }
