@@ -10,7 +10,6 @@ data class SentGroupMessageDto(
 )
 
 data class ReceivedGroupMessageDto(
-    val id: String,
     val groupChatId : Long,
     val senderId : Long,
     val content : String,
