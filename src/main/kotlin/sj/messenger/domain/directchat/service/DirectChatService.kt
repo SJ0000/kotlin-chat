@@ -43,7 +43,7 @@ class DirectChatService(
     @Transactional
     fun createDirectChat(userIds: Pair<Long, Long>): Long {
         validateAlreadyExists(userIds)
-        val users = userService.findUsers(userIds.toList())
+        val users = userService.findUsers(setOf(userIds.first, userIds.second))
         val directChat = directChatRepository.save(DirectChat(users[0], users[1]))
         return directChat.id!!
     }

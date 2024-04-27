@@ -64,7 +64,7 @@ class UserServiceTest(
         userRepository.saveAll(users)
 
         // when
-        val userIds = users.map { it.id!! }
+        val userIds = users.map { it.id!! }.toSet()
         val findUsers = userService.findUsers(userIds)
 
         // then
@@ -82,7 +82,7 @@ class UserServiceTest(
 
         // expected
         assertThatThrownBy {
-            userService.findUsers(users.map { it.id!! } + listOf(notExistsUserId))
+            userService.findUsers(users.map { it.id!! }.toSet() + setOf(notExistsUserId))
         }.isInstanceOf(RuntimeException::class.java)
     }
 

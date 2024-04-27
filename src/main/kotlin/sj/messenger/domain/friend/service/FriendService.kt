@@ -19,7 +19,7 @@ class FriendService (
     fun getFriends(userId: Long) : List<User>{
         val friends = friendRepository.findAll(userId)
         val friendUserIds = extractFriendsUserId(userId, friends)
-        return userService.findUsers(friendUserIds)
+        return userService.findUsers(friendUserIds.toSet())
     }
 
     fun getReceivedRequests(receiverId: Long) : List<FriendRequest>{

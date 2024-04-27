@@ -29,7 +29,7 @@ class GroupChat(
         }
     }
 
-    fun getParticipantUserIds() : List<Long>{
-        return participants.map { it.user.id!! }
+    fun getParticipantUserIds() : Set<Long>{
+        return participants.map { it.user.id!! }.toSet()
     }
 }
