@@ -1,5 +1,7 @@
 package sj.messenger.domain.directchat.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -10,9 +12,12 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.directchat.domain.DirectChat
+import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectChatRepository
+import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.config.InjectAccessToken
+import sj.messenger.util.generateDirectMessage
 import sj.messenger.util.generateUser
 import sj.messenger.util.integration.IntegrationTest
 
@@ -21,6 +26,8 @@ class DirectChatControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val userRepository: UserRepository,
     @Autowired val directChatRepository: DirectChatRepository,
+    @Autowired val directMessageRepository: DirectMessageRepository,
+    @Autowired val objectMapper: ObjectMapper,
 ) {
 
     @Test
@@ -93,5 +100,32 @@ class DirectChatControllerTest(
         val directChatId = result.response.contentAsString.toLong()
         val directChat = directChatRepository.findByIdWithUsers(directChatId)!!
         assertThat(directChat.getOtherUser(user.id!!).id).isEqualTo(other.id)
+    }
+
+    @Test
+    @InjectAccessToken
+    fun getDirectMessages() {
+        // given
+        val directChatId = 1L
+        directMessageRepository.saveAll(
+            (1..10).map { generateDirectMessage(directChatId) }
+        )
+
+        // expected
+        val result = mockMvc.get("/chats/directs/${directChatId}/messages") {
+            accept = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+            content {
+                jsonPath("$").isArray
+                jsonPath("$.size()", 10)
+            }
+        }.andReturn()
+
+        val jsonString = result.response.contentAsString
+        val messages = objectMapper.readValue<List<ReceivedDirectMessageDto>>(jsonString)
+        assertThat(messages).isSortedAccordingTo{ o1, o2 ->
+            o1.receivedAt.compareTo(o2.receivedAt)
+        }
     }
 }

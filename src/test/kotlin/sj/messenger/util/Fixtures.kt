@@ -5,10 +5,18 @@ import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPl
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
+import net.jqwik.time.api.DateTimes
+import net.jqwik.time.api.arbitraries.LocalDateTimeArbitrary
 import net.jqwik.web.api.Web
+import org.bson.types.ObjectId
+import sj.messenger.domain.directchat.domain.DirectMessage
+import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.domain.Invitation
 import sj.messenger.domain.user.domain.User
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 val fixture: FixtureMonkey = FixtureMonkey.builder()
     .plugin(KotlinPlugin())
@@ -35,6 +43,19 @@ fun generateUser(id: Long?): User {
     )
 }
 
+fun generateDirectMessage(
+    directChatId: Long,
+    minSentAt: LocalDateTime = LocalDateTime.of(LocalDate.EPOCH, LocalTime.MIN),
+    maxSentAt: LocalDateTime = LocalDateTime.now()
+): DirectMessage{
+    return DirectMessage(
+        senderId = fixture.giveMeOne(),
+        directChatId = directChatId,
+        content = randomString(1, 200),
+        sentAt = randomDateTime(minSentAt, maxSentAt),
+    )
+}
+
 fun generateInvitation(groupChat: GroupChat): Invitation {
     return Invitation(
         id = Arbitraries.strings().alpha().numeric().ofLength(8).sample(),
@@ -55,3 +76,5 @@ fun randomEmail(): String {
 fun randomPassword() = Arbitraries.strings().ascii().numeric().ofMinLength(10).ofMaxLength(20).sample()
 
 fun randomString(minLength: Int, maxLength: Int) = Arbitraries.strings().ofMinLength(minLength).ofMaxLength(maxLength).sample()
+
+fun randomDateTime(min : LocalDateTime, max: LocalDateTime) = DateTimes.dateTimes().between(min, max).sample()
