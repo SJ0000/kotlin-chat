@@ -2,6 +2,7 @@ package sj.messenger.domain.directchat.service
 
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.amqp.core.Queue
@@ -27,6 +28,11 @@ class DirectChatMessageServiceTest(
     @Autowired val directMessageRepository: DirectMessageRepository,
     @Autowired val directChatMessageService: DirectChatMessageService,
 ) {
+
+    @BeforeEach
+    fun beforeEach(){
+        directMessageRepository.deleteAll()
+    }
 
     @Test
     @DisplayName("RabbitMQ의 directMessageSaveQueue로부터 메시지를 읽어와 저장")
@@ -55,8 +61,6 @@ class DirectChatMessageServiceTest(
     @DisplayName("DirectChat의 특정 시간 이전 메시지를 10개 조회")
     fun getPreviousMessages() {
         // given
-        directMessageRepository.deleteAll()
-
         val directChatId = 1L
         val directMessages = (1..12).map {
             generateDirectMessage(directChatId)

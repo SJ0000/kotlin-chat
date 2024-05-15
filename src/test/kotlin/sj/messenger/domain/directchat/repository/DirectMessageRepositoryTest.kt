@@ -1,6 +1,7 @@
 package sj.messenger.domain.directchat.repository
 
 import org.assertj.core.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,11 @@ import java.time.LocalDateTime
 class DirectMessageRepositoryTest (
     @Autowired val directMessageRepository: DirectMessageRepository,
 ){
+
+    @BeforeEach
+    fun beforeEach(){
+        directMessageRepository.deleteAll()
+    }
 
     @Test
     @DisplayName("특정 DirectChat의 최신 메시지를 일정 갯수 조회한다.")
@@ -45,22 +51,14 @@ class DirectMessageRepositoryTest (
             assertThat(it.sentAt).isBeforeOrEqualTo(now)
         }
 
-        val expected = pastMessages.sortedBy { it.sentAt }.subList(1,10).reversed()
+        val expected = pastMessages.sortedBy { it.sentAt }.subList(1,11).reversed()
 
-        recentMessages.forEach{
-            println("recentMessage = ${it.senderId}, ${it.sentAt}")
-        }
-
-        pastMessages.forEach{
-            println("recentMessage = ${it.senderId}, ${it.sentAt}")
-        }
-
-//        expected.zip(recentMessages)
-//            .forEach{
-//                assertThat(it.first.senderId).isEqualTo(it.second.senderId)
-//                assertThat(truncateMicroSeconds(it.first.sentAt)).isEqualTo(it.second.sentAt)
-//                assertThat(it.first.content).isEqualTo(it.second.content)
-//                assertThat(it.first.directChatId).isEqualTo(it.second.directChatId)
-//            }
+        expected.zip(recentMessages)
+            .forEach{
+                assertThat(it.first.senderId).isEqualTo(it.second.senderId)
+                assertThat(truncateMicroSeconds(it.first.sentAt)).isEqualTo(it.second.sentAt)
+                assertThat(it.first.content).isEqualTo(it.second.content)
+                assertThat(it.first.directChatId).isEqualTo(it.second.directChatId)
+            }
     }
 }

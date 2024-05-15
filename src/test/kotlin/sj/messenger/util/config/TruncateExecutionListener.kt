@@ -1,5 +1,7 @@
 package sj.messenger.util.config
 
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.TestContext
 import org.springframework.test.context.TestExecutionListener
@@ -10,8 +12,10 @@ class TruncateExecutionListener : TestExecutionListener {
 
     override fun afterTestExecution(testContext: TestContext) {
         val jdbcTemplate = getJdbcTemplate(testContext)
-        // truncateMySql(jdbcTemplate)
         truncateOracle(jdbcTemplate)
+
+        val mongoTemplate = getMongoTemplate(testContext)
+        truncateMongo(mongoTemplate);
     }
 
     private fun truncateMySql(jdbcTemplate: JdbcTemplate) {
@@ -26,6 +30,16 @@ class TruncateExecutionListener : TestExecutionListener {
         tables.forEach {
             jdbcTemplate.execute("TRUNCATE TABLE ${it}")
         }
+    }
+
+    private fun truncateMongo(mongoTemplate: MongoTemplate){
+        mongoTemplate.collectionNames.forEach{
+            mongoTemplate.remove(Query(),it)
+        }
+    }
+
+    private fun getMongoTemplate(context: TestContext): MongoTemplate{
+        return context.applicationContext.getBean(MongoTemplate::class.java)
     }
 
     private fun getJdbcTemplate(context: TestContext): JdbcTemplate {
