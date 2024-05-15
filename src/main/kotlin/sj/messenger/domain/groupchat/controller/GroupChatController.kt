@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.dto.InvitationDto
+import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
 import sj.messenger.domain.groupchat.service.GroupChatInviteService
+import sj.messenger.domain.groupchat.service.GroupChatMessageService
 import sj.messenger.domain.groupchat.service.GroupChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
@@ -19,6 +21,7 @@ import java.time.LocalDateTime
 class GroupChatController(
     private val groupChatService: GroupChatService,
     private val groupChatInviteService: GroupChatInviteService,
+    private val groupChatMessageService: GroupChatMessageService,
     private val userService: UserService,
 ) {
 
@@ -120,5 +123,15 @@ class GroupChatController(
             expiredAt = LocalDateTime.now().plusMinutes(invitation.timeToLiveSeconds)
         )
         return ResponseEntity.ok(dto)
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/chats/groups/{id}/messages")
+    fun getDirectMessages(
+        @PathVariable id: Long,
+        @RequestParam(required = false) dateTime: LocalDateTime = LocalDateTime.now()
+    ) : ResponseEntity<List<ReceivedGroupMessageDto>>{
+        val previousMessages = groupChatMessageService.getPreviousMessages(id, dateTime)
+        return ResponseEntity.ok(previousMessages)
     }
 }

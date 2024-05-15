@@ -69,4 +69,5 @@ class DirectChatController(
         val previousMessages = directChatMessageService.getPreviousMessages(id, dateTime)
         return ResponseEntity.ok(previousMessages)
     }
+
 }

@@ -37,4 +37,5 @@ class DirectChatStompController(
         template.convertAndSend("/topic/direct-chat/${message.senderId}", data)
         template.convertAndSend("/topic/direct-chat/${message.receiverId}", data)
     }
+
 }

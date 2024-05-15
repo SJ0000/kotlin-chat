@@ -12,7 +12,9 @@ import org.bson.types.ObjectId
 import sj.messenger.domain.directchat.domain.DirectMessage
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.groupchat.domain.GroupChat
+import sj.messenger.domain.groupchat.domain.GroupMessage
 import sj.messenger.domain.groupchat.domain.Invitation
+import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.domain.user.domain.User
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -53,6 +55,19 @@ fun generateDirectMessage(
         directChatId = directChatId,
         content = randomString(1, 200),
         sentAt = randomDateTime(minSentAt, maxSentAt),
+    )
+}
+
+fun generateGroupMessage(
+    groupChatId: Long,
+    minSentAt: LocalDateTime = LocalDateTime.of(LocalDate.EPOCH, LocalTime.MIN),
+    maxSentAt: LocalDateTime = LocalDateTime.now()
+): GroupMessage{
+    return GroupMessage(
+        senderId = fixture.giveMeOne(),
+        groupChatId = groupChatId,
+        content = randomString(1,200),
+        sentAt = randomDateTime(minSentAt, maxSentAt)
     )
 }
 

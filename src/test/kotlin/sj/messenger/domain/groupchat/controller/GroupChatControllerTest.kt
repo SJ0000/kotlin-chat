@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -15,27 +16,27 @@ import sj.messenger.domain.groupchat.domain.Invitation
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.dto.InvitationDto
+import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
+import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.domain.groupchat.repository.InvitationRepository
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.*
 import sj.messenger.util.config.InjectAccessToken
-import sj.messenger.util.fixture
-import sj.messenger.util.generateGroupChat
-import sj.messenger.util.generateInvitation
-import sj.messenger.util.generateUser
 import sj.messenger.util.integration.IntegrationTest
 
 @IntegrationTest
 class GroupChatControllerTest(
-    @Autowired val mockMvc : MockMvc,
-    @Autowired val om : ObjectMapper,
+    @Autowired val mockMvc: MockMvc,
+    @Autowired val om: ObjectMapper,
     @Autowired val groupChatRepository: GroupChatRepository,
     @Autowired val invitationRepository: InvitationRepository,
     @Autowired val userRepository: UserRepository,
-){
+    @Autowired val groupMessageRepository: GroupMessageRepository,
+) {
 
     @Test
-    fun getGroupChatInfo(){
+    fun getGroupChatInfo() {
         // given
         val user = userRepository.save(generateUser())
         val groupChat = generateGroupChat()
@@ -48,9 +49,9 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("id",groupChat.id!!)
-                jsonPath("name",groupChat.name)
-                jsonPath("avatarUrl",groupChat.avatarUrl)
+                jsonPath("id", groupChat.id!!)
+                jsonPath("name", groupChat.name)
+                jsonPath("avatarUrl", groupChat.avatarUrl)
                 jsonPath("users[0].id", user.id!!)
                 jsonPath("users[0].name", user.name)
                 jsonPath("users[0].email", user.email)
@@ -60,9 +61,9 @@ class GroupChatControllerTest(
 
     @Test
     @InjectAccessToken
-    fun postGroupChat(){
+    fun postGroupChat() {
         // given
-        val dto : GroupChatCreateDto = fixture.giveMeOne()
+        val dto: GroupChatCreateDto = fixture.giveMeOne()
 
         // expected
         val result = mockMvc.post("/chats/groups") {
@@ -73,7 +74,7 @@ class GroupChatControllerTest(
             status { isCreated() }
             content {
                 jsonPath("id").isNumber
-                jsonPath("name",dto.name)
+                jsonPath("name", dto.name)
                 jsonPath("avatarUrl").isString
             }
         }.andReturn()
@@ -84,7 +85,7 @@ class GroupChatControllerTest(
 
     @Test
     @InjectAccessToken
-    fun getMyGroupChats(){
+    fun getMyGroupChats() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
         val groupChat = generateGroupChat()
@@ -97,16 +98,16 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$[0].id",groupChat.id)
-                jsonPath("$[0].name",groupChat.name)
-                jsonPath("$[0].avatarUrl",groupChat.avatarUrl)
+                jsonPath("$[0].id", groupChat.id)
+                jsonPath("$[0].name", groupChat.name)
+                jsonPath("$[0].avatarUrl", groupChat.avatarUrl)
             }
         }
     }
 
     @Test
     @InjectAccessToken
-    fun joinGroupChat(){
+    fun joinGroupChat() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
         val groupChat = generateGroupChat()
@@ -118,10 +119,10 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isCreated() }
             content {
-                jsonPath("id",groupChat.id)
-                jsonPath("name",groupChat.name)
-                jsonPath("avatarUrl",groupChat.avatarUrl)
-                jsonPath("users[0].email","test@test.com")
+                jsonPath("id", groupChat.id)
+                jsonPath("name", groupChat.name)
+                jsonPath("avatarUrl", groupChat.avatarUrl)
+                jsonPath("users[0].email", "test@test.com")
             }
         }
 
@@ -131,7 +132,7 @@ class GroupChatControllerTest(
 
     @Test
     @InjectAccessToken
-    fun postInviteGroupChat(){
+    fun postInviteGroupChat() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
         val groupChat = generateGroupChat()
@@ -157,10 +158,10 @@ class GroupChatControllerTest(
     }
 
     @Test
-    fun getInvitation(){
+    fun getInvitation() {
         // given
         val groupChat = groupChatRepository.save(generateGroupChat())
-        val invitation : Invitation = generateInvitation(groupChat)
+        val invitation: Invitation = generateInvitation(groupChat)
         invitationRepository.save(invitation)
 
         // expected
@@ -169,12 +170,37 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("id",invitation.id)
+                jsonPath("id", invitation.id)
                 jsonPath("groupChatId", invitation.groupChatId)
                 jsonPath("groupChatName", groupChat.name)
                 jsonPath("inviterName", invitation.inviterName)
                 jsonPath("expiredAt").exists()
             }
+        }
+    }
+
+    @Test
+    @InjectAccessToken
+    fun getDirectMessages() {
+        // given
+        val groupChatId = 1L
+        groupMessageRepository.saveAll((1..20).map { generateGroupMessage(groupChatId) })
+
+        // expected
+        val result = mockMvc.get("/chats/groups/${groupChatId}/messages") {
+            accept = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk() }
+            content {
+                jsonPath("$").isArray
+                jsonPath("$.size()", 10)
+            }
+        }.andReturn()
+
+        val jsonString = result.response.contentAsString
+        val messages = om.readValue<List<ReceivedGroupMessageDto>>(jsonString)
+        assertThat(messages).isSortedAccordingTo { o1, o2 ->
+            o1.receivedAt.compareTo(o2.receivedAt)
         }
     }
 }
