@@ -1,17 +1,16 @@
 package sj.messenger.domain.groupchat.repository
 
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.data.domain.PageRequest
 import sj.messenger.util.generateGroupMessage
+import sj.messenger.util.repository.MongoRepositoryTest
 import sj.messenger.util.truncateMicroSeconds
 import java.time.LocalDateTime
 
-@DataMongoTest
+@MongoRepositoryTest
 class GroupMessageRepositoryTest (
     @Autowired val groupMessageRepository: GroupMessageRepository
 ){

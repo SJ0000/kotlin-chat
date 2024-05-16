@@ -11,7 +11,6 @@ import sj.messenger.domain.directchat.service.DirectChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
 import sj.messenger.domain.user.dto.UserDto
 import java.net.URI
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @RestController

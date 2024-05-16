@@ -6,15 +6,11 @@ import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import net.jqwik.api.Arbitraries
 import net.jqwik.time.api.DateTimes
-import net.jqwik.time.api.arbitraries.LocalDateTimeArbitrary
 import net.jqwik.web.api.Web
-import org.bson.types.ObjectId
 import sj.messenger.domain.directchat.domain.DirectMessage
-import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.domain.GroupMessage
 import sj.messenger.domain.groupchat.domain.Invitation
-import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.domain.user.domain.User
 import java.time.LocalDate
 import java.time.LocalDateTime

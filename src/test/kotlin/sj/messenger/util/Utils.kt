@@ -1,6 +1,5 @@
 package sj.messenger.util
 
-import org.hibernate.query.sqm.TemporalUnit
 import java.time.LocalDateTime
 
 fun truncateMicroSeconds(dateTime: LocalDateTime): LocalDateTime{

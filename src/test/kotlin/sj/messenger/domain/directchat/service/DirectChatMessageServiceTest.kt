@@ -16,7 +16,6 @@ import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.util.fixture
 import sj.messenger.util.generateDirectMessage
 import sj.messenger.util.integration.EnableContainers
-import sj.messenger.util.randomDateTime
 import sj.messenger.util.truncateMicroSeconds
 import java.time.LocalDateTime
 
