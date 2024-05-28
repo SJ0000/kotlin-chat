@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.dto.InvitationDto
-import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
 import sj.messenger.domain.groupchat.service.GroupChatInviteService
 import sj.messenger.domain.groupchat.service.GroupChatMessageService
 import sj.messenger.domain.groupchat.service.GroupChatService
@@ -127,10 +127,10 @@ class GroupChatController(
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/chats/groups/{id}/messages")
-    fun getDirectMessages(
+    fun getGroupMessages(
         @PathVariable id: Long,
         @RequestParam(required = false) dateTime: LocalDateTime = LocalDateTime.now()
-    ) : ResponseEntity<List<ReceivedGroupMessageDto>>{
+    ) : ResponseEntity<List<ServerGroupMessageDto>>{
         val previousMessages = groupChatMessageService.getPreviousMessages(id, dateTime)
         return ResponseEntity.ok(previousMessages)
     }

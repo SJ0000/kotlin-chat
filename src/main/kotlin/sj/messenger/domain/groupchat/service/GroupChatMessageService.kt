@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import sj.messenger.domain.groupchat.domain.GroupMessage
-import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
-import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ClientGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import java.time.LocalDateTime
 
@@ -18,13 +18,13 @@ class GroupChatMessageService (
     private val groupMessageRepository: GroupMessageRepository
 ){
     @Async("threadPoolTaskExecutor")
-    fun saveRequestAsync(groupMessageDto: SentGroupMessageDto) {
+    fun saveRequestAsync(groupMessageDto: ClientGroupMessageDto) {
         batchingRabbitTemplate.convertAndSend("groupMessageSaveQueue",groupMessageDto)
     }
 
     @Timed("service.group-chat-message.batch-save")
     @RabbitListener(queues = ["groupMessageSaveQueue"])
-    fun saveAllReceivedMessage(messages : List<SentGroupMessageDto>){
+    fun saveAllReceivedMessage(messages : List<ClientGroupMessageDto>){
         val groupMessages = messages.map {
             GroupMessage(
                 senderId = it.senderId,
@@ -36,12 +36,12 @@ class GroupChatMessageService (
         groupMessageRepository.saveAll(groupMessages)
     }
 
-    fun getPreviousMessages(groupChatId: Long, dateTime: LocalDateTime): List<ReceivedGroupMessageDto>{
+    fun getPreviousMessages(groupChatId: Long, dateTime: LocalDateTime): List<ServerGroupMessageDto>{
         val pageable = PageRequest.of(0,10)
         val previousMessages = groupMessageRepository.findPreviousMessages(groupChatId,dateTime,pageable)
             .reversed()
         return previousMessages.map {
-            ReceivedGroupMessageDto(
+            ServerGroupMessageDto(
                 groupChatId = it.groupChatId,
                 senderId = it.senderId,
                 content = it.content,

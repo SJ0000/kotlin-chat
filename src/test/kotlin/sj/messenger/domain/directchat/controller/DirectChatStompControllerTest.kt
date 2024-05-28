@@ -4,8 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import sj.messenger.domain.directchat.dto.DirectMessageType
-import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
-import sj.messenger.domain.directchat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
+import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.util.config.TestStompClient
 import sj.messenger.util.integration.IntegrationTest
@@ -21,7 +21,7 @@ class DirectChatStompControllerTest(
         // given
         val source = "/app/direct-message"
         val destination = "/topic/direct-chat/1"
-        val message = SentDirectMessageDto(
+        val message = ClientDirectMessageDto(
             directChatId = 1L,
             messageType = DirectMessageType.MESSAGE,
             senderId = 1L,
@@ -31,7 +31,7 @@ class DirectChatStompControllerTest(
         )
 
         // when
-        val received = client.sendAndReceive<ReceivedDirectMessageDto>(source, destination, message)
+        val received = client.sendAndReceive<ServerDirectMessageDto>(source, destination, message)
 
         // then
         with(received){

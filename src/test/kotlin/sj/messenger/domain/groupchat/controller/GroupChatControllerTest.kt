@@ -15,7 +15,7 @@ import sj.messenger.domain.groupchat.domain.Invitation
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.dto.InvitationDto
-import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.domain.groupchat.repository.InvitationRepository
@@ -197,7 +197,7 @@ class GroupChatControllerTest(
         }.andReturn()
 
         val jsonString = result.response.contentAsString
-        val messages = om.readValue<List<ReceivedGroupMessageDto>>(jsonString)
+        val messages = om.readValue<List<ServerGroupMessageDto>>(jsonString)
         assertThat(messages).isSortedAccordingTo { o1, o2 ->
             o1.receivedAt.compareTo(o2.receivedAt)
         }

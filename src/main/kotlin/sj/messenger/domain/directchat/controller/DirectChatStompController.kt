@@ -5,8 +5,8 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 import sj.messenger.domain.directchat.dto.DirectMessageType.MESSAGE
-import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
-import sj.messenger.domain.directchat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
+import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.service.DirectChatMessageService
 import java.time.LocalDateTime
 
@@ -17,7 +17,7 @@ class DirectChatStompController(
 ) {
     @MessageMapping("/direct-message")
     fun directMessage(
-        @Payload messageDto: SentDirectMessageDto,
+        @Payload messageDto: ClientDirectMessageDto,
     ) {
         when (messageDto.messageType) {
             MESSAGE -> processMessage(messageDto)
@@ -25,9 +25,9 @@ class DirectChatStompController(
         }
     }
 
-    private fun processMessage(message: SentDirectMessageDto){
+    private fun processMessage(message: ClientDirectMessageDto){
         directChatMessageService.saveRequestAsync(message)
-        val data = ReceivedDirectMessageDto(
+        val data = ServerDirectMessageDto(
             directChatId = message.directChatId,
             senderId = message.senderId,
             content = message.content,

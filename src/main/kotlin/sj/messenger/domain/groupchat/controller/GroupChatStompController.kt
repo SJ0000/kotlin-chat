@@ -5,8 +5,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
-import sj.messenger.domain.groupchat.dto.ReceivedGroupMessageDto
-import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ClientGroupMessageDto
 import sj.messenger.domain.groupchat.service.GroupChatMessageService
 import java.time.LocalDateTime
 
@@ -19,13 +19,13 @@ class GroupChatStompController(
     @Timed("controller.group-chat-stomp.send-message")
     @MessageMapping("/group-message")
     fun sendMessage(
-        @Payload sentGroupMessageDto: SentGroupMessageDto,
+        @Payload clientGroupMessageDto: ClientGroupMessageDto,
     ) {
-        groupChatMessageService.saveRequestAsync(sentGroupMessageDto)
-        val data = ReceivedGroupMessageDto(
-            groupChatId = sentGroupMessageDto.groupChatId,
-            senderId = sentGroupMessageDto.senderId,
-            content = sentGroupMessageDto.content,
+        groupChatMessageService.saveRequestAsync(clientGroupMessageDto)
+        val data = ServerGroupMessageDto(
+            groupChatId = clientGroupMessageDto.groupChatId,
+            senderId = clientGroupMessageDto.senderId,
+            content = clientGroupMessageDto.content,
             receivedAt = LocalDateTime.now()
         )
         template.convertAndSend("/topic/group-chat/${data.groupChatId}",data)

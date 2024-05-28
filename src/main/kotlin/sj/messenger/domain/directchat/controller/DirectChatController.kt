@@ -5,7 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import sj.messenger.domain.directchat.dto.DirectChatDto
-import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
+import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
 import sj.messenger.domain.directchat.service.DirectChatMessageService
 import sj.messenger.domain.directchat.service.DirectChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
@@ -64,7 +64,7 @@ class DirectChatController(
     fun getDirectMessages(
         @PathVariable id: Long,
         @RequestParam(required = false) dateTime: LocalDateTime = LocalDateTime.now()
-    ) : ResponseEntity<List<ReceivedDirectMessageDto>> {
+    ) : ResponseEntity<List<ServerDirectMessageDto>> {
         val previousMessages = directChatMessageService.getPreviousMessages(id, dateTime)
         return ResponseEntity.ok(previousMessages)
     }

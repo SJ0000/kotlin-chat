@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Example
 import sj.messenger.domain.directchat.domain.DirectMessage
-import sj.messenger.domain.directchat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.util.fixture
 import sj.messenger.util.generateDirectMessage
@@ -37,7 +37,7 @@ class DirectChatMessageServiceTest(
     @DisplayName("RabbitMQ의 directMessageSaveQueue로부터 메시지를 읽어와 저장")
     fun saveAllReceivedMessage() {
         // given
-        val messageDto: SentDirectMessageDto = fixture.giveMeOne()
+        val messageDto: ClientDirectMessageDto = fixture.giveMeOne()
 
         // when
         batchingRabbitTemplate.convertAndSend(directMessageSaveQueue.name, messageDto)

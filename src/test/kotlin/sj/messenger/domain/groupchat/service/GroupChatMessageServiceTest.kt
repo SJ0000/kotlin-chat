@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Example
 import sj.messenger.domain.groupchat.domain.GroupMessage
-import sj.messenger.domain.groupchat.dto.SentGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ClientGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.util.fixture
 import sj.messenger.util.generateGroupMessage
@@ -38,7 +38,7 @@ class GroupChatMessageServiceTest(
     @DisplayName("RabbitMQ의 groupMessageSaveQueue로부터 메시지를 읽어서 저장")
     fun saveAllReceivedMessage(){
         // given
-        val messageDto : SentGroupMessageDto = fixture.giveMeOne()
+        val messageDto : ClientGroupMessageDto = fixture.giveMeOne()
 
         // when
         batchingRabbitTemplate.convertAndSend(groupMessageSaveQueue.name,messageDto)

@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.directchat.domain.DirectChat
-import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
+import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectChatRepository
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.user.repository.UserRepository
@@ -123,7 +123,7 @@ class DirectChatControllerTest(
         }.andReturn()
 
         val jsonString = result.response.contentAsString
-        val messages = objectMapper.readValue<List<ReceivedDirectMessageDto>>(jsonString)
+        val messages = objectMapper.readValue<List<ServerDirectMessageDto>>(jsonString)
         assertThat(messages).isSortedAccordingTo{ o1, o2 ->
             o1.receivedAt.compareTo(o2.receivedAt)
         }

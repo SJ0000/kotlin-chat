@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.directchat.domain.DirectChat
 import sj.messenger.domain.directchat.domain.DirectMessage
-import sj.messenger.domain.directchat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectChatRepository
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.user.service.UserService
@@ -17,12 +17,12 @@ class DirectChatService(
     private val directMessageRepository: DirectMessageRepository,
 ) {
 
-    fun saveMessage(sentDirectMessageDto: SentDirectMessageDto): String {
+    fun saveMessage(clientDirectMessageDto: ClientDirectMessageDto): String {
         val message = DirectMessage(
-            senderId = sentDirectMessageDto.senderId,
-            directChatId = sentDirectMessageDto.directChatId,
-            content = sentDirectMessageDto.content,
-            sentAt = sentDirectMessageDto.sentAt,
+            senderId = clientDirectMessageDto.senderId,
+            directChatId = clientDirectMessageDto.directChatId,
+            content = clientDirectMessageDto.content,
+            sentAt = clientDirectMessageDto.sentAt,
         )
         val savedMessage = directMessageRepository.save(message)
         return savedMessage.id!!.toHexString()

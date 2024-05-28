@@ -2,7 +2,7 @@ package sj.messenger.domain.directchat.dto
 
 import java.time.LocalDateTime
 
-data class SentDirectMessageDto(
+data class ClientDirectMessageDto(
     val directChatId : Long,
     val messageType: DirectMessageType,
     val senderId : Long,
@@ -11,7 +11,7 @@ data class SentDirectMessageDto(
     val sentAt : LocalDateTime,
 )
 
-data class ReceivedDirectMessageDto(
+data class ServerDirectMessageDto(
     val directChatId : Long,
     val messageType: DirectMessageType,
     val senderId : Long,

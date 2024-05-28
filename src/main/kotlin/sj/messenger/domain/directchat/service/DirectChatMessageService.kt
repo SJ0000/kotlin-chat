@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import sj.messenger.domain.directchat.domain.DirectMessage
 import sj.messenger.domain.directchat.dto.DirectMessageType
-import sj.messenger.domain.directchat.dto.ReceivedDirectMessageDto
-import sj.messenger.domain.directchat.dto.SentDirectMessageDto
+import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
+import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import java.time.LocalDateTime
 
@@ -19,12 +19,12 @@ class DirectChatMessageService(
 ) {
 
     @Async("threadPoolTaskExecutor")
-    fun saveRequestAsync(directMessageDto: SentDirectMessageDto) {
+    fun saveRequestAsync(directMessageDto: ClientDirectMessageDto) {
         batchingRabbitTemplate.convertAndSend("directMessageSaveQueue",directMessageDto)
     }
 
     @RabbitListener(queues = ["directMessageSaveQueue"])
-    fun saveAllReceivedMessage(messages : List<SentDirectMessageDto>){
+    fun saveAllReceivedMessage(messages : List<ClientDirectMessageDto>){
         val directMessages = messages.map {
             DirectMessage(
                 senderId = it.senderId,
@@ -36,12 +36,12 @@ class DirectChatMessageService(
         directMessageRepository.saveAll(directMessages)
     }
 
-    fun getPreviousMessages(directChatId: Long, dateTime: LocalDateTime): List<ReceivedDirectMessageDto>{
+    fun getPreviousMessages(directChatId: Long, dateTime: LocalDateTime): List<ServerDirectMessageDto>{
         val pageable = PageRequest.of(0, 10)
         val previousMessages = directMessageRepository.findPreviousMessages(directChatId, dateTime, pageable)
             .reversed()
         return previousMessages.map {
-            ReceivedDirectMessageDto(
+            ServerDirectMessageDto(
                 directChatId = it.directChatId,
                 messageType = DirectMessageType.MESSAGE,
                 senderId = it.senderId,

@@ -2,14 +2,14 @@ package sj.messenger.domain.groupchat.dto
 
 import java.time.LocalDateTime
 
-data class SentGroupMessageDto(
+data class ClientGroupMessageDto(
     val groupChatId : Long,
     val senderId : Long,
     val content : String,
     val sentAt : LocalDateTime,
 )
 
-data class ReceivedGroupMessageDto(
+data class ServerGroupMessageDto(
     val groupChatId : Long,
     val senderId : Long,
     val content : String,
