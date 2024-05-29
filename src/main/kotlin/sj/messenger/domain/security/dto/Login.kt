@@ -11,7 +11,7 @@ data class LoginRequest(
     @field:Size(max=255)
     @field:JsonDeserialize(using = StringLowercaseDeserializer::class)
     val email : String,
-    @Size(min = 10, max = 20)
+    @field:Size(min = 10, max = 20)
     val password : String,
 )
 

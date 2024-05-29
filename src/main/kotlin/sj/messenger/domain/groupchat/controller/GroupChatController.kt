@@ -1,5 +1,6 @@
 package sj.messenger.domain.groupchat.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -42,7 +43,7 @@ class GroupChatController(
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/chats/groups")
     fun postGroupChat(
-        @RequestBody groupChatCreateDto: GroupChatCreateDto,
+        @Valid @RequestBody groupChatCreateDto: GroupChatCreateDto,
     ): ResponseEntity<GroupChatDto> {
         val groupChatId = groupChatService.createGroupChat(groupChatCreateDto)
         val groupChat = groupChatService.findGroupChatWithParticipants(groupChatId)

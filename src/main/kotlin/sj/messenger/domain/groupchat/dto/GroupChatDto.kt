@@ -14,6 +14,6 @@ data class GroupChatDto(
 
 data class GroupChatCreateDto(
     @field:NotEmpty
-    @Size(max = 255)
+    @field:Size(max = 255)
     val name: String
 )

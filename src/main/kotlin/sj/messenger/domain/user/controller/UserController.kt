@@ -1,5 +1,6 @@
 package sj.messenger.domain.user.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -24,7 +25,7 @@ class UserController(
     }
 
     @PostMapping("/signup")
-    fun signUp(@RequestBody signUp: SignUpDto): ResponseEntity<UserDto> {
+    fun signUp(@Valid @RequestBody signUp: SignUpDto): ResponseEntity<UserDto> {
         val userId = userService.signUpUser(signUp)
         val user = userService.findUserById(userId)
         return ResponseEntity.created(URI.create("/users/${userId}"))
@@ -35,7 +36,7 @@ class UserController(
     fun patchUser(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @PathVariable id: Long,
-        @RequestBody dto: UpdateUserDto
+        @Valid @RequestBody dto: UpdateUserDto
     ): ResponseEntity<UserDto> {
         if (userDetails.getUserId() != id)
             throw RuntimeException("has no permission. login user id = ${userDetails.getUserId()}, change request user id = ${id}")

@@ -10,7 +10,7 @@ data class SignUpDto(
     @field:Size(max = 255)
     @field:JsonDeserialize(using = StringLowercaseDeserializer::class)
     val email: String,
-    @field:Size(min = 1, max = 20)
+    @field:Size(max = 20)
     val name: String,
     @field:Size(min = 10, max = 20)
     val password: String,

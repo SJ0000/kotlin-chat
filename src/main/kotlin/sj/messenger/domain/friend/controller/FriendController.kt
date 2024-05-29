@@ -1,5 +1,6 @@
 package sj.messenger.domain.friend.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -41,7 +42,7 @@ class FriendController(
     @PostMapping("/friends")
     fun postFriends(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
-        @RequestBody dto: FriendRequestDto
+        @Valid @RequestBody dto: FriendRequestDto
     ) : ResponseEntity<Unit> {
         friendService.request(userDetails.getUserId(), dto.publicIdentifier)
 

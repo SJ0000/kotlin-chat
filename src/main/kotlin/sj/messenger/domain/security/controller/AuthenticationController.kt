@@ -1,5 +1,6 @@
 package sj.messenger.domain.security.controller
 
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,7 +19,7 @@ class AuthenticationController (
 ){
 
     @PostMapping("/login")
-    fun login(@RequestBody loginRequest: LoginRequest) : ResponseEntity<LoginResponse>{
+    fun login(@Valid @RequestBody loginRequest: LoginRequest) : ResponseEntity<LoginResponse>{
         userService.validateLogin(loginRequest)
         val loginUser = userService.findUserByEmail(loginRequest.email)
         val token = jwtProvider.createAccessToken(UserClaim(id = loginUser.id!!, name = loginUser.name))
