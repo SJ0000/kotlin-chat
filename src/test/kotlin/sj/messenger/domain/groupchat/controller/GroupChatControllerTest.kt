@@ -49,12 +49,12 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("id", groupChat.id!!)
-                jsonPath("name", groupChat.name)
-                jsonPath("avatarUrl", groupChat.avatarUrl)
-                jsonPath("users[0].id", user.id!!)
-                jsonPath("users[0].name", user.name)
-                jsonPath("users[0].email", user.email)
+                jsonPath("id") { value(groupChat.id) }
+                jsonPath("name") { value(groupChat.name) }
+                jsonPath("avatarUrl") { value(groupChat.avatarUrl) }
+                jsonPath("users[0].id") { value(user.id) }
+                jsonPath("users[0].name") { value(user.name) }
+                jsonPath("users[0].email") { value(user.email) }
             }
         }
     }
@@ -73,9 +73,9 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isCreated() }
             content {
-                jsonPath("id").isNumber
-                jsonPath("name", dto.name)
-                jsonPath("avatarUrl").isString
+                jsonPath("id") { isNumber() }
+                jsonPath("name") { value(dto.name) }
+                jsonPath("avatarUrl") { isString() }
             }
         }.andReturn()
 
@@ -141,10 +141,10 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isCreated() }
             content {
-                jsonPath("id", groupChat.id)
-                jsonPath("name", groupChat.name)
-                jsonPath("avatarUrl", groupChat.avatarUrl)
-                jsonPath("users[0].email", "test@test.com")
+                jsonPath("id") { value(groupChat.id) }
+                jsonPath("name") { value(groupChat.name) }
+                jsonPath("avatarUrl") { value(groupChat.avatarUrl) }
+                jsonPath("users[0].email") { value(user.email) }
             }
         }
 
@@ -167,11 +167,11 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("id").isString
-                jsonPath("groupChatId", groupChat.id)
-                jsonPath("groupChatName", groupChat.avatarUrl)
-                jsonPath("inviterName", user.name)
-                jsonPath("expiredAt").exists()
+                jsonPath("id") { isString() }
+                jsonPath("groupChatId") { value(groupChat.id) }
+                jsonPath("groupChatName") { value(groupChat.name) }
+                jsonPath("inviterName") { value(user.name) }
+                jsonPath("expiredAt") { exists() }
             }
         }.andReturn()
 
@@ -192,11 +192,11 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("id", invitation.id)
-                jsonPath("groupChatId", invitation.groupChatId)
-                jsonPath("groupChatName", groupChat.name)
-                jsonPath("inviterName", invitation.inviterName)
-                jsonPath("expiredAt").exists()
+                jsonPath("id") { value(invitation.id) }
+                jsonPath("groupChatId") { value(invitation.groupChatId) }
+                jsonPath("groupChatName") { value(groupChat.name) }
+                jsonPath("inviterName") { value(invitation.inviterName) }
+                jsonPath("expiredAt") { exists() }
             }
         }
     }
@@ -214,8 +214,8 @@ class GroupChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$").isArray
-                jsonPath("$.size()", 10)
+                jsonPath("$") { isArray() }
+                jsonPath("$.size()") { value(10) }
             }
         }.andReturn()
 

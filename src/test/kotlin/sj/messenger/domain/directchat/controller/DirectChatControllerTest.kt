@@ -44,13 +44,13 @@ class DirectChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("id", directChat.id)
-                jsonPath("otherUser.id", other.id)
-                jsonPath("otherUser.name", other.name)
-                jsonPath("otherUser.email", other.email)
-                jsonPath("otherUser.avatarUrl", other.avatarUrl)
-                jsonPath("otherUser.statusMessage", other.statusMessage)
-                jsonPath("otherUser.publicIdentifier", other.publicIdentifier)
+                jsonPath("id") { value(directChat.id) }
+                jsonPath("otherUser.id") { value(other.id) }
+                jsonPath("otherUser.name") { value(other.name) }
+                jsonPath("otherUser.email") { value(other.email) }
+                jsonPath("otherUser.avatarUrl") { value(other.avatarUrl) }
+                jsonPath("otherUser.statusMessage") { value(other.statusMessage) }
+                jsonPath("otherUser.publicIdentifier") { value(other.publicIdentifier) }
             }
         }
     }
@@ -93,7 +93,7 @@ class DirectChatControllerTest(
         }.andExpect {
             status { isCreated() }
             content {
-                jsonPath("$").isNumber
+                jsonPath("$") { isNumber() }
             }
         }.andReturn()
 
@@ -117,14 +117,14 @@ class DirectChatControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$").isArray
-                jsonPath("$.size()", 10)
+                jsonPath("$") { isArray() }
+                jsonPath("$.size()") { value(10) }
             }
         }.andReturn()
 
         val jsonString = result.response.contentAsString
         val messages = objectMapper.readValue<List<ServerDirectMessageDto>>(jsonString)
-        assertThat(messages).isSortedAccordingTo{ o1, o2 ->
+        assertThat(messages).isSortedAccordingTo { o1, o2 ->
             o1.receivedAt.compareTo(o2.receivedAt)
         }
     }

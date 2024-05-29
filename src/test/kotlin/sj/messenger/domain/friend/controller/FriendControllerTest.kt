@@ -48,8 +48,8 @@ class FriendControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$").isArray
-                jsonPath("$.size()", 3)
+                jsonPath("$"){isArray()}
+                jsonPath("$.size()"){value(3)}
                 jsonPath(
                     "$[*].id", Matchers.containsInAnyOrder(
                         *others.map { it.id?.toInt() }.toTypedArray()
@@ -74,8 +74,8 @@ class FriendControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$").isArray
-                jsonPath("$.size()", 2)
+                jsonPath("$"){isArray()}
+                jsonPath("$.size()"){value(3)}
                 jsonPath(
                     "$[*].fromUser.id", Matchers.containsInAnyOrder(
                         *others.map { it.id?.toInt() }.toTypedArray()

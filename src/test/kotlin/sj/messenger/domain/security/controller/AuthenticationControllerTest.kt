@@ -51,8 +51,8 @@ class AuthenticationControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("token").isString
-                jsonPath("$.user").exists()
+                jsonPath("token"){isString()}
+                jsonPath("$.user"){exists()}
             }
         }.andReturn()
 
