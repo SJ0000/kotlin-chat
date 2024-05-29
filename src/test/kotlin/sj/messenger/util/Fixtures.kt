@@ -88,4 +88,6 @@ fun randomPassword() = Arbitraries.strings().ascii().numeric().ofMinLength(10).o
 
 fun randomString(minLength: Int, maxLength: Int) = Arbitraries.strings().ofMinLength(minLength).ofMaxLength(maxLength).sample()
 
+fun randomString(length: Int) = randomString(length,length)
+
 fun randomDateTime(min : LocalDateTime, max: LocalDateTime) = DateTimes.dateTimes().between(min, max).sample()

@@ -6,18 +6,22 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.test.util.ReflectionTestUtils
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.config.PasswordConfig
 import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
 import sj.messenger.util.integration.IntegrationTest
+import sj.messenger.util.randomEmail
 import sj.messenger.util.randomString
 
 
@@ -28,6 +32,9 @@ class UserControllerTest(
     @Autowired val userRepository: UserRepository,
     @Autowired val om: ObjectMapper,
 ) {
+
+    @Autowired
+    private lateinit var passwordConfig: PasswordConfig
 
     @Test
     @InjectAccessToken
@@ -98,6 +105,116 @@ class UserControllerTest(
     }
 
     @Test
+    @DisplayName("POST /signup : email 형식 불일치시 400 bad request")
+    fun signUpEmailFormatError(){
+        // given
+        val emailInvalidFormat =  SignUpDto(
+            email = "email_invalid_format",
+            name = randomString(10),
+            password = randomString(15)
+        );
+
+        // expected
+        mockMvc.post("/signup"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(emailInvalidFormat)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.email") {exists()}
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("POST /signup : email 길이 255자 초과시 400 bad request")
+    fun signUpEmailLengthGreaterThan255(){
+        // given
+        val emailLengthGT255 = SignUpDto(
+            email = "${randomString(255)}@123.com",
+            name = randomString(10),
+            password = randomString(15)
+        )
+
+        // expected
+        mockMvc.post("/signup"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(emailLengthGT255)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.email") {exists()}
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("POST /signup : name 길이 20자 초과시 400 bad request")
+    fun signUpNameLengthGreaterThan20(){
+        // given
+        val nameLengthGT20 = SignUpDto(
+            email = randomEmail(),
+            name = randomString(21),
+            password = randomString(15)
+        )
+
+        // expected
+        mockMvc.post("/signup"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(nameLengthGT20)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.name") {exists()}
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("POST /signup : password 길이 10자 미만시 400 bad request")
+    fun signUpPasswordLengthLessThan10(){
+        // given
+        val passwordLengthLT10 = SignUpDto(
+            email = randomEmail(),
+            name = randomString(15),
+            password = randomString(9)
+        )
+
+        // expected
+        mockMvc.post("/signup"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(passwordLengthLT10)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.password") {exists()}
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("POST /signup : password 길이 20자 초과시 400 bad request")
+    fun signUpPasswordLengthGreaterThan20(){
+        // given
+        val passwordLengthGT20 = SignUpDto(
+            email = randomEmail(),
+            name = randomString(15),
+            password = randomString(21)
+        )
+
+        // expected
+        mockMvc.post("/signup"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(passwordLengthGT20)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.password") {exists()}
+            }
+        }
+    }
+
+    @Test
     @InjectAccessToken
     fun patchUser(){
         // given
@@ -115,6 +232,90 @@ class UserControllerTest(
                 jsonPath("avatarUrl",updateUser.avatarUrl)
                 jsonPath("statusMessage",updateUser.statusMessage)
                 jsonPath("publicIdentifier",updateUser.publicIdentifier)
+            }
+        }
+    }
+
+    @Test
+    @InjectAccessToken
+    @DisplayName("PATCH /users/{id} : name이 255자 초과인 경우 400 Bad Request")
+    fun patchUserNameGT255(){
+        // given
+        val user = userRepository.findByEmail("test@test.com")!!
+        val updateUser : UpdateUserDto = fixture.giveMeOne()
+        ReflectionTestUtils.setField(updateUser,"name", randomString(256))
+
+        // expected
+        mockMvc.patch("/users/${user.id!!}"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(updateUser)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.name"){exists()}
+            }
+        }
+    }
+
+    @Test
+    @InjectAccessToken
+    @DisplayName("PATCH /users/{id} : name이 빈 문자열일 경우 400 Bad Request")
+    fun patchUserNameBlank(){
+        // given
+        val user = userRepository.findByEmail("test@test.com")!!
+        val updateUser : UpdateUserDto = fixture.giveMeOne()
+        ReflectionTestUtils.setField(updateUser,"name", "  ")
+
+        // expected
+        mockMvc.patch("/users/${user.id!!}"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(updateUser)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.name"){exists()}
+            }
+        }
+    }
+
+    @Test
+    @InjectAccessToken
+    @DisplayName("PATCH /users/{id} : statusMessage 255자 초과시 400 Bad Request")
+    fun patchUserStatusMessageGT255(){
+        // given
+        val user = userRepository.findByEmail("test@test.com")!!
+        val updateUser : UpdateUserDto = fixture.giveMeOne()
+        ReflectionTestUtils.setField(updateUser,"statusMessage", randomString(256))
+
+        // expected
+        mockMvc.patch("/users/${user.id!!}"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(updateUser)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.statusMessage"){exists()}
+            }
+        }
+    }
+
+    @Test
+    @InjectAccessToken
+    @DisplayName("PATCH /users/{id} : publicIdentifier 255자 초과시 400 Bad Request")
+    fun patchUserPublicIdentifierGT255(){
+        // given
+        val user = userRepository.findByEmail("test@test.com")!!
+        val updateUser : UpdateUserDto = fixture.giveMeOne()
+        ReflectionTestUtils.setField(updateUser,"publicIdentifier", randomString(256))
+
+        // expected
+        mockMvc.patch("/users/${user.id!!}"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(updateUser)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.publicIdentifier"){exists()}
             }
         }
     }

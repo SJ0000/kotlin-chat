@@ -4,6 +4,7 @@ package sj.messenger.domain.friend.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -103,6 +104,23 @@ class FriendControllerTest(
 
         val receivedRequest = friendRequestRepository.findByFromTo(user.id!!, other.id!!)
         assertThat(receivedRequest).isNotNull
+    }
+
+    @Test
+    @InjectAccessToken
+    @DisplayName("POST /friends : publicIdentifier가 비어있을 경우 400 Bad Request")
+    fun postFriendsIdentifierEmpty() {
+        // given
+        val publicIdentifierEmpty = FriendRequestDto(publicIdentifier = "  ")
+
+        // expected
+        mockMvc.post("/friends") {
+            accept = MediaType.APPLICATION_JSON
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(publicIdentifierEmpty)
+        }.andExpect {
+            status { isBadRequest() }
+        }
     }
 
     @Test

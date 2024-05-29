@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -84,22 +85,44 @@ class GroupChatControllerTest(
 
     @Test
     @InjectAccessToken
+    @DisplayName("POST /chats/groups : name이 255자 초과시 400 Bad Request")
+    fun postGroupChatLengthOver() {
+        // given
+        val dto = GroupChatCreateDto(randomString(256));
+
+        // expected
+        mockMvc.post("/chats/groups") {
+            accept = MediaType.APPLICATION_JSON
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(dto)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.fieldErrors.name") { exists() }
+            }
+        }
+    }
+
+    @Test
+    @InjectAccessToken
     fun getMyGroupChats() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
         val groupChat = generateGroupChat()
         groupChat.join(user)
-        groupChatRepository.save(generateGroupChat())
+        groupChatRepository.save(groupChat)
 
         // expected
         mockMvc.get("/chats/groups/me") {
             accept = MediaType.APPLICATION_JSON
+        }.andDo {
+            print()
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$[0].id", groupChat.id)
-                jsonPath("$[0].name", groupChat.name)
-                jsonPath("$[0].avatarUrl", groupChat.avatarUrl)
+                jsonPath("$[0].id") { value(groupChat.id) }
+                jsonPath("$[0].name") { value(groupChat.name) }
+                jsonPath("$[0].avatarUrl") { value(groupChat.avatarUrl) }
             }
         }
     }
