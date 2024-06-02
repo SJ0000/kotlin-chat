@@ -26,11 +26,10 @@ class GroupChatRepositoryTest (
         // given
         val users = (1..3).map { generateUser() }
         userRepository.saveAll(users)
-        val chatRoom = generateGroupChat()
+        val chatRoom = generateGroupChat(users[0])
         groupChatRepository.save(chatRoom)
-        users.forEach{
-         chatRoom.join(it)
-        }
+        chatRoom.join(users[1])
+        chatRoom.join(users[2])
 
         em.flush()
         em.clear()

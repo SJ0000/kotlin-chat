@@ -28,9 +28,8 @@ class ParticipantRepositoryTest (
         userRepository.save(user)
 
         for(num in 1..10){
-            val chatRoom = generateGroupChat()
+            val chatRoom = generateGroupChat(user)
             groupChatRepository.save(chatRoom)
-            participantRepository.save(Participant(user,chatRoom))
         }
 
         // when

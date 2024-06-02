@@ -29,8 +29,7 @@ class GroupChatInviteServiceTest(
         // given
         val user = generateUser()
         userRepository.save(user)
-        val chatRoom = generateGroupChat()
-        chatRoom.join(user)
+        val chatRoom = generateGroupChat(user)
         groupChatRepository.save(chatRoom)
 
         // when

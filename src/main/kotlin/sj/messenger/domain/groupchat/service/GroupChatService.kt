@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
+import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
+import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.service.UserService
 
 
@@ -25,7 +27,7 @@ class GroupChatService(
     @Transactional(readOnly = false)
     fun joinGroupChat(groupChatId: Long, userId: Long) {
         val chatRoom = findGroupChatWithParticipants(groupChatId)
-        if(chatRoom.isParticipant(userId))
+        if (chatRoom.isParticipant(userId))
             throw RuntimeException("User(id = ${userId}) is already participant in ChatRoom(id = ${groupChatId}) ")
 
         val user = userService.findUserById(userId)
@@ -33,22 +35,36 @@ class GroupChatService(
     }
 
     @Transactional(readOnly = false)
-    fun createGroupChat(groupChatCreateDto: GroupChatCreateDto): Long {
-        val groupChat = GroupChat(name = groupChatCreateDto.name)
+    fun createGroupChat(creatorId: Long, groupChatCreateDto: GroupChatCreateDto): Long {
+        val creator = userService.findUserById(creatorId);
+        val groupChat = GroupChat.create(creator, groupChatCreateDto.name)
         groupChatRepository.save(groupChat)
         return groupChat.id!!
     }
 
-    fun findUserGroupChats(userId: Long): List<GroupChat>{
+    fun findUserGroupChats(userId: Long): List<GroupChat> {
         val participants = participantRepository.getParticipantsWithGroupChatByUserId(userId)
         return participants.map { it.groupChat }
     }
 
-    fun findGroupChat(chatRoomId: Long): GroupChat{
-        return groupChatRepository.findByIdOrNull(chatRoomId) ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
+    fun findGroupChat(groupChatId: Long): GroupChat {
+        return groupChatRepository.findByIdOrNull(groupChatId)
+            ?: throw RuntimeException("ChatRoom id ${groupChatId} not found")
     }
 
-    fun findGroupChatWithParticipants(chatRoomId: Long): GroupChat{
-        return groupChatRepository.findWithParticipantsById(chatRoomId) ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
+    fun getGroupChatWithUsers(groupChatId: Long): GroupChatDto {
+        val groupChat = findGroupChatWithParticipants(groupChatId)
+        val userIds = groupChat.getParticipantUserIds()
+        val users = userService.findUsers(userIds)
+        return GroupChatDto(
+            id = groupChat.id!!,
+            name = groupChat.name,
+            avatarUrl = groupChat.avatarUrl,
+            users = users.map { UserDto(it) })
+    }
+
+    private fun findGroupChatWithParticipants(groupChatId: Long): GroupChat {
+        return groupChatRepository.findWithParticipantsById(groupChatId)
+            ?: throw RuntimeException("ChatRoom id ${groupChatId} not found")
     }
 }

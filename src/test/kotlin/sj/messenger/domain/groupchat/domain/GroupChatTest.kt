@@ -14,26 +14,25 @@ class GroupChatTest(
     @DisplayName("join 호출시 participant를 생성하고 chatRoom의 participants에 추가된다.")
     fun joinTest(){
         // given
-        val chatRoom = generateGroupChat()
+        val chatRoom = generateGroupChat(generateUser())
         val user = generateUser()
 
         // when
         chatRoom.join(user)
 
         // then
-        assertThat(chatRoom.participants.size).isEqualTo(1)
-        assertThat(chatRoom.participants[0].user).isEqualTo(user)
+        assertThat(chatRoom.participants.size).isEqualTo(2)
     }
 
     @Test
     @DisplayName("특정 사용자가 특정 대화방의 참여자인지 여부를 확인")
     fun isParticipantTest(){
         // given
-        val chatRoom = generateGroupChat()
         val user = generateUser(1L)
+        val chatRoom = generateGroupChat(user)
 
         // then
-        assertThat(chatRoom.isParticipant(user.id!!)).isFalse()
+        assertThat(chatRoom.isParticipant(user.id!!)).isTrue()
     }
 
 }

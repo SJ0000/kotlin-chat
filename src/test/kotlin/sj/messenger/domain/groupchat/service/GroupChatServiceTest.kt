@@ -39,43 +39,44 @@ class GroupChatServiceTest(
 
     @Test
     @DisplayName("사용자가 대화방에 정상적으로 참여")
-    fun joinGroupChat(){
+    fun joinGroupChat() {
         // given
-        val user = generateUser()
-        userRepository.save(user)
-        val groupChat = groupChatRepository.save(GroupChat(name = fixture.giveMeOne()))
+        val groupChatCreator = userRepository.save(generateUser())
+        val groupChat = groupChatRepository.save(GroupChat.create(groupChatCreator, fixture.giveMeOne()))
 
+        val newUser = userRepository.save(generateUser())
         // when
-        groupChatService.joinGroupChat(groupChat.id!!, user.id!!)
+        groupChatService.joinGroupChat(groupChat.id!!, newUser.id!!)
 
         // then
-        val isParticipant = groupChatRepository.findByIdOrNull(groupChat.id!!)?.isParticipant(user.id!!)
+        val isParticipant = groupChatRepository.findByIdOrNull(groupChat.id!!)?.isParticipant(groupChatCreator.id!!)
         assertThat(isParticipant).isTrue()
     }
 
     @Test
     @DisplayName("사용자가 참여하고자 하는 대화방에 이미 참여중인 경우 예외 발생")
-    fun joinChatRoomError(){
+    fun joinChatRoomError() {
         // given
         val user = generateUser()
         userRepository.save(user)
-        val groupChat = groupChatRepository.save(GroupChat(name = randomString(1,255)))
-        groupChat.join(user)
+        val groupChat = groupChatRepository.save(GroupChat.create(user, name = randomString(1, 255)))
 
         // expected
         assertThatThrownBy {
-            groupChatService.joinGroupChat(groupChat.id!!,user.id!!)
+            groupChatService.joinGroupChat(groupChat.id!!, user.id!!)
         }.isInstanceOf(RuntimeException::class.java)
     }
 
     @Test
     @DisplayName("대화방 정상 생성")
-    fun createChatRoom(){
+    fun createChatRoom() {
         // given
+        val user = generateUser()
+        userRepository.save(user)
         val groupChatCreateDto = fixture.giveMeOne<GroupChatCreateDto>()
 
         // when
-        val chatRoomId = groupChatService.createGroupChat(groupChatCreateDto)
+        val chatRoomId = groupChatService.createGroupChat(user.id!!, groupChatCreateDto)
 
         // then
         val findChatRoom = groupChatRepository.findByIdOrNull(chatRoomId)
@@ -85,12 +86,11 @@ class GroupChatServiceTest(
 
     @Test
     @DisplayName("특정 사용자의 참가한 대화방 리스트 조회")
-    fun findUserChatRooms(){
+    fun findUserChatRooms() {
         // given
         val user = generateUser()
         userRepository.save(user)
-        val chatRooms = (1..3).map { generateGroupChat() }
-        chatRooms.forEach { it.join(user) }
+        val chatRooms = (1..3).map { generateGroupChat(user) }
         groupChatRepository.saveAll(chatRooms)
 
         // when

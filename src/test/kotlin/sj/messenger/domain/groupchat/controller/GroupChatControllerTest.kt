@@ -39,8 +39,7 @@ class GroupChatControllerTest(
     fun getGroupChatInfo() {
         // given
         val user = userRepository.save(generateUser())
-        val groupChat = generateGroupChat()
-        groupChat.join(user)
+        val groupChat = generateGroupChat(user)
         groupChatRepository.save(groupChat)
 
         // expected
@@ -108,8 +107,7 @@ class GroupChatControllerTest(
     fun getMyGroupChats() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
-        val groupChat = generateGroupChat()
-        groupChat.join(user)
+        val groupChat = generateGroupChat(user)
         groupChatRepository.save(groupChat)
 
         // expected
@@ -131,9 +129,11 @@ class GroupChatControllerTest(
     @InjectAccessToken
     fun joinGroupChat() {
         // given
-        val user = userRepository.findByEmail("test@test.com")!!
-        val groupChat = generateGroupChat()
+        val groupChatCreator = userRepository.save(generateUser())
+        val groupChat = generateGroupChat(groupChatCreator)
         groupChatRepository.save(groupChat)
+
+        val user = userRepository.findByEmail("test@test.com")!!
 
         // expected
         mockMvc.post("/chats/groups/${groupChat.id!!}/join") {
@@ -157,8 +157,7 @@ class GroupChatControllerTest(
     fun postInviteGroupChat() {
         // given
         val user = userRepository.findByEmail("test@test.com")!!
-        val groupChat = generateGroupChat()
-        groupChat.join(user)
+        val groupChat = generateGroupChat(user)
         groupChatRepository.save(groupChat)
 
         // expected
@@ -180,9 +179,11 @@ class GroupChatControllerTest(
     }
 
     @Test
+    @InjectAccessToken
     fun getInvitation() {
         // given
-        val groupChat = groupChatRepository.save(generateGroupChat())
+        val user = userRepository.findByEmail("test@test.com")!!
+        val groupChat = groupChatRepository.save(generateGroupChat(user))
         val invitation: Invitation = generateInvitation(groupChat)
         invitationRepository.save(invitation)
 

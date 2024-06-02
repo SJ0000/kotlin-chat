@@ -5,8 +5,7 @@ import sj.messenger.domain.user.domain.User
 import sj.messenger.global.domain.BaseEntity
 
 @Entity
-class GroupChat(
-
+class GroupChat private constructor(
     val name: String,
     val avatarUrl: String = "https://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=identicon",
 
@@ -18,8 +17,22 @@ class GroupChat(
     val id : Long? = null
 ): BaseEntity() {
 
+    companion object{
+        @JvmStatic
+        fun create(creator: User, name: String) : GroupChat{
+            val groupChat = GroupChat(name);
+            groupChat.assignAdmin(creator)
+            return groupChat;
+        }
+    }
+
+    private fun assignAdmin(user: User){
+        val admin = Participant(user, this, GroupChatRole.ADMIN)
+        participants.add(admin)
+    }
+
     fun join(user: User){
-        val participant = Participant(user, this)
+        val participant = Participant(user, this, GroupChatRole.MEMBER)
         participants.add(participant)
     }
 

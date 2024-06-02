@@ -19,13 +19,12 @@ class LocalTestDataConfig (
 ){
     @PostConstruct
     fun createTestAccount(){
-        val u1 = userService.signUpUser(SignUpDto("111@123.com", "123", "1234567890"))
-        val u2 = userService.signUpUser(SignUpDto("222@123.com", "123", "1234567890"))
-        val users = userService.findUsers(setOf(u1, u2))
+        val userId1 = userService.signUpUser(SignUpDto("111@123.com", "123", "1234567890"))
+        val userId2 = userService.signUpUser(SignUpDto("222@123.com", "123", "1234567890"))
+        val users = userService.findUsers(setOf(userId1, userId2))
         friendRepository.save(Friend(users[0],users[1]))
 
-        val groupChatId = groupChatService.createGroupChat(GroupChatCreateDto("test"))
-        groupChatService.joinGroupChat(groupChatId, u1)
-        groupChatService.joinGroupChat(groupChatId, u2)
+        val groupChatId = groupChatService.createGroupChat(userId1, GroupChatCreateDto("test"))
+        groupChatService.joinGroupChat(groupChatId, userId2)
     }
 }

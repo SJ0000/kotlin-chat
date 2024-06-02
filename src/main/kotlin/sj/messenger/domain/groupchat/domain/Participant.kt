@@ -14,6 +14,9 @@ class Participant(
     @JoinColumn(name = "group_chat_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val groupChat: GroupChat,
 
+    @Enumerated(EnumType.STRING)
+    val role: GroupChatRole,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
