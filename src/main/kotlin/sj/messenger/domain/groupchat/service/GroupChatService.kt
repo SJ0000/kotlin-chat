@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
+import sj.messenger.domain.groupchat.dto.ParticipantDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.dto.UserDto
@@ -55,12 +56,18 @@ class GroupChatService(
     fun getGroupChatWithUsers(groupChatId: Long): GroupChatDto {
         val groupChat = findGroupChatWithParticipants(groupChatId)
         val userIds = groupChat.getParticipantUserIds()
-        val users = userService.findUsers(userIds)
+        val users = userService.findUsers(userIds).associateBy { it.id };
+
         return GroupChatDto(
             id = groupChat.id!!,
             name = groupChat.name,
             avatarUrl = groupChat.avatarUrl,
-            users = users.map { UserDto(it) })
+            participants = groupChat.participants.map {
+                ParticipantDto(
+                    user = UserDto(users[it.user.id]!!),
+                    role = it.role
+                )
+            })
     }
 
     private fun findGroupChatWithParticipants(groupChatId: Long): GroupChat {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import sj.messenger.domain.groupchat.domain.GroupChatRole
 import sj.messenger.domain.groupchat.domain.Invitation
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
@@ -51,9 +54,9 @@ class GroupChatControllerTest(
                 jsonPath("id") { value(groupChat.id) }
                 jsonPath("name") { value(groupChat.name) }
                 jsonPath("avatarUrl") { value(groupChat.avatarUrl) }
-                jsonPath("users[0].id") { value(user.id) }
-                jsonPath("users[0].name") { value(user.name) }
-                jsonPath("users[0].email") { value(user.email) }
+                jsonPath("participants[0].user.id") { value(user.id) }
+                jsonPath("participants[0].user.name") { value(user.name) }
+                jsonPath("participants[0].user.email") { value(user.email) }
             }
         }
     }
@@ -144,7 +147,8 @@ class GroupChatControllerTest(
                 jsonPath("id") { value(groupChat.id) }
                 jsonPath("name") { value(groupChat.name) }
                 jsonPath("avatarUrl") { value(groupChat.avatarUrl) }
-                jsonPath("users[0].email") { value(user.email) }
+                jsonPath("participants[*].user.email") { value(hasItem(user.email)) }
+                jsonPath("participants[*].role") { value(hasItems(GroupChatRole.ADMIN.toString(), GroupChatRole.MEMBER.toString())) }
             }
         }
 
