@@ -13,6 +13,7 @@ data class GroupChatDto(
 )
 
 data class ParticipantDto(
+    val id: Long,
     val user: UserDto,
     val role: GroupChatRole
 )
@@ -22,4 +23,10 @@ data class GroupChatCreateDto(
     @field:NotEmpty
     @field:Size(max = 255)
     val name: String
+)
+
+data class ParticipantUpdateDto(
+    @field:NotEmpty
+    val userId: Long,
+    val role: GroupChatRole
 )

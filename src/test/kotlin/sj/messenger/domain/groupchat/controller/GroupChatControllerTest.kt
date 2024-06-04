@@ -54,6 +54,7 @@ class GroupChatControllerTest(
                 jsonPath("id") { value(groupChat.id) }
                 jsonPath("name") { value(groupChat.name) }
                 jsonPath("avatarUrl") { value(groupChat.avatarUrl) }
+                jsonPath("participants[0].id") { value(groupChat.participants[0].id) }
                 jsonPath("participants[0].user.id") { value(user.id) }
                 jsonPath("participants[0].user.name") { value(user.name) }
                 jsonPath("participants[0].user.email") { value(user.email) }
@@ -147,8 +148,16 @@ class GroupChatControllerTest(
                 jsonPath("id") { value(groupChat.id) }
                 jsonPath("name") { value(groupChat.name) }
                 jsonPath("avatarUrl") { value(groupChat.avatarUrl) }
+                jsonPath("participants.size()") { value(2) }
                 jsonPath("participants[*].user.email") { value(hasItem(user.email)) }
-                jsonPath("participants[*].role") { value(hasItems(GroupChatRole.ADMIN.toString(), GroupChatRole.MEMBER.toString())) }
+                jsonPath("participants[*].role") {
+                    value(
+                        hasItems(
+                            GroupChatRole.ADMIN.toString(),
+                            GroupChatRole.MEMBER.toString()
+                        )
+                    )
+                }
             }
         }
 

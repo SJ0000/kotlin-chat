@@ -64,6 +64,7 @@ class GroupChatService(
             avatarUrl = groupChat.avatarUrl,
             participants = groupChat.participants.map {
                 ParticipantDto(
+                    id = it.id!!,
                     user = UserDto(users[it.user.id]!!),
                     role = it.role
                 )

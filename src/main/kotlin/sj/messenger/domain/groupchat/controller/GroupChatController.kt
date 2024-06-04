@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
-import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
-import sj.messenger.domain.groupchat.dto.GroupChatDto
-import sj.messenger.domain.groupchat.dto.InvitationDto
-import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
+import sj.messenger.domain.groupchat.dto.*
 import sj.messenger.domain.groupchat.service.GroupChatInviteService
 import sj.messenger.domain.groupchat.service.GroupChatMessageService
 import sj.messenger.domain.groupchat.service.GroupChatService
@@ -107,6 +104,16 @@ class GroupChatController(
         )
         return ResponseEntity.ok(dto)
     }
+
+//    @PreAuthorize("hasRole('USER')")
+//    @PatchMapping("/chats/groups/{groupChatId}/participants/{participantId}")
+//    fun patchParticipant(
+//        @PathVariable groupChatId: Long,
+//        @Valid @RequestBody participantUpdateDto: ParticipantUpdateDto
+//    ){
+//
+//    }
+
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/chats/groups/{id}/messages")
