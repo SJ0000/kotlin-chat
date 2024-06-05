@@ -10,8 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
+import sj.messenger.domain.groupchat.domain.GroupChatRole
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
+import sj.messenger.domain.groupchat.dto.ParticipantUpdateDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
+import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.fixture
 import sj.messenger.util.generateGroupChat
@@ -26,8 +29,8 @@ class GroupChatServiceTest(
     @Autowired val groupChatService: GroupChatService,
     @Autowired val userRepository: UserRepository,
     @Autowired val groupChatRepository: GroupChatRepository,
-
-    ) {
+    @Autowired val participantRepository: ParticipantRepository,
+) {
 
     @Test
     @DisplayName("존재하지 않는 GroupChat 조회시 예외 발생")
@@ -100,4 +103,50 @@ class GroupChatServiceTest(
         assertThat(userChatRooms.size).isEqualTo(chatRooms.size)
     }
 
+    @Test
+    @DisplayName("ADMIN은 대화방 참여자의 권한을 수정할 수 있다.")
+    fun updateParticipant() {
+        // given
+        val admin = userRepository.save(generateUser())
+        val member = userRepository.save(generateUser())
+        val groupChat = generateGroupChat(admin)
+        groupChat.join(member)
+        groupChatRepository.save(groupChat)
+
+        // when
+        val participantId = groupChat.getParticipant(member.id!!)?.id!!
+        val newRole = GroupChatRole.MODERATOR
+        groupChatService.updateParticipant(
+            groupChat.id!!, admin.id!!,
+            ParticipantUpdateDto(participantId, newRole)
+        )
+
+        // then
+        val findParticipant = participantRepository.findByIdOrNull(participantId)
+        assertThat(findParticipant?.role).isEqualTo(newRole)
+    }
+
+    @Test
+    @DisplayName("참여자 수정 권한이 없는데 수정 시도시 RuntimeException 예외가 발생한다.")
+    fun updateParticipantError() {
+        // given
+        val admin = userRepository.save(generateUser())
+        val members = userRepository.saveAll((1..2).map { generateUser() })
+        val groupChat = generateGroupChat(admin)
+        members.map { groupChat.join(it) }
+        groupChatRepository.save(groupChat)
+
+        // when
+        val modifier = members[0]
+        val target = members[1]
+        val participantId = groupChat.getParticipant(target.id!!)?.id!!
+        val newRole = GroupChatRole.MODERATOR
+
+        assertThatThrownBy {
+            groupChatService.updateParticipant(
+                groupChat.id!!, modifier.id!!,
+                ParticipantUpdateDto(participantId, newRole)
+            )
+        }.isInstanceOf(RuntimeException::class.java)
+    }
 }

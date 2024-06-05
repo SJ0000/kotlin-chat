@@ -15,11 +15,17 @@ class Participant(
     val groupChat: GroupChat,
 
     @Enumerated(EnumType.STRING)
-    val role: GroupChatRole,
+    var role: GroupChatRole,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long? = null
 ) : BaseEntity(){
 
+    fun canModify(target: Participant): Boolean {
+        if(this.groupChat.id != target.groupChat.id)
+            return false;
+
+        return this.role.canEditTarget(target.role)
+    }
 }

@@ -7,6 +7,7 @@ import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.dto.ParticipantDto
+import sj.messenger.domain.groupchat.dto.ParticipantUpdateDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.dto.UserDto
@@ -69,6 +70,17 @@ class GroupChatService(
                     role = it.role
                 )
             })
+    }
+
+    @Transactional(readOnly = false)
+    fun updateParticipant(groupChatId: Long, modifierUserId: Long, updateDto: ParticipantUpdateDto){
+        val modifier = participantRepository.findByGroupChatIdAndUserId(groupChatId, modifierUserId)
+        val target = participantRepository.findByIdOrNull(updateDto.participantId) ?: throw RuntimeException("participant not exists. id = ${updateDto.participantId}")
+
+        if(!modifier.canModify(target))
+            throw RuntimeException("Participant(id = ${modifier.id})Can Edit Target Participant(id = ${target.id}).")
+
+        target.role = updateDto.role
     }
 
     private fun findGroupChatWithParticipants(groupChatId: Long): GroupChat {

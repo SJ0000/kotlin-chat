@@ -2,6 +2,7 @@ package sj.messenger.domain.groupchat.repository
 
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,7 +37,23 @@ class ParticipantRepositoryTest (
         val result = participantRepository.getParticipantsWithGroupChatByUserId(user.id!!);
         val chatRooms = result.map { it.groupChat }
         // then
-        Assertions.assertThat(result.size).isEqualTo(10)
+        assertThat(result.size).isEqualTo(10)
         assertEntityLoaded(em, *chatRooms.toTypedArray())
+    }
+
+    @Test
+    @DisplayName("groupChatId와 userId로 participant 조회")
+    fun findByGroupChatIdAndUserIdTest(){
+        // given
+        val user = userRepository.save(generateUser())
+        val groupChat = groupChatRepository.save(generateGroupChat(user))
+
+        // when
+        val participant = participantRepository.findByGroupChatIdAndUserId(groupChat.id!!, user.id!!);
+
+        // then
+        assertThat(participant.user).isEqualTo(user)
+        assertThat(participant.groupChat).isEqualTo(groupChat)
+
     }
 }

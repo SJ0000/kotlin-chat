@@ -1,5 +1,6 @@
 package sj.messenger.domain.groupchat.dto
 
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
 import sj.messenger.domain.groupchat.domain.GroupChatRole
@@ -26,7 +27,7 @@ data class GroupChatCreateDto(
 )
 
 data class ParticipantUpdateDto(
-    @field:NotEmpty
-    val userId: Long,
+    @field:Min(1)
+    val participantId: Long,
     val role: GroupChatRole
 )

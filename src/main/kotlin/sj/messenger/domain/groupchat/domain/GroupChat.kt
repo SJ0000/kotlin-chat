@@ -42,6 +42,10 @@ class GroupChat private constructor(
         }
     }
 
+    fun getParticipant(userId: Long): Participant?{
+        return participants.find { it.user.id == userId }
+    }
+
     fun getParticipantUserIds() : Set<Long>{
         return participants.map { it.user.id!! }.toSet()
     }

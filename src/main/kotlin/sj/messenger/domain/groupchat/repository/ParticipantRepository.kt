@@ -8,4 +8,7 @@ interface ParticipantRepository : JpaRepository<Participant, Long?> {
 
     @Query("select p from Participant p join fetch p.groupChat where p.user.id = :userId")
     fun getParticipantsWithGroupChatByUserId(userId: Long) : List<Participant>
+
+    @Query("select p from Participant p where p.groupChat.id = :groupChatId and p.user.id = :userId")
+    fun findByGroupChatIdAndUserId(groupChatId: Long, userId: Long) : Participant
 }

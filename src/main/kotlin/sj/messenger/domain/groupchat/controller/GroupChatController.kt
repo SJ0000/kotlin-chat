@@ -105,14 +105,16 @@ class GroupChatController(
         return ResponseEntity.ok(dto)
     }
 
-//    @PreAuthorize("hasRole('USER')")
-//    @PatchMapping("/chats/groups/{groupChatId}/participants/{participantId}")
-//    fun patchParticipant(
-//        @PathVariable groupChatId: Long,
-//        @Valid @RequestBody participantUpdateDto: ParticipantUpdateDto
-//    ){
-//
-//    }
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/chats/groups/{groupChatId}/participants")
+    fun patchParticipant(
+        @PathVariable groupChatId: Long,
+        @AuthenticationPrincipal userDetails: LoginUserDetails,
+        @Valid @RequestBody participantUpdateDto: ParticipantUpdateDto
+    ): ResponseEntity<Unit>{
+        groupChatService.updateParticipant(groupChatId,userDetails.getUserId(),participantUpdateDto);
+        return ResponseEntity.ok().build();
+    }
 
 
     @PreAuthorize("hasRole('USER')")

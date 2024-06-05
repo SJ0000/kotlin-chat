@@ -9,20 +9,20 @@ import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.groupchat.domain.GroupChatRole
 import sj.messenger.domain.groupchat.domain.Invitation
-import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
-import sj.messenger.domain.groupchat.dto.GroupChatDto
-import sj.messenger.domain.groupchat.dto.InvitationDto
-import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
+import sj.messenger.domain.groupchat.dto.*
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import sj.messenger.domain.groupchat.repository.InvitationRepository
+import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.*
 import sj.messenger.util.config.InjectAccessToken
@@ -36,6 +36,7 @@ class GroupChatControllerTest(
     @Autowired val invitationRepository: InvitationRepository,
     @Autowired val userRepository: UserRepository,
     @Autowired val groupMessageRepository: GroupMessageRepository,
+    @Autowired val participantRepository: ParticipantRepository,
 ) {
 
     @Test
@@ -238,5 +239,33 @@ class GroupChatControllerTest(
         assertThat(messages).isSortedAccordingTo { o1, o2 ->
             o1.receivedAt.compareTo(o2.receivedAt)
         }
+    }
+
+    @Test
+    @InjectAccessToken
+    @DisplayName("PATCH /chats/groups/{groupChatId}/participants : 대화방 참여자의 권한을 수정")
+    fun patchParticipant() {
+        // given
+        val user = userRepository.findByEmail("test@test.com")!!
+        val member = userRepository.save(generateUser())
+        val groupChat = generateGroupChat(user)
+        groupChat.join(member)
+        groupChatRepository.save(groupChat)
+
+        val target = groupChat.getParticipant(member.id!!)
+        val dto = ParticipantUpdateDto(target?.id!!, GroupChatRole.MODERATOR)
+
+        // expected
+        mockMvc.patch("/chats/groups/${groupChat.id!!}/participants") {
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(dto)
+        }.andDo {
+            print()
+        }.andExpect {
+            status { isOk() }
+        }
+
+        val findParticipant = participantRepository.findByIdOrNull(target.id!!)!!
+        assertThat(findParticipant.role).isEqualTo(GroupChatRole.MODERATOR)
     }
 }
