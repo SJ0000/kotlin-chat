@@ -8,7 +8,6 @@ data class ClientDirectMessageDto(
     val senderId : Long,
     val receiverId: Long,
     val content : String,
-    val sentAt : LocalDateTime,
 )
 
 data class ServerDirectMessageDto(

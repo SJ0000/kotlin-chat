@@ -14,20 +14,7 @@ import sj.messenger.domain.user.service.UserService
 class DirectChatService(
     private val userService: UserService,
     private val directChatRepository: DirectChatRepository,
-    private val directMessageRepository: DirectMessageRepository,
 ) {
-
-    fun saveMessage(clientDirectMessageDto: ClientDirectMessageDto): String {
-        val message = DirectMessage(
-            senderId = clientDirectMessageDto.senderId,
-            directChatId = clientDirectMessageDto.directChatId,
-            content = clientDirectMessageDto.content,
-            sentAt = clientDirectMessageDto.sentAt,
-        )
-        val savedMessage = directMessageRepository.save(message)
-        return savedMessage.id!!.toHexString()
-    }
-
     fun getDirectChat(userId: Long, id: Long): DirectChat {
         val directChat =
             directChatRepository.findByIdWithUsers(id) ?: throw RuntimeException("DirectChat not exists. id = ${id}")

@@ -37,23 +37,15 @@ class DirectChatMessageServiceTest(
     @DisplayName("RabbitMQ의 directMessageSaveQueue로부터 메시지를 읽어와 저장")
     fun saveAllReceivedMessage() {
         // given
-        val messageDto: ClientDirectMessageDto = fixture.giveMeOne()
+        val message: DirectMessage = generateDirectMessage(1L)
 
         // when
-        batchingRabbitTemplate.convertAndSend(directMessageSaveQueue.name, messageDto)
+        batchingRabbitTemplate.convertAndSend(directMessageSaveQueue.name, message)
         Thread.sleep(5000)
 
         // then
-        val example = Example.of(
-            DirectMessage(
-                senderId = messageDto.senderId,
-                directChatId = messageDto.directChatId,
-                content = messageDto.content,
-                sentAt = messageDto.sentAt
-            )
-        )
-        val findOptional = directMessageRepository.findOne(example)
-        assertThat(findOptional.isPresent).isTrue()
+        val messages = directMessageRepository.findAll()
+        assertThat(messages.size).isEqualTo(1)
     }
 
     @Test

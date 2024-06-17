@@ -20,11 +20,17 @@ class DirectChatMessageService(
 
     @Async("threadPoolTaskExecutor")
     fun saveRequestAsync(directMessageDto: ClientDirectMessageDto) {
-        batchingRabbitTemplate.convertAndSend("directMessageSaveQueue",directMessageDto)
+        val message = DirectMessage(
+            senderId = directMessageDto.senderId,
+            directChatId = directMessageDto.directChatId,
+            content = directMessageDto.content,
+            sentAt = LocalDateTime.now(),
+        )
+        batchingRabbitTemplate.convertAndSend("directMessageSaveQueue",message)
     }
 
     @RabbitListener(queues = ["directMessageSaveQueue"])
-    fun saveAllReceivedMessage(messages : List<ClientDirectMessageDto>){
+    fun saveAllReceivedMessage(messages : List<DirectMessage>){
         val directMessages = messages.map {
             DirectMessage(
                 senderId = it.senderId,

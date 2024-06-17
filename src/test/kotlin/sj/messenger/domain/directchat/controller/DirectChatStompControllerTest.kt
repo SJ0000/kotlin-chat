@@ -27,7 +27,6 @@ class DirectChatStompControllerTest(
             senderId = 1L,
             receiverId = 1L,
             content = "1234",
-            sentAt = LocalDateTime.now()
         )
 
         // when
