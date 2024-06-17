@@ -46,7 +46,8 @@ class GroupChatMessageServiceTest(
 
         // then
         val messages = groupMessageRepository.findAll()
-        assertThat(messages.size).isEqualTo(1)
+        val result = messages.find { it.senderId == message.senderId && it.groupChatId == message.groupChatId && it.content == message.content }
+        assertThat(result).isNotNull
     }
 
     @Test

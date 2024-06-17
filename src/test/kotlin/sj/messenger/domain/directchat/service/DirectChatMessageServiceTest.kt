@@ -45,7 +45,9 @@ class DirectChatMessageServiceTest(
 
         // then
         val messages = directMessageRepository.findAll()
-        assertThat(messages.size).isEqualTo(1)
+        val result =
+            messages.find { it.senderId == message.senderId && it.directChatId == message.directChatId && it.content == message.content }
+        assertThat(result).isNotNull
     }
 
     @Test
