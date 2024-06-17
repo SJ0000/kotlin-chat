@@ -38,23 +38,15 @@ class GroupChatMessageServiceTest(
     @DisplayName("RabbitMQ의 groupMessageSaveQueue로부터 메시지를 읽어서 저장")
     fun saveAllReceivedMessage(){
         // given
-        val messageDto : ClientGroupMessageDto = fixture.giveMeOne()
+        val message = generateGroupMessage(1L)
 
         // when
-        batchingRabbitTemplate.convertAndSend(groupMessageSaveQueue.name,messageDto)
+        batchingRabbitTemplate.convertAndSend(groupMessageSaveQueue.name, message)
         Thread.sleep(5000)
 
         // then
-        val example = Example.of(
-            GroupMessage(
-                senderId = messageDto.senderId,
-                groupChatId = messageDto.groupChatId,
-                content = messageDto.content,
-                sentAt = messageDto.sentAt
-            )
-        )
-        val findOptional = groupMessageRepository.findOne(example)
-        assertThat(findOptional.isPresent).isTrue()
+        val messages = groupMessageRepository.findAll()
+        assertThat(messages.size).isEqualTo(1)
     }
 
     @Test

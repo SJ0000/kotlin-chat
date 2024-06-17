@@ -24,7 +24,6 @@ class GroupChatStompControllerTest(
             groupChatId = 1L,
             senderId = 1L,
             content = "1234",
-            sentAt = LocalDateTime.now()
         )
 
         val received = client.sendAndReceive<ServerGroupMessageDto>(source, destination, message)

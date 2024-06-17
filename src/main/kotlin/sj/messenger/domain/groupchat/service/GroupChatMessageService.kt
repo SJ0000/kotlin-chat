@@ -19,21 +19,19 @@ class GroupChatMessageService (
 ){
     @Async("threadPoolTaskExecutor")
     fun saveRequestAsync(groupMessageDto: ClientGroupMessageDto) {
-        batchingRabbitTemplate.convertAndSend("groupMessageSaveQueue",groupMessageDto)
+        val groupMessage = GroupMessage(
+            senderId = groupMessageDto.senderId,
+            groupChatId = groupMessageDto.groupChatId,
+            content = groupMessageDto.content,
+            sentAt = LocalDateTime.now()
+        )
+        batchingRabbitTemplate.convertAndSend("groupMessageSaveQueue",groupMessage)
     }
 
     @Timed("service.group-chat-message.batch-save")
     @RabbitListener(queues = ["groupMessageSaveQueue"])
-    fun saveAllReceivedMessage(messages : List<ClientGroupMessageDto>){
-        val groupMessages = messages.map {
-            GroupMessage(
-                senderId = it.senderId,
-                groupChatId = it.groupChatId,
-                content = it.content,
-                sentAt = it.sentAt
-            )
-        }.toList()
-        groupMessageRepository.saveAll(groupMessages)
+    fun saveAllReceivedMessage(messages : List<GroupMessage>){
+        groupMessageRepository.saveAll(messages)
     }
 
     fun getPreviousMessages(groupChatId: Long, dateTime: LocalDateTime): List<ServerGroupMessageDto>{

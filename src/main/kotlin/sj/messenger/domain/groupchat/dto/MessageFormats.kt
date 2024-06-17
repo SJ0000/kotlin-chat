@@ -6,7 +6,6 @@ data class ClientGroupMessageDto(
     val groupChatId : Long,
     val senderId : Long,
     val content : String,
-    val sentAt : LocalDateTime,
 )
 
 data class ServerGroupMessageDto(
