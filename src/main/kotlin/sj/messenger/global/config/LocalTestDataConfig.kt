@@ -11,7 +11,7 @@ import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.service.UserService
 
 @Profile("local")
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class LocalTestDataConfig (
     val userService: UserService,
     val friendRepository: FriendRepository,

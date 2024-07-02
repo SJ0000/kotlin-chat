@@ -12,7 +12,7 @@ import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.security.jwt.JwtProvider
 import javax.crypto.SecretKey
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(JwtProperties::class)
 class JwtConfig(
     private val properties: JwtProperties,
