@@ -9,7 +9,7 @@ import sj.messenger.global.actuator.websocket.ReflectionStompStatsAdapter
 import sj.messenger.global.actuator.websocket.StompStatsProvider
 import sj.messenger.global.actuator.websocket.WebSocketSessionStats
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class MetricConfig {
     /**
      * Micrometer는 약한 참조를 사용하기 때문에 metric target 객체가 GC에 의해 제거되면

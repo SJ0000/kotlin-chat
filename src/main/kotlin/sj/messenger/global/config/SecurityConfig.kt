@@ -18,7 +18,7 @@ import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.security.jwt.JwtProvider
 import sj.messenger.domain.user.service.UserService
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableMethodSecurity
 @EnableWebSecurity
 class SecurityConfig (
