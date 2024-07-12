@@ -44,6 +44,7 @@ out/
 application.yml
 application-local.yml
 application-production.yml
+application-ci.yml
 **/src/main/generated/
 **/src/main/resources/static/docs/
 **/log/

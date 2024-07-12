@@ -7,7 +7,6 @@ import org.testcontainers.containers.OracleContainer
 
 class OracleContainerInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-
     companion object{
         private const val DATABASE_NAME = "testDB"
         private const val USER_NAME = "testUser"

@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.TestExecutionListeners
 import sj.messenger.util.config.InjectAccessTokenExecutionListener
-import sj.messenger.util.config.TestStompClientConfig
+import sj.messenger.util.websocket.TestStompClientConfig
 import sj.messenger.util.config.TruncateExecutionListener
 
 

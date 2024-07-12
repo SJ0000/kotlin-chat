@@ -7,9 +7,8 @@ import sj.messenger.domain.directchat.dto.DirectMessageType
 import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
 import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
-import sj.messenger.util.config.TestStompClient
+import sj.messenger.util.websocket.TestStompClient
 import sj.messenger.util.integration.IntegrationTest
-import java.time.LocalDateTime
 
 @IntegrationTest
 class DirectChatStompControllerTest(
