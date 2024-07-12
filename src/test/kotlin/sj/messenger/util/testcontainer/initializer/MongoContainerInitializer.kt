@@ -1,24 +1,14 @@
 package sj.messenger.util.testcontainer.initializer
 
-import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
-import org.testcontainers.containers.MongoDBContainer
+import sj.messenger.util.testcontainer.TestContainers.Companion.applyMongoProperties
+import sj.messenger.util.testcontainer.TestContainers.Companion.mongoDBContainer
 
 class MongoContainerInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-    companion object{
-        @JvmStatic
-        val mongoDBContainer: MongoDBContainer = MongoDBContainer("mongo:7.0.6")
-            .withExposedPorts(27017)
-            .withReuse(true)
-    }
-
     override fun initialize(applicationContext: ConfigurableApplicationContext) {
         mongoDBContainer.start()
-        TestPropertyValues.of(
-            "spring.data.mongodb.host=${mongoDBContainer.host}",
-            "spring.data.mongodb.port=${mongoDBContainer.getMappedPort(27017)}",
-        ).applyTo(applicationContext.environment)
+        applyMongoProperties(applicationContext.environment)
     }
 }
