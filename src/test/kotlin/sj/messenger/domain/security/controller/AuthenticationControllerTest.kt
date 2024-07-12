@@ -31,6 +31,7 @@ class AuthenticationControllerTest(
 ) {
 
     @Test
+    @DisplayName("POST /login : 로그인 성공시 200 OK")
     fun login() {
         // given
         val signUp: SignUpDto = fixture.giveMeOne()
@@ -46,8 +47,6 @@ class AuthenticationControllerTest(
             accept = MediaType.APPLICATION_JSON
             contentType = MediaType.APPLICATION_JSON
             content = om.writeValueAsString(loginRequest)
-        }.andDo {
-            print()
         }.andExpect {
             status { isOk() }
             content {

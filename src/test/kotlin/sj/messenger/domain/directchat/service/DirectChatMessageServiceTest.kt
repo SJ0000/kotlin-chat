@@ -67,14 +67,6 @@ class DirectChatMessageServiceTest(
         // then
         assertThat(previousMessages.size).isEqualTo(10)
 
-        previousMessages.forEach{
-            println("previous Message = ${it.senderId}, ${it.receivedAt}")
-        }
-
-        directMessages.forEach{
-            println("directMessages = ${it.senderId}, ${it.sentAt}")
-        }
-
         directMessages
             .subList(2, 11)
             .zip(previousMessages)

@@ -118,8 +118,6 @@ class GroupChatControllerTest(
         // expected
         mockMvc.get("/chats/groups/me") {
             accept = MediaType.APPLICATION_JSON
-        }.andDo {
-            print()
         }.andExpect {
             status { isOk() }
             content {
@@ -259,8 +257,6 @@ class GroupChatControllerTest(
         mockMvc.patch("/chats/groups/${groupChat.id!!}/participants") {
             contentType = MediaType.APPLICATION_JSON
             content = om.writeValueAsString(dto)
-        }.andDo {
-            print()
         }.andExpect {
             status { isOk() }
         }

@@ -24,21 +24,6 @@ class FriendServiceTest(
     @Autowired val friendRepository: FriendRepository,
     @Autowired val friendRequestRepository: FriendRequestRepository,
 ) {
-
-    @Test
-    fun temp(){
-        val user = generateUser(1L)
-        val user2 = generateUser(1L)
-        userRepository.saveAll(listOf(user,user2))
-        println(user.name)
-        println(user2.name)
-
-        val find = userRepository.findAll()
-        find.map {
-            println("id = ${it.id}, name = ${it.name}")
-        }
-    }
-
     @Test
     @DisplayName("특정 사용자의 친구 조회")
     fun getFriends() {

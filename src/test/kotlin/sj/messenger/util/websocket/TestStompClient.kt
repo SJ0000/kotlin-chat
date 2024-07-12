@@ -28,6 +28,10 @@ class TestStompClient(
 
         stompClient.connectAsync(connectionUrl, WebSocketHttpHeaders(), handler)
 
+        return fetchResult<T>(holder)
+    }
+
+    inline fun <reified T> fetchResult(holder: TestAsyncResultHolder<T>): T {
         if (holder.latch.await(3, TimeUnit.SECONDS)) {
             if (holder.failure.get() != null)
                 throw RuntimeException("", holder.failure.get())
@@ -36,6 +40,7 @@ class TestStompClient(
             throw RuntimeException("not received.")
         }
     }
+
 }
 
 class TestSessionHandler<T>(
