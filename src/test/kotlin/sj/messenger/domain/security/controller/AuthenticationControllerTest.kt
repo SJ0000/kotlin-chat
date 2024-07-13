@@ -10,15 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.JsonPathResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.security.dto.LoginRequest
 import sj.messenger.domain.security.dto.LoginResponse
 import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.fixture
-import sj.messenger.util.integration.IntegrationTest
 import sj.messenger.util.randomEmail
 import sj.messenger.util.randomString
 

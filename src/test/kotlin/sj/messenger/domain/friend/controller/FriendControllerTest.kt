@@ -12,16 +12,15 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.friend.domain.Friend
 import sj.messenger.domain.friend.domain.FriendRequest
 import sj.messenger.domain.friend.dto.FriendRequestDto
 import sj.messenger.domain.friend.repository.FriendRepository
 import sj.messenger.domain.friend.repository.FriendRequestRepository
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.generateUser
-import sj.messenger.util.integration.IntegrationTest
 
 
 @IntegrationTest

@@ -3,13 +3,11 @@ package sj.messenger.domain.groupchat.controller
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
 import sj.messenger.domain.groupchat.dto.ClientGroupMessageDto
+import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
+import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.websocket.TestStompClient
-import sj.messenger.util.integration.IntegrationTest
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @IntegrationTest
 class GroupChatStompControllerTest(

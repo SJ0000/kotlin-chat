@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import sj.messenger.util.config.InjectAccessTokenExecutionListener
 import sj.messenger.util.config.TruncateExecutionListener
-import sj.messenger.util.testcontainer.initializer.*
+import sj.messenger.util.testcontainer.initializer.ContainerParallelInitializer
 import sj.messenger.util.websocket.TestStompClientConfig
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)

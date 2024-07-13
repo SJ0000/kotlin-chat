@@ -6,8 +6,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import sj.messenger.util.annotation.MongoRepositoryTest
 import sj.messenger.util.generateDirectMessage
-import sj.messenger.util.repository.MongoRepositoryTest
 import sj.messenger.util.truncateMicroSeconds
 import java.time.LocalDateTime
 

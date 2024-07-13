@@ -7,21 +7,17 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.security.dto.LoginRequest
 import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.*
-import sj.messenger.util.integration.EnableContainers
+import sj.messenger.util.annotation.ServiceTest
 
-@SpringBootTest
-@EnableContainers
-@Transactional
+@ServiceTest
 class UserServiceTest(
     @Autowired val userService: UserService,
     @Autowired val userRepository: UserRepository,

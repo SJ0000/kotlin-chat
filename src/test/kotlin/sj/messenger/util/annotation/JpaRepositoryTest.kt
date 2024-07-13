@@ -1,4 +1,4 @@
-package sj.messenger.util.repository
+package sj.messenger.util.annotation
 
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest

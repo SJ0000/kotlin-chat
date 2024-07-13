@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.hasItems
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.groupchat.domain.GroupChatRole
 import sj.messenger.domain.groupchat.domain.Invitation
 import sj.messenger.domain.groupchat.dto.*
@@ -25,8 +24,8 @@ import sj.messenger.domain.groupchat.repository.InvitationRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.*
+import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.config.InjectAccessToken
-import sj.messenger.util.integration.IntegrationTest
 
 @IntegrationTest
 class GroupChatControllerTest(

@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import sj.messenger.domain.directchat.domain.DirectChat
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.annotation.JpaRepositoryTest
 import sj.messenger.util.assertEntityLoaded
 import sj.messenger.util.generateUser
-import sj.messenger.util.repository.JpaRepositoryTest
 
 @JpaRepositoryTest
 class DirectChatRepositoryTest (

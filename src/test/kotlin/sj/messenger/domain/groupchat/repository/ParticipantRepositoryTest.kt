@@ -1,17 +1,15 @@
 package sj.messenger.domain.groupchat.repository
 
 import jakarta.persistence.EntityManager
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import sj.messenger.domain.groupchat.domain.Participant
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.annotation.JpaRepositoryTest
 import sj.messenger.util.assertEntityLoaded
 import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
-import sj.messenger.util.repository.JpaRepositoryTest
 
 @JpaRepositoryTest
 class ParticipantRepositoryTest (

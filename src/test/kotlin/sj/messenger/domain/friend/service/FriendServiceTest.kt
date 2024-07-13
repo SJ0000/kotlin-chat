@@ -5,19 +5,15 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.friend.domain.Friend
 import sj.messenger.domain.friend.domain.FriendRequest
 import sj.messenger.domain.friend.repository.FriendRepository
 import sj.messenger.domain.friend.repository.FriendRequestRepository
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.annotation.ServiceTest
 import sj.messenger.util.generateUser
-import sj.messenger.util.integration.EnableContainers
 
-@SpringBootTest
-@EnableContainers
-@Transactional
+@ServiceTest
 class FriendServiceTest(
     @Autowired val friendService: FriendService,
     @Autowired val userRepository: UserRepository,

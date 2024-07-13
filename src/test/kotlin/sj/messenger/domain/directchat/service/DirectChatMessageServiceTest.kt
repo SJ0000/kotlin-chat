@@ -1,6 +1,5 @@
 package sj.messenger.domain.directchat.service
 
-import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -8,19 +7,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.Example
 import sj.messenger.domain.directchat.domain.DirectMessage
-import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
-import sj.messenger.util.fixture
+import sj.messenger.util.annotation.ServiceTest
 import sj.messenger.util.generateDirectMessage
-import sj.messenger.util.integration.EnableContainers
 import sj.messenger.util.truncateMicroSeconds
 import java.time.LocalDateTime
 
-@SpringBootTest
-@EnableContainers
+@ServiceTest
 class DirectChatMessageServiceTest(
     @Autowired val batchingRabbitTemplate: BatchingRabbitTemplate,
     @Autowired val directMessageSaveQueue: Queue,

@@ -1,7 +1,6 @@
 package sj.messenger.domain.groupchat.service
 
 
-import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -9,19 +8,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.domain.Example
-import sj.messenger.domain.groupchat.domain.GroupMessage
-import sj.messenger.domain.groupchat.dto.ClientGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
-import sj.messenger.util.fixture
+import sj.messenger.util.annotation.ServiceTest
 import sj.messenger.util.generateGroupMessage
-import sj.messenger.util.integration.EnableContainers
 import sj.messenger.util.truncateMicroSeconds
 import java.time.LocalDateTime
 
-@SpringBootTest
-@EnableContainers
+@ServiceTest
 class GroupChatMessageServiceTest(
     @Autowired val batchingRabbitTemplate: BatchingRabbitTemplate,
     @Autowired val groupMessageSaveQueue: Queue,

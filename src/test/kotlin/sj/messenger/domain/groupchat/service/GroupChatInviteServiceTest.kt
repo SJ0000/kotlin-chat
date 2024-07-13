@@ -4,18 +4,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.InvitationRepository
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.annotation.ServiceTest
 import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
-import sj.messenger.util.integration.EnableContainers
 
-@SpringBootTest
-@EnableContainers
-@Transactional
+@ServiceTest
 class GroupChatInviteServiceTest(
     @Autowired val groupChatInviteService: GroupChatInviteService,
     @Autowired val userRepository: UserRepository,

@@ -3,12 +3,12 @@ package sj.messenger.domain.directchat.controller
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.dto.DirectMessageType
 import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
-import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
+import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.websocket.TestStompClient
-import sj.messenger.util.integration.IntegrationTest
 
 @IntegrationTest
 class DirectChatStompControllerTest(

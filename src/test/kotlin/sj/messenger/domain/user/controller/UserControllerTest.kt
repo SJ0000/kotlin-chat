@@ -11,16 +11,14 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
 import sj.messenger.global.config.PasswordConfig
+import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
-import sj.messenger.util.integration.IntegrationTest
 import sj.messenger.util.randomEmail
 import sj.messenger.util.randomString
 
