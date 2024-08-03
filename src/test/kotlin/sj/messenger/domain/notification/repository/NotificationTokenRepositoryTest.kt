@@ -30,6 +30,24 @@ class NotificationTokenRepositoryTest(
 
         // then
         assertThat(result.size).isEqualTo(3)
+    }
 
+    @Test
+    @DisplayName("여러 사용자의 NotificationToken 목록을 조회한다.")
+    fun findAllByUserIdsTest() {
+        // given
+        val users = userRepository.saveAll((1..3).map { generateUser() })
+
+        users.forEach { user ->
+            val tokens = (1..3).map { NotificationToken(user, randomString(150)) }
+            tokenRepository.saveAll(tokens)
+        }
+
+        // when
+        val userIds = users.map { it.id!! }
+        val result = tokenRepository.findAllByUserIds(userIds)
+
+        // then
+        assertThat(result.size).isEqualTo(9)
     }
 }

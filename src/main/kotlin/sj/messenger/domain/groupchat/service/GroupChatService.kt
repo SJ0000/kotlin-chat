@@ -83,7 +83,7 @@ class GroupChatService(
         target.role = updateDto.role
     }
 
-    private fun findGroupChatWithParticipants(groupChatId: Long): GroupChat {
+    fun findGroupChatWithParticipants(groupChatId: Long): GroupChat {
         return groupChatRepository.findWithParticipantsById(groupChatId)
             ?: throw RuntimeException("ChatRoom id ${groupChatId} not found")
     }

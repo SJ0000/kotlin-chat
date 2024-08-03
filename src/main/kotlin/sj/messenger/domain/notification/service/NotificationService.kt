@@ -38,6 +38,19 @@ class NotificationService(
         FirebaseMessaging.getInstance().sendEachForMulticastAsync(fcmMessage)
     }
 
+    fun sendGroupNotification(senderId: Long, groupChatId: Long, content: String){
+        val groupChat = groupChatService.findGroupChatWithParticipants(groupChatId)
+        val targetUserIds = groupChat.getParticipantUserIds().filter { it != senderId }
+
+        val notificationTokens = notificationTokenRepository.findAllByUserIds(targetUserIds)
+        val fcmTokens = extractFcmTokens(notificationTokens)
+
+        val notification = createNotification(groupChat.name, content)
+        val fcmMessage = createFcmMessage(notification, fcmTokens)
+        FirebaseMessaging.getInstance().sendEachForMulticastAsync(fcmMessage)
+    }
+
+
     private fun extractFcmTokens(notificationTokens: List<NotificationToken>): List<String> {
         return notificationTokens.map { it.fcmToken }
     }
