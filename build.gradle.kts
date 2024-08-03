@@ -55,9 +55,10 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     // oracle
     runtimeOnly("com.oracle.database.jdbc:ojdbc8")
-
     // rabbitmq
     implementation("org.springframework.boot:spring-boot-starter-amqp")
+    // fcm
+    implementation("com.google.firebase:firebase-admin:9.2.0")
 
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

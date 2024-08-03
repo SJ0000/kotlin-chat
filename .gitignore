@@ -49,5 +49,8 @@ application-ci.yml
 **/src/main/resources/static/docs/
 **/log/
 
+**/src/main/resources/firebase/
+**/src/test/resources/firebase/
+
 .DS_Store
 .jqwik-database
