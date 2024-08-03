@@ -32,6 +32,7 @@ class UserController(
             .body(UserDto(user))
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/users/{id}")
     fun patchUser(
         @AuthenticationPrincipal userDetails: LoginUserDetails,

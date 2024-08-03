@@ -8,7 +8,8 @@ import org.springframework.test.context.TestExecutionListener
 
 class TruncateExecutionListener : TestExecutionListener {
 
-    private val tables = listOf("users", "direct_chat", "friend", "friend_request", "group_chat", "participant")
+    private val tables =
+        listOf("users", "direct_chat", "friend", "friend_request", "group_chat", "participant", "notification_token")
 
     override fun afterTestExecution(testContext: TestContext) {
         val jdbcTemplate = getJdbcTemplate(testContext)
@@ -26,19 +27,19 @@ class TruncateExecutionListener : TestExecutionListener {
         jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS=1;")
     }
 
-    private fun truncateOracle(jdbcTemplate: JdbcTemplate){
+    private fun truncateOracle(jdbcTemplate: JdbcTemplate) {
         tables.forEach {
             jdbcTemplate.execute("TRUNCATE TABLE ${it}")
         }
     }
 
-    private fun truncateMongo(mongoTemplate: MongoTemplate){
-        mongoTemplate.collectionNames.forEach{
-            mongoTemplate.remove(Query(),it)
+    private fun truncateMongo(mongoTemplate: MongoTemplate) {
+        mongoTemplate.collectionNames.forEach {
+            mongoTemplate.remove(Query(), it)
         }
     }
 
-    private fun getMongoTemplate(context: TestContext): MongoTemplate{
+    private fun getMongoTemplate(context: TestContext): MongoTemplate {
         return context.applicationContext.getBean(MongoTemplate::class.java)
     }
 
