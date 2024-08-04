@@ -9,21 +9,23 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
 
 @Configuration
-class FirebaseConfig (
+class FirebaseConfig(
     @Value("\${firebase.secret-path}")
     val firebaseSecretPath: String,
-){
+) {
 
     @PostConstruct
-    fun initializeFirebase(){
+    fun initializeFirebase() {
         val credentials = getFirebaseCredentials();
         val options = FirebaseOptions.builder()
             .setCredentials(credentials)
             .build()
-        FirebaseApp.initializeApp(options)
+        if (FirebaseApp.getApps().isEmpty()) {
+            FirebaseApp.initializeApp(options)
+        }
     }
 
-    private fun getFirebaseCredentials() : GoogleCredentials{
+    private fun getFirebaseCredentials(): GoogleCredentials {
         val fcmSecretInputStream = ClassPathResource(firebaseSecretPath).inputStream
         return GoogleCredentials.fromStream(fcmSecretInputStream)
     }
