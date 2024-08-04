@@ -12,12 +12,12 @@ jobs:
       working-directory: ./
       APPLICATION: ${{ secrets.APPLICATION }}
       APPLICATION_TEST: ${{ secrets.APPLICATION_TEST }}
+      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
     
     steps:
       # repository code pull
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
@@ -32,6 +32,18 @@ jobs:
           echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
           touch ./src/test/resources/application.yml
           echo "${{env.APPLICATION_TEST}}" > ./src/test/resources/application.yml
+          touch ./src/main/resources/firebase/firebase-private-key.json
+          echo "${{env.FIREBASE_PRIVATE_KEY}}" > ./src/main/resources/firebase/firebase-private-key.json
+          touch ./src/test/resources/firebase/firebase-private-key.json
+          echo "${{env.FIREBASE_PRIVATE_KEY}}" > ./src/test/resources/firebase/firebase-private-key.json
+
+      - name: Copy firebase private key
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "firebase-private-key.json"
+          json: ${{ env.FIREBASE_PRIVATE_KEY }}
+          dir: './src/main/resources/firebase'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
