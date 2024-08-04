@@ -38,7 +38,7 @@ jobs:
           touch ./src/test/resources/firebase/firebase-private-key.json
 
       - name: Copy firebase private key
-        id: create-json
+        id: create-json-1
         uses: jsdaniell/create-json@v1.2.3
         with:
           name: "firebase-private-key.json"
@@ -46,7 +46,7 @@ jobs:
           dir: './src/main/resources/firebase'
 
       - name: Copy firebase private key (test dir)
-        id: create-json
+        id: create-json-2
         uses: jsdaniell/create-json@v1.2.3
         with:
           name: "firebase-private-key.json"
