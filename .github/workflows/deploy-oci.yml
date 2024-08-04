@@ -32,10 +32,6 @@ jobs:
           echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
           touch ./src/test/resources/application.yml
           echo "${{env.APPLICATION_TEST}}" > ./src/test/resources/application.yml
-          touch ./src/main/resources/firebase/firebase-private-key.json
-          echo "${{env.FIREBASE_PRIVATE_KEY}}" > ./src/main/resources/firebase/firebase-private-key.json
-          touch ./src/test/resources/firebase/firebase-private-key.json
-          echo "${{env.FIREBASE_PRIVATE_KEY}}" > ./src/test/resources/firebase/firebase-private-key.json
 
       - name: Copy firebase private key
         id: create-json
