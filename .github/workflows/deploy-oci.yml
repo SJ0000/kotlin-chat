@@ -32,6 +32,10 @@ jobs:
           echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
           touch ./src/test/resources/application.yml
           echo "${{env.APPLICATION_TEST}}" > ./src/test/resources/application.yml
+          mkdir -p ./src/main/resources/firebase
+          touch ./src/main/resources/firebase/firebase-private-key.json
+          mkdir -p ./src/test/resources/firebase
+          touch ./src/test/resources/firebase/firebase-private-key.json
 
       - name: Copy firebase private key
         id: create-json
@@ -40,6 +44,14 @@ jobs:
           name: "firebase-private-key.json"
           json: ${{ env.FIREBASE_PRIVATE_KEY }}
           dir: './src/main/resources/firebase'
+
+      - name: Copy firebase private key (test dir)
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "firebase-private-key.json"
+          json: ${{ env.FIREBASE_PRIVATE_KEY }}
+          dir: './src/test/resources/firebase'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
