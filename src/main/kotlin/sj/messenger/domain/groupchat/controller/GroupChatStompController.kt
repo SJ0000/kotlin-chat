@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller
 import sj.messenger.domain.groupchat.dto.ServerGroupMessageDto
 import sj.messenger.domain.groupchat.dto.ClientGroupMessageDto
 import sj.messenger.domain.groupchat.service.GroupChatMessageService
+import sj.messenger.global.stomp.CONTENT_CLASS_NAME
 import java.time.LocalDateTime
 
 @Controller
@@ -28,7 +29,7 @@ class GroupChatStompController(
             content = clientGroupMessageDto.content,
             receivedAt = LocalDateTime.now()
         )
-        template.convertAndSend("/topic/group-chat/${data.groupChatId}",data)
+        val header = mapOf(Pair(CONTENT_CLASS_NAME, data.javaClass.simpleName))
+        template.convertAndSend("/topic/group-chat/${data.groupChatId}",data, header)
     }
-
 }

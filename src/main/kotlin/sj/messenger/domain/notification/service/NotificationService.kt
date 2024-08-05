@@ -45,9 +45,12 @@ class NotificationService(
         val notificationTokens = notificationTokenRepository.findAllByUserIds(targetUserIds)
         val fcmTokens = extractFcmTokens(notificationTokens)
 
-        val notification = createNotification(groupChat.name, content)
-        val fcmMessage = createFcmMessage(notification, fcmTokens)
-        FirebaseMessaging.getInstance().sendEachForMulticastAsync(fcmMessage)
+        // fcmTokens 비어있을 경우 MulticastMessage.builder.build() 예외 발생
+        if(fcmTokens.isNotEmpty()){
+            val notification = createNotification(groupChat.name, content)
+            val fcmMessage = createFcmMessage(notification, fcmTokens)
+            FirebaseMessaging.getInstance().sendEachForMulticastAsync(fcmMessage)
+        }
     }
 
 
@@ -63,6 +66,7 @@ class NotificationService(
     }
 
     private fun createFcmMessage(notification: Notification, fcmTokens: List<String>): MulticastMessage {
+        // fcmTokens가 비어있을 경우 build()에서 예외 발생함
         return MulticastMessage.builder()
             .setNotification(notification)
             .addAllTokens(fcmTokens)

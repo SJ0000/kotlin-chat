@@ -11,12 +11,14 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
+import sj.messenger.domain.notification.interceptor.NotificationInterceptor
 
 @Configuration(proxyBeanMethods = false)
 @EnableWebSocketMessageBroker
 @EnableConfigurationProperties(WebSocketProperties::class)
 class WebSocketConfig(
     private val properties: WebSocketProperties,
+    private val notificationInterceptor: NotificationInterceptor,
 ) : WebSocketMessageBrokerConfigurer{
 
     @Value("\${client.url}")
@@ -43,6 +45,8 @@ class WebSocketConfig(
         executor.corePoolSize = properties.outboundPoolSize
         executor.setAllowCoreThreadTimeOut(true)
         registration.taskExecutor(executor)
+
+        registration.interceptors(notificationInterceptor)
     }
 }
 

@@ -8,6 +8,7 @@ import sj.messenger.domain.directchat.dto.DirectMessageType.MESSAGE
 import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
 import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.service.DirectChatMessageService
+import sj.messenger.global.stomp.CONTENT_CLASS_NAME
 import java.time.LocalDateTime
 
 @Controller
@@ -34,8 +35,8 @@ class DirectChatStompController(
             messageType = message.messageType,
             receivedAt = LocalDateTime.now()
         )
-        template.convertAndSend("/topic/direct-chat/${message.senderId}", data)
-        template.convertAndSend("/topic/direct-chat/${message.receiverId}", data)
+        val header = mapOf(Pair(CONTENT_CLASS_NAME, data.javaClass.simpleName))
+        template.convertAndSend("/topic/direct-chat/${message.senderId}", data, header)
+        template.convertAndSend("/topic/direct-chat/${message.receiverId}", data, header)
     }
-
 }
