@@ -1,6 +1,5 @@
 package sj.messenger.domain.notification.repository
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -18,7 +17,7 @@ class NotificationTokenRepositoryTest(
 ) {
     @Test
     @DisplayName("사용자의 NotificationToken 목록을 조회한다.")
-    fun findByUserIdTest() {
+    fun findAllByUserIdTest() {
         // given
         val user = userRepository.save(generateUser())
         tokenRepository.saveAll((1..3).map {
@@ -26,10 +25,37 @@ class NotificationTokenRepositoryTest(
         })
 
         // when
-        val result = tokenRepository.findByUserId(user.id!!)
+        val result = tokenRepository.findAllByUserId(user.id!!)
 
         // then
         assertThat(result.size).isEqualTo(3)
+    }
+
+    @Test
+    @DisplayName("사용자의 NotificationToken 존재할 경우 true")
+    fun existsByUserIdExists() {
+        // given
+        val user = userRepository.save(generateUser())
+        tokenRepository.save(NotificationToken(user, randomString(150)))
+
+        // when
+        val exists = tokenRepository.existsByUserId(user.id!!)
+
+        // then
+        assertThat(exists).isTrue()
+    }
+
+    @Test
+    @DisplayName("사용자의 NotificationToken 존재하지 않을 경우 false")
+    fun existsByUserIdNotExists() {
+        // given
+        val user = userRepository.save(generateUser())
+
+        // when
+        val exists = tokenRepository.existsByUserId(user.id!!)
+
+        // then
+        assertThat(exists).isFalse()
     }
 
     @Test

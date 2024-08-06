@@ -8,7 +8,9 @@ import sj.messenger.domain.notification.domain.NotificationToken
 interface NotificationTokenRepository : JpaRepository<NotificationToken, Long> {
 
     @Query("select n from NotificationToken n where n.user.id = :userId")
-    fun findByUserId(userId: Long): List<NotificationToken>
+    fun findAllByUserId(userId: Long): List<NotificationToken>
+
+    fun existsByUserId(userId: Long) : Boolean
 
     @Query("select n from NotificationToken n where n.user.id in :userIds")
     fun findAllByUserIds(userIds: Iterable<Long>) : List<NotificationToken>

@@ -19,13 +19,13 @@ class NotificationServiceTest(
 
     @Test
     @DisplayName("알림 토큰 생성 성공")
-    fun createTokenTest() {
+    fun createTokenIfNotExistsTest() {
         // given
         val user = userRepository.save(generateUser())
         val token = randomString(255)
 
         // when
-        notificationService.createToken(user.id!!, token)
+        notificationService.createTokenIfNotExists(user.id!!, token)
 
         // then
         val tokens = notificationTokenRepository.findAll()
