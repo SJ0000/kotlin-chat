@@ -59,6 +59,30 @@ class NotificationTokenRepositoryTest(
     }
 
     @Test
+    @DisplayName("사용자의 NotificationToken 단일 조회")
+    fun findFirstByUserIdTest() {
+        // given
+        val user = userRepository.save(generateUser())
+        tokenRepository.save(NotificationToken(user, randomString(150)))
+        // when
+        val token = tokenRepository.findFirstByUserId(user.id!!)
+        // then
+        assertThat(token).isNotNull
+        assertThat(token?.user?.id).isEqualTo(user.id)
+    }
+
+    @Test
+    @DisplayName("사용자의 NotificationToken 단일 조회시 없을 경우 null 반환")
+    fun findFirstByUserIdNull() {
+        // given
+        val user = userRepository.save(generateUser())
+        // when
+        val token = tokenRepository.findFirstByUserId(user.id!!)
+        // then
+        assertThat(token).isNull()
+    }
+
+    @Test
     @DisplayName("여러 사용자의 NotificationToken 목록을 조회한다.")
     fun findAllByUserIdsTest() {
         // given

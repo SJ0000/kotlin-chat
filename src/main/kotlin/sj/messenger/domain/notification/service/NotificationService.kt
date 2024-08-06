@@ -17,12 +17,23 @@ class NotificationService(
     private val notificationTokenRepository: NotificationTokenRepository,
     private val userService: UserService,
     private val directChatService: DirectChatService,
-    private val groupChatService: GroupChatService
+    private val groupChatService: GroupChatService,
 ) {
+    @Transactional
+    fun createTokenIfNotExists(userId: Long, token: String) {
+        // 이미 존재성 경우 생성 불가
+        if(notificationTokenRepository.existsByUserId(userId))
+            throw RuntimeException("FCM token already exists.")
 
-    fun createToken(userId: Long, token: String) {
         val user = userService.findUserById(userId)
         notificationTokenRepository.save(NotificationToken(user, token))
+    }
+
+    @Transactional
+    fun updateNotificationToken(userId: Long, newFcmToken: String){
+        val notificationToken = notificationTokenRepository.findFirstByUserId(userId)
+            ?: throw RuntimeException("Notification token not exists.")
+        notificationToken.fcmToken = newFcmToken
     }
 
     fun sendDirectNotification(senderId: Long, directChatId: Long, content: String) {
@@ -30,7 +41,7 @@ class NotificationService(
         val target = directChat.getOtherUser(senderId)
         val sender = directChat.getOtherUser(target.id!!)
 
-        val notificationTokens = notificationTokenRepository.findByUserId(target.id!!)
+        val notificationTokens = notificationTokenRepository.findAllByUserId(target.id!!)
         val fcmTokens = extractFcmTokens(notificationTokens);
 
         val notification = createNotification(sender.name, content)
@@ -52,7 +63,6 @@ class NotificationService(
             FirebaseMessaging.getInstance().sendEachForMulticastAsync(fcmMessage)
         }
     }
-
 
     private fun extractFcmTokens(notificationTokens: List<NotificationToken>): List<String> {
         return notificationTokens.map { it.fcmToken }

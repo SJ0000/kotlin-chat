@@ -9,7 +9,7 @@ class NotificationToken (
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
     val user: User,
-    val fcmToken : String,
+    var fcmToken : String,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

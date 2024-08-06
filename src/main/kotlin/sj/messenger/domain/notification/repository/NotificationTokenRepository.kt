@@ -12,6 +12,8 @@ interface NotificationTokenRepository : JpaRepository<NotificationToken, Long> {
 
     fun existsByUserId(userId: Long) : Boolean
 
+    fun findFirstByUserId(userId: Long) : NotificationToken?
+
     @Query("select n from NotificationToken n where n.user.id in :userIds")
     fun findAllByUserIds(userIds: Iterable<Long>) : List<NotificationToken>
 }

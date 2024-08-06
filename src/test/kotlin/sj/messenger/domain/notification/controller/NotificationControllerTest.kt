@@ -8,13 +8,17 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
+import sj.messenger.domain.notification.domain.NotificationToken
 import sj.messenger.domain.notification.dto.NotificationTokenCreate
+import sj.messenger.domain.notification.dto.NotificationTokenUpdate
 import sj.messenger.domain.notification.repository.NotificationTokenRepository
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
+import sj.messenger.util.randomString
 
 @IntegrationTest
 class NotificationControllerTest(
@@ -55,6 +59,42 @@ class NotificationControllerTest(
 
         // expected
         mockMvc.post("/notifications/tokens"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(emptyToken)
+        }.andExpect {
+            status { isBadRequest() }
+        }
+    }
+
+    @Test
+    @DisplayName("PATCH /notifications/tokens : FCM 토큰 갱신")
+    @InjectAccessToken
+    fun patchNotificationToken(){
+        // given
+        val user = userRepository.findByEmail("test@test.com")!!
+        notificationTokenRepository.save(NotificationToken(user, randomString(255)))
+
+        val dto = NotificationTokenUpdate(randomString(255))
+
+        // expected
+        mockMvc.patch("/notifications/tokens"){
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(dto)
+        }.andExpect {
+            status { isOk() }
+        }
+    }
+
+    @Test
+    @DisplayName("PATCH /notifications/tokens : FCM 토큰이 비어있을 경우 400 bad request")
+    @InjectAccessToken
+    fun patchNotificationTokenEmpty(){
+        // given
+        val user = userRepository.findAll()[0]
+        val emptyToken = NotificationTokenCreate("")
+
+        // expected
+        mockMvc.patch("/notifications/tokens"){
             contentType = MediaType.APPLICATION_JSON
             content = om.writeValueAsString(emptyToken)
         }.andExpect {
