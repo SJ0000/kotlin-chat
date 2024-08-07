@@ -41,12 +41,16 @@ class NotificationController(
         return ResponseEntity.ok().build()
     }
 
-    // 로그아웃 시
-//    @PreAuthorize("hasRole('USER')")
-//    @DeleteMapping("/notification/tokens")
-//    fun deleteNotificationToken(
-//        @AuthenticationPrincipal userDetails: LoginUserDetails
-//    ) {
-//
-//    }
+    /**
+     * Client 로그아웃 전 호출하는 API
+     * 현재 1인당 1개의 기기만 허용하기 때문에, 토큰 이름을 받을 필요 없음.
+     */
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/notifications/tokens")
+    fun deleteNotificationToken(
+        @AuthenticationPrincipal userDetails: LoginUserDetails
+    ):ResponseEntity<Void> {
+        notificationService.removeUserNotificationToken(userDetails.getUserId())
+        return ResponseEntity.noContent().build()
+    }
 }

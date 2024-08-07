@@ -77,4 +77,19 @@ class NotificationServiceTest(
             notificationService.updateNotificationToken(user.id!!, randomString(100))
         }.isInstanceOf(RuntimeException::class.java)
     }
+
+    @Test
+    @DisplayName("사용자의 notification token을 삭제한다.")
+    fun removeUserNotificationTokenTest() {
+        // given
+        val user = userRepository.save(generateUser())
+        notificationTokenRepository.save(NotificationToken(user,randomString(255)))
+
+        // when
+        notificationService.removeUserNotificationToken(user.id!!)
+
+        // then
+        val exists = notificationTokenRepository.existsByUserId(user.id!!)
+        assertThat(exists).isFalse()
+    }
 }

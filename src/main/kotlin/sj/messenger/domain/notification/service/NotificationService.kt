@@ -9,6 +9,7 @@ import sj.messenger.domain.directchat.service.DirectChatService
 import sj.messenger.domain.groupchat.service.GroupChatService
 import sj.messenger.domain.notification.domain.NotificationToken
 import sj.messenger.domain.notification.repository.NotificationTokenRepository
+import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
 
 @Service
@@ -34,6 +35,13 @@ class NotificationService(
         val notificationToken = notificationTokenRepository.findFirstByUserId(userId)
             ?: throw RuntimeException("Notification token not exists.")
         notificationToken.fcmToken = newFcmToken
+    }
+
+    @Transactional
+    fun removeUserNotificationToken(userId: Long) {
+        val notificationToken = notificationTokenRepository.findFirstByUserId(userId)
+        if(notificationToken != null)
+            notificationTokenRepository.delete(notificationToken)
     }
 
     fun sendDirectNotification(senderId: Long, directChatId: Long, content: String) {
@@ -82,4 +90,5 @@ class NotificationService(
             .addAllTokens(fcmTokens)
             .build()
     }
+
 }
