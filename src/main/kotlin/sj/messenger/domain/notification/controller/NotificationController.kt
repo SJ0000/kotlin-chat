@@ -26,7 +26,7 @@ class NotificationController(
     fun postNotificationToken(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @Valid @RequestBody tokenCreate: NotificationTokenCreate
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         notificationService.createTokenIfNotExists(userDetails.getUserId(), tokenCreate.fcmToken)
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -36,7 +36,7 @@ class NotificationController(
     fun patchNotificationToken(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @Valid @RequestBody tokenUpdate: NotificationTokenUpdate
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         notificationService.updateNotificationToken(userDetails.getUserId(), tokenUpdate.fcmToken)
         return ResponseEntity.ok().build()
     }
@@ -49,7 +49,7 @@ class NotificationController(
     @DeleteMapping("/notifications/tokens")
     fun deleteNotificationToken(
         @AuthenticationPrincipal userDetails: LoginUserDetails
-    ):ResponseEntity<Void> {
+    ):ResponseEntity<Unit> {
         notificationService.removeUserNotificationToken(userDetails.getUserId())
         return ResponseEntity.noContent().build()
     }

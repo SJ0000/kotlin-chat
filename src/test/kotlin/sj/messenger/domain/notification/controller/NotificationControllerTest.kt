@@ -65,7 +65,6 @@ class NotificationControllerTest(
         }.andExpect {
             status { isBadRequest() }
         }
-
     }
 
     @Test
@@ -73,10 +72,11 @@ class NotificationControllerTest(
     @InjectAccessToken
     fun patchNotificationToken() {
         // given
-        val user = userRepository.findByEmail("test@test.com")!!
+        val user = userRepository.findAll()[0]
         notificationTokenRepository.save(NotificationToken(user, randomString(255)))
 
-        val dto = NotificationTokenUpdate(randomString(255))
+        val newFcmToken = randomString(255)
+        val dto = NotificationTokenUpdate(newFcmToken)
 
         // expected
         mockMvc.patch("/notifications/tokens") {
@@ -85,6 +85,9 @@ class NotificationControllerTest(
         }.andExpect {
             status { isOk() }
         }
+
+        val updatedToken = notificationTokenRepository.findFirstByUserId(user.id!!)
+        assertThat(updatedToken?.fcmToken).isEqualTo(newFcmToken)
     }
 
     @Test
@@ -108,10 +111,17 @@ class NotificationControllerTest(
     @DisplayName("DELETE /notifications/tokens : FCM 토큰 삭제 후 204 No Content")
     @InjectAccessToken
     fun deleteNotificationToken() {
+        // given
+        val user = userRepository.findAll()[0]
+        notificationTokenRepository.save(NotificationToken(user, randomString(255)))
+
         // expected
         mockMvc.delete("/notifications/tokens")
             .andExpect {
                 status { isNoContent() }
             }
+
+        val result = notificationTokenRepository.findFirstByUserId(user.id!!)
+        assertThat(result).isNull()
     }
 }
