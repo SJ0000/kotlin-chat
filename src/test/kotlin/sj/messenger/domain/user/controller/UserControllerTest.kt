@@ -30,8 +30,6 @@ class UserControllerTest(
     @Autowired val om: ObjectMapper,
 ) {
 
-    @Autowired
-    private lateinit var passwordConfig: PasswordConfig
 
     @Test
     @InjectAccessToken
