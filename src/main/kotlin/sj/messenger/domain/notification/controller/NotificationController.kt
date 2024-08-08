@@ -27,7 +27,7 @@ class NotificationController(
         @AuthenticationPrincipal userDetails: LoginUserDetails,
         @Valid @RequestBody tokenCreate: NotificationTokenCreate
     ): ResponseEntity<Unit> {
-        notificationService.createTokenIfNotExists(userDetails.getUserId(), tokenCreate.fcmToken)
+        notificationService.registerFcmToken(userDetails.getUserId(), tokenCreate.fcmToken)
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
