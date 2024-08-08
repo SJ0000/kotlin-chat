@@ -10,7 +10,7 @@ import org.springframework.core.io.ClassPathResource
 
 @Configuration
 class FirebaseConfig(
-    @Value("\${firebase.secret-path}")
+    @Value("\${app.firebase.secret-path}")
     val firebaseSecretPath: String,
 ) {
 

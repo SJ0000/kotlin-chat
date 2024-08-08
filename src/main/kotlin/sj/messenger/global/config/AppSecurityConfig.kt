@@ -7,6 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.validation.annotation.Validated
 import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.security.jwt.JwtProvider
@@ -14,7 +16,7 @@ import javax.crypto.SecretKey
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(JwtProperties::class)
-class JwtConfig(
+class AppSecurityConfig(
     private val properties: JwtProperties,
 ) {
 
@@ -30,10 +32,15 @@ class JwtConfig(
     fun jwtParser(): JwtParser {
         return JwtParser(secretKey)
     }
+
+    @Bean
+    fun passwordEncoder() : PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
 }
 
 @Validated
-@ConfigurationProperties("jwt")
+@ConfigurationProperties("app.security.jwt")
 data class JwtProperties(
     @field:Length(min = 48)
     val secret : String,

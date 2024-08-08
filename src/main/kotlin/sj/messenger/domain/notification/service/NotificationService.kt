@@ -22,7 +22,7 @@ class NotificationService(
     private val userService: UserService,
     private val directChatService: DirectChatService,
     private val groupChatService: GroupChatService,
-    @Value("\${app.firebase.fcm-token-expiration-days}")
+    @Value("\${app.firebase.fcm.token-expiration-days}")
     private val fcmTokenExpirationDays: Long,
 ) {
 

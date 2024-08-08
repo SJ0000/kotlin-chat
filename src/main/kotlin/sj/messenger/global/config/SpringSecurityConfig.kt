@@ -15,16 +15,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import sj.messenger.domain.security.authentication.provider.JwtAuthenticationProvider
 import sj.messenger.domain.security.filter.JwtAuthenticationFilter
 import sj.messenger.domain.security.jwt.JwtParser
-import sj.messenger.domain.security.jwt.JwtProvider
-import sj.messenger.domain.user.service.UserService
 
 @Configuration(proxyBeanMethods = false)
 @EnableMethodSecurity
 @EnableWebSecurity
-class SecurityConfig (
-    private val jwtProvider: JwtProvider,
+class SpringSecurityConfig (
     private val jwtParser: JwtParser,
-    private val userService: UserService,
 ) {
 
     @Bean

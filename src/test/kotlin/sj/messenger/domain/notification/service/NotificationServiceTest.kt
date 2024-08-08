@@ -24,7 +24,7 @@ class NotificationServiceTest(
     @Autowired val notificationService: NotificationService,
     @Autowired val notificationTokenRepository: NotificationTokenRepository,
     @Autowired val userRepository: UserRepository,
-    @Value("\${app.firebase.fcm-token-expiration-days}") val fcmTokenExpirationDays: Long,
+    @Value("\${app.firebase.fcm.token-expiration-days}") val fcmTokenExpirationDays: Long,
 ) {
 
     @Test

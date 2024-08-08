@@ -15,7 +15,6 @@ import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
-import sj.messenger.global.config.PasswordConfig
 import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
