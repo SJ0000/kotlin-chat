@@ -5,6 +5,7 @@ plugins {
     id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.4"
     java
+    jacoco
     kotlin("jvm") version "1.9.20"
     kotlin("kapt") version "1.9.20"
     kotlin("plugin.spring") version "1.9.20"
@@ -58,7 +59,7 @@ dependencies {
     // rabbitmq
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     // fcm
-    implementation("com.google.firebase:firebase-admin:9.2.0")
+    implementation("com.google.firebase:firebase-admin:9.3.0")
 
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -81,6 +82,10 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
 }
 
+jacoco {
+    toolVersion = "0.8.12"
+}
+
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
@@ -101,5 +106,97 @@ tasks {
     named<Jar>("jar") {
         enabled = false
     }
+}
 
+tasks.test {
+    extensions.configure(JacocoTaskExtension::class) {
+        setDestinationFile(
+            file(
+                layout.buildDirectory.dir(
+                    "jacoco/jacoco.exec"
+                ).get().asFile
+            )
+        )
+    }
+}
+
+tasks.jacocoTestReport {
+    reports {
+        // html report 사용
+        html.required = true
+        xml.required = false
+        csv.required = false
+    }
+
+//    val queryDslGeneratedClasses = mutableListOf<String>()
+//    for (uppercase in 'A'..'Z') {
+//        queryDslGeneratedClasses.add("**/Q$uppercase*")
+//    }
+//
+//    afterEvaluate {
+//        classDirectories.setFrom(
+//            files(classDirectories.files.map {
+//                fileTree(it){
+//                    exclude(queryDslGeneratedClasses)
+//                }
+//            })
+//        )
+//    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            // element가 없으면, 프로젝트 전체 파일을 합친 기준 값으로 한다.
+            limit {
+                // counter 기본값은 "INSTRUCTION"
+                // value 기본값은 "COVEREDRATIO"
+                minimum = "0.30".toBigDecimal()
+            }
+        }
+
+        rule {
+            // 클래스 단위로 체크
+            element = "CLASS"
+
+            // 브랜치 커버리지를 최소 90% 만족해야 한다
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = "0.90".toBigDecimal()
+            }
+
+            // 라인 커버리지 최소 80% 만족
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.80".toBigDecimal()
+            }
+
+            // 빈 줄을 제외한 코드의 라인 수를 최대 200라인으로 제한.
+            limit {
+                counter = "LINE"
+                value = "TOTALCOUNT"
+                maximum = "200".toBigDecimal()
+            }
+
+            excludes = listOf(
+                "*.test.*"
+            )
+        }
+    }
+}
+
+val testCoverage by tasks.registering {
+    group = "verification"
+    description = "Runs the unit tests with coverage"
+
+    dependsOn(
+        ":test",
+        ":jacocoTestReport",
+        ":jacocoTestCoverageVerification"
+    )
+
+    tasks["jacocoTestReport"].mustRunAfter(tasks["test"])
+    tasks["jacocoTestCoverageVerification"].mustRunAfter(tasks["jacocoTestReport"])
 }

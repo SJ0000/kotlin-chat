@@ -10,8 +10,6 @@ import sj.messenger.domain.groupchat.service.GroupChatInviteService
 import sj.messenger.domain.groupchat.service.GroupChatMessageService
 import sj.messenger.domain.groupchat.service.GroupChatService
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
-import sj.messenger.domain.user.dto.UserDto
-import sj.messenger.domain.user.service.UserService
 import java.net.URI
 import java.time.LocalDateTime
 
@@ -37,7 +35,7 @@ class GroupChatController(
     ): ResponseEntity<GroupChatDto> {
         val groupChatId = groupChatService.createGroupChat(userDetails.getUserId(), groupChatCreateDto)
         val groupChatDto = groupChatService.getGroupChatWithUsers(groupChatId)
-        return ResponseEntity.created(URI.create("/chatrooms/${groupChatId}"))
+        return ResponseEntity.created(URI.create("/chats/groups/${groupChatId}"))
             .body(groupChatDto)
     }
 
