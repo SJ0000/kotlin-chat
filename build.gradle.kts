@@ -120,6 +120,8 @@ tasks.test {
     }
 }
 
+val queryDslQClassPatterns = ('A'..'Z').map { "Q${it}*" }
+
 tasks.jacocoTestReport {
     reports {
         // html report 사용
@@ -128,20 +130,15 @@ tasks.jacocoTestReport {
         csv.required = false
     }
 
-//    val queryDslGeneratedClasses = mutableListOf<String>()
-//    for (uppercase in 'A'..'Z') {
-//        queryDslGeneratedClasses.add("**/Q$uppercase*")
-//    }
-//
-//    afterEvaluate {
-//        classDirectories.setFrom(
-//            files(classDirectories.files.map {
-//                fileTree(it){
-//                    exclude(queryDslGeneratedClasses)
-//                }
-//            })
-//        )
-//    }
+    // querydsl GeneratedClass를 report에서 제외
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it){
+                exclude(queryDslQClassPatterns.map { "**/${it}" })
+            }
+        })
+    )
+
 }
 
 tasks.jacocoTestCoverageVerification {
@@ -180,9 +177,7 @@ tasks.jacocoTestCoverageVerification {
                 maximum = "200".toBigDecimal()
             }
 
-            excludes = listOf(
-                "*.test.*"
-            )
+            excludes = listOf("*.test.*") + queryDslQClassPatterns.map { "*.${it}" }
         }
     }
 }
