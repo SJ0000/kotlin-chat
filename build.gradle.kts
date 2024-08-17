@@ -135,6 +135,8 @@ tasks.jacocoTestReport {
         files(classDirectories.files.map {
             fileTree(it){
                 exclude(queryDslQClassPatterns.map { "**/${it}" })
+                exclude("**/*Interceptor*")
+                exclude("**/*Config*")
             }
         })
     )
@@ -177,7 +179,7 @@ tasks.jacocoTestCoverageVerification {
                 maximum = "200".toBigDecimal()
             }
 
-            excludes = listOf("*.test.*") + queryDslQClassPatterns.map { "*.${it}" }
+            excludes = listOf("*.test.*", "*.*Interceptor", "*.*Config*") + queryDslQClassPatterns.map { "*.${it}" }
         }
     }
 }

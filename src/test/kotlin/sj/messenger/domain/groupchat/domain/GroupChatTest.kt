@@ -29,10 +29,27 @@ class GroupChatTest(
     fun isParticipantTest(){
         // given
         val user = generateUser(1L)
+        val otherUser = generateUser(2L)
         val chatRoom = generateGroupChat(user)
 
         // then
         assertThat(chatRoom.isParticipant(user.id!!)).isTrue()
+        assertThat(chatRoom.isParticipant(otherUser.id!!)).isFalse()
     }
 
+    @Test
+    @DisplayName("GroupChat의 참여자를 userId로 가져온다. 미참여자인 경우 null")
+    fun getParticipantTest(){
+        // given
+        val user = generateUser(1L)
+        val otherUser = generateUser(2L)
+        val groupChat = generateGroupChat(user)
+
+        // when
+        val participant = groupChat.getParticipant(user.id!!)
+        // then
+        assertThat(participant?.user).isEqualTo(user)
+        assertThat(participant?.groupChat).isEqualTo(groupChat)
+        assertThat(groupChat.getParticipant(otherUser.id!!)).isNull()
+    }
 }
