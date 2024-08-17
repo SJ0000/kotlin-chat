@@ -17,8 +17,13 @@ class NotificationToken (
     val id : Long? = null
 ) : BaseEntity(){
 
-    fun isModifiedAfter(days: Long) : Boolean{
-        val expirationDay = modifiedAt.plusDays(days)
+    companion object{
+        @JvmStatic
+        val expirationDays = 60L;
+    }
+
+    fun isExpired() : Boolean{
+        val expirationDay = modifiedAt.plusDays(expirationDays)
         return LocalDateTime.now().isAfter(expirationDay)
     }
 }

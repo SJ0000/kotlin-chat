@@ -1,13 +1,16 @@
 package sj.messenger.domain.notification.service
 
-import org.assertj.core.api.Assertions
+
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.test.util.ReflectionTestUtils
+import sj.messenger.domain.directchat.domain.DirectChat
+import sj.messenger.domain.directchat.repository.DirectChatRepository
+import sj.messenger.domain.groupchat.domain.GroupChat
+import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.notification.domain.NotificationToken
 import sj.messenger.domain.notification.repository.NotificationTokenRepository
 import sj.messenger.domain.user.repository.UserRepository
@@ -16,7 +19,6 @@ import sj.messenger.global.exception.FcmTokenAlreadyExistsException
 import sj.messenger.util.annotation.ServiceTest
 import sj.messenger.util.generateUser
 import sj.messenger.util.randomString
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @ServiceTest
@@ -24,7 +26,8 @@ class NotificationServiceTest(
     @Autowired val notificationService: NotificationService,
     @Autowired val notificationTokenRepository: NotificationTokenRepository,
     @Autowired val userRepository: UserRepository,
-    @Value("\${app.firebase.fcm.token-expiration-days}") val fcmTokenExpirationDays: Long,
+    @Autowired val directChatRepository: DirectChatRepository,
+    @Autowired val groupChatRepository: GroupChatRepository,
 ) {
 
     @Test
@@ -67,7 +70,7 @@ class NotificationServiceTest(
         ReflectionTestUtils.setField(
             notificationToken,
             "modifiedAt",
-            LocalDateTime.now().minusDays(fcmTokenExpirationDays + 1)
+            LocalDateTime.now().minusDays(NotificationToken.expirationDays + 1)
         )
 
         // expected
@@ -119,4 +122,71 @@ class NotificationServiceTest(
         val exists = notificationTokenRepository.existsByUserId(user.id!!)
         assertThat(exists).isFalse()
     }
+
+    @Test
+    @DisplayName("DirectMessage 수신 알림시 title=전송자 이름, target=수신자")
+    fun sendDirectNotificationTest() {
+        // given
+        val sender = userRepository.save(generateUser())
+        val receiver = userRepository.save(generateUser())
+        val directChat = directChatRepository.save(DirectChat(sender, receiver))
+        val receiverNotificationToken = notificationTokenRepository.save(NotificationToken(receiver, randomString(100)))
+        val content = randomString(30)
+
+        // expected
+        ReflectionTestUtils.setField(
+            notificationService,
+            "notificationMessagingService",
+            getStubNotificationMessagingService(
+                NotificationMessageParams(sender.name, content, listOf(receiverNotificationToken.fcmToken))
+            )
+        )
+        notificationService.sendDirectNotification(sender.id!!, directChat.id!!, content)
+    }
+
+    @Test
+    @DisplayName("GroupMessage 수신 알림시 title=GroupChat 이름, target=sender를 제외한 참여자")
+    fun sendGroupNotificationTest() {
+        // given
+        val users = userRepository.saveAll((1..10).map { generateUser() })
+        val groupChat = GroupChat.create(users[0], randomString(10))
+        (1..9).forEach {
+            groupChat.join(users[it])
+        }
+        groupChatRepository.save(groupChat)
+        val notificationTokens =
+            notificationTokenRepository.saveAll(users.map { NotificationToken(it, randomString(100)) })
+        val content = randomString(30)
+
+        val targets = notificationTokens
+            .filter { it.user != users[0] }
+            .map { it.fcmToken }
+
+        // expected
+        ReflectionTestUtils.setField(
+            notificationService,
+            "notificationMessagingService",
+            getStubNotificationMessagingService(
+                NotificationMessageParams(groupChat.name, content, targets)
+            )
+        )
+        notificationService.sendGroupNotification(users[0].id!!, groupChat.id!!, content)
+    }
+
+    private fun getStubNotificationMessagingService(params: NotificationMessageParams): NotificationMessagingService {
+        return object : NotificationMessagingService {
+            override fun sendMessageAsync(title: String, content: String, targets: List<String>) {
+                assertThat(title).isEqualTo(params.title)
+                assertThat(content).isEqualTo(params.content)
+                assertThat(targets).containsAll(params.targets)
+            }
+        }
+    }
+}
+
+data class NotificationMessageParams(
+    val title: String,
+    val content: String,
+    val targets: List<String>
+) {
 }

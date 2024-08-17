@@ -29,6 +29,14 @@ class DirectChat(
         throw RuntimeException("User(id = ${myId}) is not participant")
     }
 
+    fun getUser(userId: Long) : User{
+        if(user1.id == userId)
+            return user1
+        if(user2.id == userId)
+            return user2
+        throw RuntimeException("User(id = ${userId}) is not participant")
+    }
+
     fun hasAuthority(userId: Long) : Boolean{
         return (user1.id == userId) || (user2.id == userId)
     }

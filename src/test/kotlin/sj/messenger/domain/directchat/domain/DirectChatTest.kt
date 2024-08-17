@@ -31,4 +31,29 @@ class DirectChatTest{
         assertThatThrownBy { directChat.getOtherUser(user.id!!) }
             .isInstanceOf(RuntimeException::class.java)
     }
+
+    @Test
+    fun getUserTest(){
+        // given
+        val user1 = generateUser(1L)
+        val user2 = generateUser(2L)
+        val directChat = DirectChat(user1, user2)
+
+        // when
+        val findUser = directChat.getUser(user1.id!!)
+
+        // then
+        assertThat(findUser).isEqualTo(user1)
+    }
+
+    @Test
+    fun getUserErrorTest(){
+        // given
+        val user = generateUser(1L)
+        val directChat = DirectChat(generateUser(2L), generateUser(3L))
+
+        // expected
+        assertThatThrownBy { directChat.getUser(user.id!!) }
+            .isInstanceOf(RuntimeException::class.java)
+    }
 }
