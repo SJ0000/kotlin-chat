@@ -86,6 +86,20 @@ class UserServiceTest(
     @DisplayName("회원가입 성공 테스트")
     fun signUpUser() {
         // given
+        val user = userRepository.save(generateUser())
+        val existsEmailSignUpDto = SignUpDto(user.email, randomString(5,10), randomString(10,15))
+
+        // expected
+        assertThatThrownBy {
+            userService.signUpUser(existsEmailSignUpDto)
+        }.isInstanceOf(RuntimeException::class.java)
+    }
+
+    @Test
+    @DisplayName("회원가입 시 이미 가입된 이메일이 있는 경우 RuntimeException 예외 발생")
+    fun signUpEmailExists() {
+        // given
+        val email = randomEmail()
         val dto = SignUpDto(randomEmail(), randomString(5,10), randomString(10,15))
 
         // when

@@ -14,11 +14,8 @@ import sj.messenger.domain.groupchat.dto.ParticipantUpdateDto
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.util.*
 import sj.messenger.util.annotation.ServiceTest
-import sj.messenger.util.fixture
-import sj.messenger.util.generateGroupChat
-import sj.messenger.util.generateUser
-import sj.messenger.util.randomString
 
 @ServiceTest
 class GroupChatServiceTest(
@@ -56,8 +53,7 @@ class GroupChatServiceTest(
     @DisplayName("사용자가 참여하고자 하는 대화방에 이미 참여중인 경우 예외 발생")
     fun joinChatRoomError() {
         // given
-        val user = generateUser()
-        userRepository.save(user)
+        val user = userRepository.save(generateUser())
         val groupChat = groupChatRepository.save(GroupChat.create(user, name = randomString(1, 255)))
 
         // expected
@@ -70,33 +66,56 @@ class GroupChatServiceTest(
     @DisplayName("대화방 정상 생성")
     fun createChatRoom() {
         // given
-        val user = generateUser()
-        userRepository.save(user)
+        val user = userRepository.save(generateUser())
         val groupChatCreateDto = fixture.giveMeOne<GroupChatCreateDto>()
 
         // when
         val chatRoomId = groupChatService.createGroupChat(user.id!!, groupChatCreateDto)
 
         // then
-        val findChatRoom = groupChatRepository.findByIdOrNull(chatRoomId)
-        assertThat(findChatRoom).isNotNull
-        assertThat(findChatRoom?.name).isEqualTo(groupChatCreateDto.name)
+        val findGroupChat = groupChatRepository.findByIdOrNull(chatRoomId)
+        assertThat(findGroupChat).isNotNull
+        assertThat(findGroupChat?.name).isEqualTo(groupChatCreateDto.name)
     }
 
     @Test
     @DisplayName("특정 사용자의 참가한 대화방 리스트 조회")
-    fun findUserChatRooms() {
+    fun findUserGroupChats() {
         // given
-        val user = generateUser()
-        userRepository.save(user)
-        val chatRooms = (1..3).map { generateGroupChat(user) }
-        groupChatRepository.saveAll(chatRooms)
+        val user = userRepository.save(generateUser())
+        val groupChats = (1..3).map { generateGroupChat(user) }
+        groupChatRepository.saveAll(groupChats)
 
         // when
-        val userChatRooms = groupChatService.findUserGroupChats(user.id!!)
+        val userGroupChats = groupChatService.findUserGroupChats(user.id!!)
 
         // then
-        assertThat(userChatRooms.size).isEqualTo(chatRooms.size)
+        assertThat(userGroupChats.size).isEqualTo(groupChats.size)
+    }
+
+    @Test
+    @DisplayName("단일 GroupChat 조회")
+    fun findGroupChat() {
+        // given
+        val user = userRepository.save(generateUser())
+        val groupChat = groupChatRepository.save(generateGroupChat(user))
+
+        // when
+        val result = groupChatService.findGroupChat(groupChat.id!!)
+
+        // then
+        assertThat(result.id).isEqualTo(groupChat.id)
+        assertThat(result.name).isEqualTo(groupChat.name)
+        assertThat(result.isParticipant(user.id!!)).isTrue()
+    }
+
+    @Test
+    @DisplayName("단일 GroupChat 조회시 없다면 RuntimeException 발생")
+    fun findGroupChatNotFound() {
+        // expected
+        assertThatThrownBy {
+            groupChatService.findGroupChat(randomLong())
+        }.isInstanceOf(RuntimeException::class.java)
     }
 
     @Test
@@ -123,8 +142,22 @@ class GroupChatServiceTest(
     }
 
     @Test
+    @DisplayName("존재하지 않는 참여자의 정보 수정 시도시 RuntimeException 발생")
+    fun updateParticipantNotExists(){
+        //  given
+        val user = userRepository.save(generateUser())
+        val groupChat = groupChatRepository.save(generateGroupChat(user))
+        val dto = ParticipantUpdateDto(user.id!!+1, GroupChatRole.MODERATOR)
+
+        // expected
+        assertThatThrownBy {
+            groupChatService.updateParticipant(groupChat.id!!,user.id!!,dto)
+        }.isInstanceOf(RuntimeException::class.java)
+    }
+
+    @Test
     @DisplayName("참여자 수정 권한이 없는데 수정 시도시 RuntimeException 예외가 발생한다.")
-    fun updateParticipantError() {
+    fun updateParticipantNoAuthority() {
         // given
         val admin = userRepository.save(generateUser())
         val members = userRepository.saveAll((1..2).map { generateUser() })

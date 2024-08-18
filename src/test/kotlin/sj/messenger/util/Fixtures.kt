@@ -22,7 +22,7 @@ val fixture: FixtureMonkey = FixtureMonkey.builder()
     .build()
 
 fun generateGroupChat(user: User): GroupChat {
-    return GroupChat.create(creator = user, name = randomString(1,255))
+    return GroupChat.create(creator = user, name = randomString(1, 255))
 }
 
 fun generateUser(): User {
@@ -31,13 +31,13 @@ fun generateUser(): User {
 
 fun generateUser(id: Long?): User {
     return User(
-        name = randomString(10,255),
+        name = randomString(10, 255),
         email = randomEmail(),
         password = randomPassword(),
         avatarUrl = randomUrl(),
-        statusMessage = randomString(10,255),
+        statusMessage = randomString(10, 255),
         id = id,
-        publicIdentifier = randomString(10,255)
+        publicIdentifier = randomString(10, 255)
     )
 }
 
@@ -45,7 +45,7 @@ fun generateDirectMessage(
     directChatId: Long,
     minSentAt: LocalDateTime = LocalDateTime.of(LocalDate.EPOCH, LocalTime.MIN),
     maxSentAt: LocalDateTime = LocalDateTime.now()
-): DirectMessage{
+): DirectMessage {
     return DirectMessage(
         senderId = fixture.giveMeOne(),
         directChatId = directChatId,
@@ -58,11 +58,11 @@ fun generateGroupMessage(
     groupChatId: Long,
     minSentAt: LocalDateTime = LocalDateTime.of(LocalDate.EPOCH, LocalTime.MIN),
     maxSentAt: LocalDateTime = LocalDateTime.now()
-): GroupMessage{
+): GroupMessage {
     return GroupMessage(
         senderId = fixture.giveMeOne(),
         groupChatId = groupChatId,
-        content = randomString(1,200),
+        content = randomString(1, 200),
         sentAt = randomDateTime(minSentAt, maxSentAt)
     )
 }
@@ -72,7 +72,7 @@ fun generateInvitation(groupChat: GroupChat): Invitation {
         id = Arbitraries.strings().alpha().numeric().ofLength(8).sample(),
         groupChatId = groupChat.id!!,
         inviterId = fixture.giveMeOne(),
-        inviterName = randomString(1,255)
+        inviterName = randomString(1, 255)
     )
 }
 
@@ -86,8 +86,16 @@ fun randomEmail(): String {
 
 fun randomPassword() = Arbitraries.strings().ascii().numeric().ofMinLength(10).ofMaxLength(20).sample()
 
-fun randomString(minLength: Int, maxLength: Int) = Arbitraries.strings().ofMinLength(minLength).ofMaxLength(maxLength).sample()
+fun randomString(minLength: Int, maxLength: Int) =
+    Arbitraries.strings().ofMinLength(minLength).ofMaxLength(maxLength).sample()
 
-fun randomString(length: Int) = randomString(length,length)
+fun randomString(length: Int) = randomString(length, length)
 
-fun randomDateTime(min : LocalDateTime, max: LocalDateTime) = DateTimes.dateTimes().between(min, max).sample()
+fun randomAlphabets(length: Int) = Arbitraries.strings().alpha().ofLength(length).sample()
+
+fun randomDateTime(min: LocalDateTime, max: LocalDateTime) = DateTimes.dateTimes().between(min, max).sample()
+
+fun randomLong(positive: Boolean = true) : Long{
+    val min = if (positive) 0 else Long.MIN_VALUE
+    return Arbitraries.longs().between(min,Long.MAX_VALUE).sample()
+}

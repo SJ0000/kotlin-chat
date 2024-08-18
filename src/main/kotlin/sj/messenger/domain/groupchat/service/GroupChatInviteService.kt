@@ -14,18 +14,18 @@ class GroupChatInviteService(
     private val invitationRepository: InvitationRepository
 ) {
 
-    fun createInvitation(userId: Long, chatRoomId: Long): Invitation {
-        val chatRoom = groupChatRepository.findWithParticipantsById(chatRoomId)
-            ?: throw RuntimeException("ChatRoom id ${chatRoomId} not found")
+    fun createInvitation(userId: Long, groupChatId: Long): Invitation {
+        val chatRoom = groupChatRepository.findWithParticipantsById(groupChatId)
+            ?: throw RuntimeException("ChatRoom id ${groupChatId} not found")
 
         if (!chatRoom.isParticipant(userId))
-            throw RuntimeException("User(id = ${userId}) is not participant in ChatRoom(id = ${chatRoomId})")
+            throw RuntimeException("User(id = ${userId}) is not participant in ChatRoom(id = ${groupChatId})")
 
         val inviter = userService.findUserById(userId)
         val key = generateRandomString() // 중복 여부 확인
         val invitation = Invitation(
             id = key,
-            groupChatId = chatRoomId,
+            groupChatId = groupChatId,
             inviterId = userId,
             inviterName = inviter.name,
         )

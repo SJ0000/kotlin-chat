@@ -5,12 +5,16 @@ import com.google.firebase.messaging.MulticastMessage
 import com.google.firebase.messaging.Notification
 import org.springframework.stereotype.Service
 
-@Service
-class FirebaseMessagingService : NotificationMessagingService {
+/**
+ * FirebaseConfig에서 생성되는 bean
+ */
+class FirebaseMessagingService(
+    private val firebaseMessaging: FirebaseMessaging,
+) : NotificationMessagingService {
 
     override fun sendMessageAsync(title: String, content: String, targets: List<String>){
         val fcmMessage = createFcmMessage(title, content, targets)
-        FirebaseMessaging.getInstance().sendEachForMulticastAsync(fcmMessage)
+        firebaseMessaging.sendEachForMulticastAsync(fcmMessage)
     }
 
     private fun createNotification(title: String, body: String): Notification {
