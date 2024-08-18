@@ -7,12 +7,11 @@ import sj.messenger.util.generateGroupChat
 import sj.messenger.util.generateUser
 
 
-class GroupChatTest(
-){
+class GroupChatTest {
 
     @Test
     @DisplayName("join 호출시 participant를 생성하고 chatRoom의 participants에 추가된다.")
-    fun joinTest(){
+    fun joinTest() {
         // given
         val chatRoom = generateGroupChat(generateUser())
         val user = generateUser()
@@ -26,30 +25,38 @@ class GroupChatTest(
 
     @Test
     @DisplayName("특정 사용자가 특정 대화방의 참여자인지 여부를 확인")
-    fun isParticipantTest(){
+    fun isParticipantTest() {
         // given
-        val user = generateUser(1L)
-        val otherUser = generateUser(2L)
-        val chatRoom = generateGroupChat(user)
+        val admin = generateUser(1L)
+        val groupChat = generateGroupChat(admin)
+        (2L..9L).map { generateUser(it) }
+            .forEach {
+                groupChat.join(it)
+            }
+        val otherUser = generateUser(10L)
 
         // then
-        assertThat(chatRoom.isParticipant(user.id!!)).isTrue()
-        assertThat(chatRoom.isParticipant(otherUser.id!!)).isFalse()
+        (1L..9L).forEach {
+            assertThat(groupChat.isParticipant(it)).isTrue()
+        }
+        assertThat(groupChat.isParticipant(otherUser.id!!)).isFalse()
     }
 
     @Test
     @DisplayName("GroupChat의 참여자를 userId로 가져온다. 미참여자인 경우 null")
-    fun getParticipantTest(){
+    fun getParticipantTest() {
         // given
-        val user = generateUser(1L)
-        val otherUser = generateUser(2L)
-        val groupChat = generateGroupChat(user)
+        val admin = generateUser(1L)
+        val groupChat = generateGroupChat(admin)
+        val members = (2L..9L).map { generateUser(it) }
+        members.forEach { groupChat.join(it) }
+        val otherUser = generateUser(10L)
 
-        // when
-        val participant = groupChat.getParticipant(user.id!!)
-        // then
-        assertThat(participant?.user).isEqualTo(user)
-        assertThat(participant?.groupChat).isEqualTo(groupChat)
+        // expected
+        assertThat(groupChat.getParticipant(admin.id!!)?.user).isEqualTo(admin)
+        members.forEach{
+            assertThat(groupChat.getParticipant(it.id!!)?.user).isEqualTo(it)
+        }
         assertThat(groupChat.getParticipant(otherUser.id!!)).isNull()
     }
 }

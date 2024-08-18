@@ -67,7 +67,6 @@ class UserService(
 
     @Transactional
     fun updateUser(id: Long, updateUser: UpdateUserDto) {
-        // todo: publicIdentifier 중복 검사
         val user = findUserById(id)
         if(user.publicIdentifier != updateUser.publicIdentifier)
             validateUniquePublicIdentifier(updateUser.publicIdentifier)

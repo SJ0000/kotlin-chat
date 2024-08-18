@@ -99,7 +99,6 @@ class UserServiceTest(
     @DisplayName("회원가입 시 이미 가입된 이메일이 있는 경우 RuntimeException 예외 발생")
     fun signUpEmailExists() {
         // given
-        val email = randomEmail()
         val dto = SignUpDto(randomEmail(), randomString(5,10), randomString(10,15))
 
         // when
@@ -126,6 +125,7 @@ class UserServiceTest(
         )
         userRepository.save(user)
         val loginRequest = LoginRequest(user.email, rawPassword)
+
         // expected
         assertDoesNotThrow { userService.validateLogin(loginRequest) }
     }
@@ -142,6 +142,7 @@ class UserServiceTest(
             password = encryptedPassword,
             publicIdentifier = randomString(5,255)
         )
+        generateUser()
         userRepository.save(user)
         val loginRequest = LoginRequest(user.email, rawPassword+"1")
 
@@ -154,8 +155,7 @@ class UserServiceTest(
     @DisplayName("사용자의 정보를 업데이트")
     fun updateUser() {
         // given
-        val user = generateUser()
-        userRepository.save(user)
+        val user = userRepository.save(generateUser())
 
         val dto = UpdateUserDto(
             name = randomString(5,25),
@@ -180,19 +180,42 @@ class UserServiceTest(
     @DisplayName("사용자 정보 수정시 PublicIdentifier는 유일해야 한다.")
     fun updateUserError() {
         // given
-        val user = generateUser()
-        val user2 = generateUser()
-        userRepository.saveAll(listOf(user,user2))
+        val users = userRepository.saveAll((1..2).map { generateUser() })
 
         val dto = UpdateUserDto(
             name = randomString(1,255),
             avatarUrl = randomUrl(),
             statusMessage = randomString(0,255),
-            publicIdentifier = user2.publicIdentifier
+            publicIdentifier = users[1].publicIdentifier
         )
 
         // expected
-        assertThatThrownBy { userService.updateUser(user.id!!,dto) }
+        assertThatThrownBy { userService.updateUser(users[0].id!!,dto) }
             .isInstanceOf(RuntimeException::class.java)
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정시 PublicIdentifier가 이전과 동일한 경우 유일성검증을 하지 않는다.")
+    fun updateUserSamePublicIdentifier() {
+        // given
+        val user = userRepository.save(generateUser())
+
+        val dto = UpdateUserDto(
+            name = randomString(5,25),
+            avatarUrl = randomUrl(),
+            statusMessage = randomString(5,255),
+            publicIdentifier = user.publicIdentifier
+        )
+
+        // when
+        userService.updateUser(user.id!!,dto)
+
+        // then
+        with(userRepository.findByIdOrNull(user.id!!)!!){
+            assertThat(name).isEqualTo(dto.name)
+            assertThat(avatarUrl).isEqualTo(dto.avatarUrl)
+            assertThat(statusMessage).isEqualTo(dto.statusMessage)
+            assertThat(publicIdentifier).isEqualTo(dto.publicIdentifier)
+        }
     }
 }
