@@ -22,8 +22,8 @@ class NotificationToken (
         val expirationDays = 60L;
     }
 
-    fun isExpired() : Boolean{
+    fun isExpired(baseDate: LocalDateTime = LocalDateTime.now()) : Boolean{
         val expirationDay = modifiedAt.plusDays(expirationDays)
-        return LocalDateTime.now().isAfter(expirationDay)
+        return baseDate.isAfter(expirationDay)
     }
 }

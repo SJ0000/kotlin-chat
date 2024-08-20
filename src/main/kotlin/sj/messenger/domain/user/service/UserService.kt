@@ -93,14 +93,18 @@ class UserService(
     }
 
     private fun createPublicIdentifier(userName: String): String {
-        var created: String
-        do {
-            created = "${userName}#${generateRandomNumbers()}"
-        } while (existsPublicIdentifier(created))
-        return created
+        // 3번 시도 후 자릿수 늘리기
+        (5..8).forEach{ length ->
+            (1..3).forEach{ _ ->
+                val created = "${userName}#${generateRandomNumbers(length)}"
+                if(!existsPublicIdentifier(created))
+                    return created
+            }
+        }
+        throw RuntimeException("Public Identifier 생성에 실패하였습니다.")
     }
 
-    private fun generateRandomNumbers(): String {
-        return (1..5).map { ('0'..'9').toList().random() }.joinToString("")
+    private fun generateRandomNumbers(length: Int): String {
+        return (1..length).map { ('0'..'9').toList().random() }.joinToString("")
     }
 }

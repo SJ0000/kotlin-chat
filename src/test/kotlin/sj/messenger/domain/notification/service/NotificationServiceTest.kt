@@ -18,6 +18,7 @@ import sj.messenger.global.exception.ExpiredFcmTokenException
 import sj.messenger.global.exception.FcmTokenAlreadyExistsException
 import sj.messenger.util.annotation.ServiceTest
 import sj.messenger.util.generateUser
+import sj.messenger.util.randomLong
 import sj.messenger.util.randomString
 import java.time.LocalDateTime
 
@@ -67,16 +68,28 @@ class NotificationServiceTest(
         val user = userRepository.save(generateUser())
         val notificationToken = NotificationToken(user, randomString(255))
         notificationTokenRepository.save(notificationToken)
-        ReflectionTestUtils.setField(
-            notificationToken,
-            "modifiedAt",
-            LocalDateTime.now().minusDays(NotificationToken.expirationDays + 1)
-        )
 
         // expected
         assertThatThrownBy {
-            notificationService.registerFcmToken(user.id!!, notificationToken.fcmToken)
+            val expiredDateTime = notificationToken.modifiedAt.plusDays(NotificationToken.expirationDays+1)
+            notificationService.registerFcmToken(user.id!!, notificationToken.fcmToken, expiredDateTime)
         }.isInstanceOf(ExpiredFcmTokenException::class.java)
+    }
+
+    @Test
+    @DisplayName("이미 가지고 있는 토큰을 등록하려고 시도할 경우에도 예외는 발생하지 않는다.")
+    fun registerFcmTokenSameToken() {
+        // given
+        val user = userRepository.save(generateUser())
+        val notificationToken = NotificationToken(user, randomString(255))
+        notificationTokenRepository.save(notificationToken)
+
+        // when
+        notificationService.registerFcmToken(user.id!!, notificationToken.fcmToken)
+
+        // then
+        val findToken = notificationTokenRepository.findFirstByUserId(user.id!!)
+        assertThat(findToken).isEqualTo(notificationToken)
     }
 
 
@@ -121,6 +134,20 @@ class NotificationServiceTest(
         // then
         val exists = notificationTokenRepository.existsByUserId(user.id!!)
         assertThat(exists).isFalse()
+    }
+
+    @Test
+    @DisplayName("token을 가지고 있지 않은 사용자가 삭제를 시도해도 예외는 발생하지 않는다.")
+    fun removeUserNotificationTokenTestNotExists() {
+        // given
+        val hasNoTokenUserId = randomLong()
+
+        // when
+        notificationService.removeUserNotificationToken(hasNoTokenUserId)
+
+        // then
+        val result = notificationTokenRepository.existsByUserId(hasNoTokenUserId)
+        assertThat(result).isFalse()
     }
 
     @Test

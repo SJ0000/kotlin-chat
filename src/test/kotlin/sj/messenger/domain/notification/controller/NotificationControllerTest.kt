@@ -84,6 +84,8 @@ class NotificationControllerTest(
             content = om.writeValueAsString(dto)
         }.andExpect {
             status { isOk() }
+        }.andDo {
+            print()
         }
 
         val updatedToken = notificationTokenRepository.findFirstByUserId(user.id!!)
@@ -95,7 +97,6 @@ class NotificationControllerTest(
     @InjectAccessToken
     fun patchNotificationTokenEmpty() {
         // given
-        val user = userRepository.findAll()[0]
         val emptyToken = NotificationTokenCreate("")
 
         // expected

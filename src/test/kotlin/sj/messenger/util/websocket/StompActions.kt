@@ -17,7 +17,7 @@ inline fun <reified T> getSubscribeAction(
     destination: String,
     holder: TestAsyncResultHolder<T>
 ): StompAction {
-    return StompAction{ session: StompSession, header: StompHeaders ->
+    return StompAction{ session: StompSession, _: StompHeaders ->
         session.subscribe(destination, object : StompFrameHandler {
             override fun getPayloadType(headers: StompHeaders): Type {
                 return T::class.java
@@ -39,7 +39,7 @@ inline fun <reified T> getSubscribeAction(
 }
 
 inline fun <reified T> getSendAction(source: String, message: Any, holder: TestAsyncResultHolder<T>): StompAction {
-    return StompAction(){ session: StompSession, header: StompHeaders ->
+    return StompAction(){ session: StompSession, _: StompHeaders ->
         try {
             session.send(source, message)
         } catch (t: Throwable) {

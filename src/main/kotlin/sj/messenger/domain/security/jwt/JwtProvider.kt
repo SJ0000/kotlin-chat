@@ -7,13 +7,13 @@ import io.jsonwebtoken.Jwts
 import java.util.*
 import javax.crypto.SecretKey
 
-class JwtProvider(
-    private val secretKey : SecretKey,
-    private val expirationPeriodMillis : Long,
+open class JwtProvider(
+    protected val secretKey : SecretKey,
+    protected val expirationPeriodMillis : Long,
 ) {
     private val objectMapper = ObjectMapper().registerModules(kotlinModule())
 
-    private val registeredClaim = mapOf(
+    protected val registeredClaim = mapOf(
         Claims.ISSUER to "api.simple-messenger",
         Claims.SUBJECT to "access-token",
         Claims.AUDIENCE to "simple-messenger-client"

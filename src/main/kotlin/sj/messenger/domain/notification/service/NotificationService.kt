@@ -9,6 +9,7 @@ import sj.messenger.domain.notification.repository.NotificationTokenRepository
 import sj.messenger.domain.user.service.UserService
 import sj.messenger.global.exception.ExpiredFcmTokenException
 import sj.messenger.global.exception.FcmTokenAlreadyExistsException
+import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = false)
@@ -21,7 +22,7 @@ class NotificationService(
 ) {
 
     @Transactional
-    fun registerFcmToken(userId: Long, fcmToken: String) {
+    fun registerFcmToken(userId: Long, fcmToken: String, baseTime: LocalDateTime = LocalDateTime.now()) {
         val notificationToken = notificationTokenRepository.findFirstByUserId(userId)
         when {
             notificationToken == null -> {
@@ -30,7 +31,7 @@ class NotificationService(
             }
 
             notificationToken.fcmToken != fcmToken -> throw FcmTokenAlreadyExistsException()
-            notificationToken.isExpired() -> throw ExpiredFcmTokenException()
+            notificationToken.isExpired(baseTime) -> throw ExpiredFcmTokenException()
             else -> { /* Do Nothing */
             }
         }

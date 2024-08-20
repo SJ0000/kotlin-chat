@@ -12,7 +12,6 @@ class ExceptionController {
 
     @ExceptionHandler(BindException::class)
     fun handleBindException(exception: BindException): ResponseEntity<ErrorResponse> {
-        val message = exception.message;
         val response = ErrorResponse(400, "요청 파라미터가 잘못되었습니다.")
         exception.fieldErrors.forEach {
             response.addError(it.field, it.defaultMessage ?: "")

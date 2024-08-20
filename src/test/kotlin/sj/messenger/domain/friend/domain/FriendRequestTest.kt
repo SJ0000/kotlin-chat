@@ -16,11 +16,9 @@ class FriendRequestTest {
         val receiver = generateUser(2L)
         val friend = FriendRequest(sender, receiver)
 
-        // when
-        val isReceiver = friend.isReceiver(receiver.id!!)
-
         // then
-        assertThat(isReceiver).isTrue()
+        assertThat(friend.isReceiver(receiver.id!!)).isTrue()
+        assertThat(friend.isReceiver(receiver.id!!+1)).isFalse()
     }
 
     @Test

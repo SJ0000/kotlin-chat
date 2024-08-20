@@ -27,8 +27,7 @@ class FirebaseMessagingServiceTest{
     @Mock lateinit var  firebaseMessaging: FirebaseMessaging
     @InjectMocks lateinit var firebaseMessagingService: FirebaseMessagingService
     @Captor lateinit var argumentCaptor: ArgumentCaptor<MulticastMessage>
-
-    // tODO
+    
     @Test
     @DisplayName("FCM 메시지 전송 파라미터 검증 테스트")
     fun sendMessageAsyncTest() {
