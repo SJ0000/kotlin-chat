@@ -1,7 +1,6 @@
 package sj.messenger.util
 
 import io.jsonwebtoken.Jwts
-import sj.messenger.domain.security.jwt.JwtParser
 import sj.messenger.domain.security.jwt.JwtProvider
 import java.util.Date
 import javax.crypto.SecretKey

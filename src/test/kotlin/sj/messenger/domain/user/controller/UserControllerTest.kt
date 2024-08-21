@@ -15,6 +15,7 @@ import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.ErrorCode
 import sj.messenger.util.annotation.IntegrationTest
 import sj.messenger.util.config.InjectAccessToken
 import sj.messenger.util.fixture
@@ -248,6 +249,27 @@ class UserControllerTest(
             status { isBadRequest() }
             content {
                 jsonPath("$.fieldErrors.name") { exists() }
+            }
+        }
+    }
+
+    @Test
+    @InjectAccessToken
+    @DisplayName("PATCH /users/{id} : 자신이 아닌 다른 user 수정 시도시 401 Unauthorized")
+    fun patchUserUnauthorized() {
+        // given
+        val user = userRepository.findByEmail("test@test.com")!!
+        val updateUser: UpdateUserDto = fixture.giveMeOne()
+
+        // expected
+        mockMvc.patch("/users/${user.id!!+1}") {
+            contentType = MediaType.APPLICATION_JSON
+            content = om.writeValueAsString(updateUser)
+        }.andExpect {
+            status { isUnauthorized() }
+            content {
+                jsonPath("$.code") { value(ErrorCode.HAS_NO_PERMISSION.code) }
+                jsonPath("$.message") { value(ErrorCode.HAS_NO_PERMISSION.message) }
             }
         }
     }

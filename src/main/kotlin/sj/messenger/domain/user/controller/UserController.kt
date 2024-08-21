@@ -10,6 +10,7 @@ import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.UnauthorizedException
 import java.net.URI
 
 @RestController
@@ -40,7 +41,7 @@ class UserController(
         @Valid @RequestBody dto: UpdateUserDto
     ): ResponseEntity<UserDto> {
         if (userDetails.getUserId() != id)
-            throw RuntimeException("has no permission. login user id = ${userDetails.getUserId()}, change request user id = ${id}")
+            throw UnauthorizedException(message = "has no permission. login user id = ${userDetails.getUserId()}, change request user id = ${id}")
         userService.updateUser(id, dto)
         val user = userService.findUserById(id)
         return ResponseEntity.ok(UserDto(user));

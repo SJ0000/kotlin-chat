@@ -26,7 +26,7 @@ class ExceptionController {
     fun handleSimpleMessengerException(exception: SimpleMessengerException): ResponseEntity<ErrorResponse> {
         return ResponseEntity
             .status(exception.status)
-            .body(ErrorResponse(exception.errorCode.code, exception.message!!))
+            .body(ErrorResponse.of(exception.errorCode))
     }
 
     @ExceptionHandler(RuntimeException::class)

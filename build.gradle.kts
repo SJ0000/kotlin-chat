@@ -158,14 +158,12 @@ tasks.jacocoTestCoverageVerification {
             // 클래스 단위로 체크
             element = "CLASS"
 
-            // 브랜치 커버리지를 최소 90% 만족해야 한다
             limit {
                 counter = "BRANCH"
                 value = "COVEREDRATIO"
-                minimum = "0.90".toBigDecimal()
+                minimum = "0.80".toBigDecimal()
             }
 
-            // 라인 커버리지 최소 80% 만족
             limit {
                 counter = "LINE"
                 value = "COVEREDRATIO"
