@@ -4,6 +4,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.groupchat.domain.GroupChat
+import sj.messenger.domain.groupchat.domain.Participant
 import sj.messenger.domain.groupchat.dto.GroupChatCreateDto
 import sj.messenger.domain.groupchat.dto.GroupChatDto
 import sj.messenger.domain.groupchat.dto.ParticipantDto
@@ -12,6 +13,7 @@ import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.EntityNotFoundException
 
 
 @Service
@@ -23,7 +25,7 @@ class GroupChatService(
 ) {
 
     fun getGroupChat(id: Long): GroupChat {
-        return groupChatRepository.findByIdOrNull(id) ?: throw RuntimeException("chat room id '$id' not found")
+        return groupChatRepository.findByIdOrNull(id) ?: throw EntityNotFoundException(GroupChat::class, "id", id)
     }
 
     @Transactional(readOnly = false)
@@ -51,7 +53,7 @@ class GroupChatService(
 
     fun findGroupChat(groupChatId: Long): GroupChat {
         return groupChatRepository.findByIdOrNull(groupChatId)
-            ?: throw RuntimeException("ChatRoom id ${groupChatId} not found")
+            ?: throw EntityNotFoundException(GroupChat::class, "id", groupChatId)
     }
 
     fun getGroupChatWithUsers(groupChatId: Long): GroupChatDto {
@@ -75,7 +77,7 @@ class GroupChatService(
     @Transactional(readOnly = false)
     fun updateParticipant(groupChatId: Long, modifierUserId: Long, updateDto: ParticipantUpdateDto){
         val modifier = participantRepository.findByGroupChatIdAndUserId(groupChatId, modifierUserId)
-        val target = participantRepository.findByIdOrNull(updateDto.participantId) ?: throw RuntimeException("participant not exists. id = ${updateDto.participantId}")
+        val target = participantRepository.findByIdOrNull(updateDto.participantId) ?: throw EntityNotFoundException(Participant::class,"id", updateDto.participantId)
 
         if(!modifier.canModify(target))
             throw RuntimeException("Participant(id = ${modifier.id})Can Edit Target Participant(id = ${target.id}).")
@@ -85,6 +87,6 @@ class GroupChatService(
 
     fun findGroupChatWithParticipants(groupChatId: Long): GroupChat {
         return groupChatRepository.findWithParticipantsById(groupChatId)
-            ?: throw RuntimeException("ChatRoom id ${groupChatId} not found")
+            ?: throw EntityNotFoundException(GroupChat::class, "id", groupChatId)
     }
 }

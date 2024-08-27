@@ -65,6 +65,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
+    // logging
+    implementation("io.github.oshai:kotlin-logging-jvm:5.1.4")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter-kotlin:1.0.6")

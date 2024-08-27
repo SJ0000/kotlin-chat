@@ -8,6 +8,7 @@ import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectChatRepository
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.EntityNotFoundException
 
 @Service
 @Transactional(readOnly = true)
@@ -17,7 +18,7 @@ class DirectChatService(
 ) {
     fun getDirectChat(userId: Long, id: Long): DirectChat {
         val directChat =
-            directChatRepository.findByIdWithUsers(id) ?: throw RuntimeException("DirectChat not exists. id = ${id}")
+            directChatRepository.findByIdWithUsers(id) ?: throw EntityNotFoundException(DirectChat::class,"id", id)
         if(!directChat.hasAuthority(userId))
             throw RuntimeException("User(id=${userId}) has no permission. DirectChat(id = ${id})")
         return directChat

@@ -2,10 +2,12 @@ package sj.messenger.domain.groupchat.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import sj.messenger.domain.groupchat.domain.GroupChat
 import sj.messenger.domain.groupchat.domain.Invitation
 import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.InvitationRepository
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.EntityNotFoundException
 
 @Service
 class GroupChatInviteService(
@@ -16,7 +18,7 @@ class GroupChatInviteService(
 
     fun createInvitation(userId: Long, groupChatId: Long): Invitation {
         val chatRoom = groupChatRepository.findWithParticipantsById(groupChatId)
-            ?: throw RuntimeException("ChatRoom id ${groupChatId} not found")
+            ?: throw EntityNotFoundException(GroupChat::class, "id", groupChatId)
 
         if (!chatRoom.isParticipant(userId))
             throw RuntimeException("User(id = ${userId}) is not participant in ChatRoom(id = ${groupChatId})")
@@ -34,7 +36,7 @@ class GroupChatInviteService(
     }
 
     fun getInvitation(id: String) : Invitation{
-        return invitationRepository.findByIdOrNull(id) ?: throw RuntimeException("Invitation not found. id = ${id}")
+        return invitationRepository.findByIdOrNull(id) ?: throw EntityNotFoundException(Invitation::class,"id", id)
     }
 
     // 경우의 수 : (대문자 수 26+ 소문자 수 26)^8 = 53,459,728,531,456
