@@ -6,11 +6,12 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import sj.messenger.domain.security.authentication.principal.LoginUserDetails
+import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.service.UserService
-import sj.messenger.global.exception.UnauthorizedException
+import sj.messenger.global.exception.PermissionDeniedException
 import java.net.URI
 
 @RestController
@@ -41,7 +42,7 @@ class UserController(
         @Valid @RequestBody dto: UpdateUserDto
     ): ResponseEntity<UserDto> {
         if (userDetails.getUserId() != id)
-            throw UnauthorizedException("has no permission. login user id = ${userDetails.getUserId()}, change request user id = ${id}")
+            throw PermissionDeniedException(User::class, id, userDetails.getUserId())
         userService.updateUser(id, dto)
         val user = userService.findUserById(id)
         return ResponseEntity.ok(UserDto(user));
