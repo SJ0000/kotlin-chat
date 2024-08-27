@@ -25,7 +25,7 @@ class DirectChat(
         return when (myId) {
             user1.id -> user2
             user2.id -> user1
-            else -> throw RuntimeException("User(id = ${myId}) is not participant")
+            else -> throw IllegalArgumentException("User(id = ${myId}) is not participant")
         }
     }
 
@@ -33,7 +33,7 @@ class DirectChat(
         return when (userId) {
             user1.id -> user1
             user2.id -> user2
-            else -> throw RuntimeException("User(id = ${userId}) is not participant")
+            else -> throw IllegalArgumentException("User(id = ${userId}) is not participant")
         }
     }
 

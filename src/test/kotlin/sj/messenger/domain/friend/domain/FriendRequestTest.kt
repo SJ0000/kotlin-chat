@@ -10,28 +10,46 @@ class FriendRequestTest {
 
     @Test
     @DisplayName("인자로 받은 사용자가 친구 요청을 받은 사용자인지 확인")
-    fun isReceiver() {
+    fun approveIfPossible() {
         // given
         val sender = generateUser(1L)
         val receiver = generateUser(2L)
-        val friend = FriendRequest(sender, receiver)
+        val friendRequest = FriendRequest(sender, receiver)
+
+        // when
+        friendRequest.approveIfPossible(receiver.id!!)
 
         // then
-        assertThat(friend.isReceiver(receiver.id!!)).isTrue()
-        assertThat(friend.isReceiver(receiver.id!!+1)).isFalse()
+        assertThat(friendRequest.approved).isTrue()
     }
 
     @Test
-    @DisplayName("이미 승인된 요청을 승인시 예외를 반환한다.")
-    fun approve() {
+    @DisplayName("Receiver가 아닌 경우 승인 시도시 IllegalArgumentException 반환")
+    fun approveIfPossibleNotReceiver() {
         // given
-        val sender = generateUser()
-        val receiver = generateUser()
+        val sender = generateUser(1L)
+        val receiver = generateUser(2L)
         val request = FriendRequest(sender, receiver)
-        request.approve()
 
         // expected
-        assertThatThrownBy { request.approve() }
-            .isInstanceOf(RuntimeException::class.java)
+        assertThatThrownBy {
+            request.approveIfPossible(receiver.id!!+1)
+        }.isInstanceOf(IllegalArgumentException::class.java)
+    }
+
+    @Test
+    @DisplayName("이미 승인된 요청을 승인 시도시 IllegalStateException 반환")
+    fun approveIfPossibleAlreadyApproved() {
+        // given
+        val sender = generateUser(1L)
+        val receiver = generateUser(2L)
+        val request = FriendRequest(sender, receiver)
+
+        // expected
+        request.approveIfPossible(receiver.id!!)
+
+        assertThatThrownBy {
+            request.approveIfPossible(receiver.id!!)
+        }.isInstanceOf(IllegalStateException::class.java)
     }
 }

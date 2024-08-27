@@ -20,7 +20,7 @@ class JwtParser(
             .parseSignedClaims(token)
             .payload
 
-        payload["user"] ?: throw RuntimeException("user claim not exists")
+        payload["user"] ?: throw IllegalArgumentException("User Claim이 존재하지 않습니다.")
         val userClaim = objectMapper.readValue<UserClaim>(payload["user"].toString())
         return userClaim
     }

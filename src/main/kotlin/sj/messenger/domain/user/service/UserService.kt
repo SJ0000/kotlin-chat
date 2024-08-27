@@ -10,6 +10,7 @@ import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
 import sj.messenger.global.exception.AlreadyExistsException
+import sj.messenger.global.exception.AuthorizeFailedException
 import sj.messenger.global.exception.EntityNotFoundException
 
 @Service
@@ -60,11 +61,10 @@ class UserService(
         return user.id!!
     }
 
-
     fun validateLogin(loginRequest: LoginRequest) {
         val user = findUserByEmail(loginRequest.email)
         if (!passwordEncoder.matches(loginRequest.password, user.password))
-            throw RuntimeException("login failed - incorrect password. email = ${loginRequest.email}")
+            throw AuthorizeFailedException("사용자(email = ${loginRequest.email})의 비밀번호가 일치하지 않습니다. ")
     }
 
     @Transactional

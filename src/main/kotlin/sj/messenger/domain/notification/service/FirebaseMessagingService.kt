@@ -26,7 +26,7 @@ class FirebaseMessagingService(
 
     private fun createFcmMessage(title: String, content: String, fcmTokens: List<String>): MulticastMessage {
         if (fcmTokens.isEmpty())
-            throw RuntimeException("fcmTokens가 비어있습니다.")
+            throw IllegalArgumentException("fcmTokens가 비어있습니다.")
 
         return MulticastMessage.builder()
             .setNotification(createNotification(title, content))

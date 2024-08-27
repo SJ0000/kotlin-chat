@@ -7,6 +7,7 @@ import sj.messenger.domain.groupchat.service.GroupChatService
 import sj.messenger.domain.notification.domain.NotificationToken
 import sj.messenger.domain.notification.repository.NotificationTokenRepository
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.EntityNotFoundException
 import sj.messenger.global.exception.ExpiredFcmTokenException
 import sj.messenger.global.exception.FcmTokenAlreadyExistsException
 import java.time.LocalDateTime
@@ -40,7 +41,7 @@ class NotificationService(
     @Transactional
     fun updateNotificationToken(userId: Long, newFcmToken: String) {
         val notificationToken = notificationTokenRepository.findFirstByUserId(userId)
-            ?: throw RuntimeException("Notification token not exists.")
+            ?: throw EntityNotFoundException(NotificationToken::class, "userId", userId)
         notificationToken.fcmToken = newFcmToken
     }
 
@@ -55,7 +56,7 @@ class NotificationService(
         val directChat = directChatService.getDirectChat(senderId, directChatId)
         val sender = directChat.getUser(senderId)
         val fcmTokens = getUsersFcmToken(directChat.getOtherUser(senderId).id!!)
-        notificationMessagingService.sendMessageAsync(sender.name, content ,fcmTokens)
+        notificationMessagingService.sendMessageAsync(sender.name, content, fcmTokens)
     }
 
     fun sendGroupNotification(senderId: Long, groupChatId: Long, content: String) {

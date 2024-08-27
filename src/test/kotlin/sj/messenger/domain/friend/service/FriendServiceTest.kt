@@ -98,19 +98,4 @@ class FriendServiceTest(
         val exists = friendRepository.exists(sender.id!!, receiver.id!!)
         assertThat(exists).isTrue()
     }
-
-    @Test
-    @DisplayName("자신이 받은 친구 요청이 아닐 경우 수락시 예외 발생")
-    fun approveRequestError() {
-        // given
-        val sender = generateUser()
-        val receiver = generateUser()
-        val other = generateUser()
-        userRepository.saveAll(listOf(sender, receiver, other))
-        val request = friendRequestRepository.save(FriendRequest(sender, receiver))
-
-        // expected
-        assertThatThrownBy { friendService.approveRequest(other.id!!, request.id!!) }
-            .isInstanceOf(RuntimeException::class.java)
-    }
 }

@@ -15,6 +15,7 @@ import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.service.UserService
 import sj.messenger.global.exception.AlreadyExistsException
 import sj.messenger.global.exception.EntityNotFoundException
+import sj.messenger.global.exception.PermissionDeniedException
 
 
 @Service
@@ -81,7 +82,7 @@ class GroupChatService(
         val target = participantRepository.findByIdOrNull(updateDto.participantId) ?: throw EntityNotFoundException(Participant::class,"id", updateDto.participantId)
 
         if(!modifier.canModify(target))
-            throw RuntimeException("Participant(id = ${modifier.id})Can Edit Target Participant(id = ${target.id}).")
+            throw PermissionDeniedException(Participant::class, target.id!!, modifier.id!!)
 
         target.role = updateDto.role
     }

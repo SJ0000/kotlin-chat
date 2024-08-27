@@ -22,7 +22,7 @@ class JwtAuthenticationFilter(
         filterChain: FilterChain
     ) {
         try{
-            val header = request.getHeader(HttpHeaders.AUTHORIZATION) ?: throw RuntimeException("Authorization header not exists.")
+            val header = request.getHeader(HttpHeaders.AUTHORIZATION) ?: throw IllegalArgumentException("Authorization header가 존재하지 않습니다.")
             val bearerToken = parseBearerToken(header)
             val authentication = authenticationManager.authenticate(JwtPreAuthenticationToken(bearerToken))
             SecurityContextHolder.getContext().authentication = authentication
@@ -35,7 +35,7 @@ class JwtAuthenticationFilter(
 
     private fun parseBearerToken(header: String): String {
         if (!header.startsWith("Bearer "))
-            throw RuntimeException("invalid authorization type.")
+            throw IllegalArgumentException("Bearer 헤더가 아닙니다")
         return header.substring("Bearer ".length)
     }
 }

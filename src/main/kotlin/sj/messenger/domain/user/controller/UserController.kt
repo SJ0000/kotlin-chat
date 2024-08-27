@@ -41,7 +41,7 @@ class UserController(
         @Valid @RequestBody dto: UpdateUserDto
     ): ResponseEntity<UserDto> {
         if (userDetails.getUserId() != id)
-            throw UnauthorizedException(message = "has no permission. login user id = ${userDetails.getUserId()}, change request user id = ${id}")
+            throw UnauthorizedException("has no permission. login user id = ${userDetails.getUserId()}, change request user id = ${id}")
         userService.updateUser(id, dto)
         val user = userService.findUserById(id)
         return ResponseEntity.ok(UserDto(user));

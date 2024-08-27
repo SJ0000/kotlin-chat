@@ -1,12 +1,16 @@
 package sj.messenger.global.exception
 
 
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import sj.messenger.global.exception.ErrorCode.*
 import kotlin.reflect.KClass
 
-class UnauthorizedException(message: String) : SimpleMessengerException(UNAUTHORIZED, HAS_NO_PERMISSION, message)
+class AuthorizeFailedException(message: String) : SimpleMessengerException(UNAUTHORIZED, AUTHORIZE_FAILED, message)
+
+class PermissionDeniedException(targetClass: KClass<*>, targetId: Long, accessorId: Long) :
+    SimpleMessengerException(UNAUTHORIZED, PERMISSION_DENIED,
+        "Has No Permission. Target = ${targetClass.simpleName}, id = ${targetId}, accessorId = ${accessorId}"
+    )
 
 class ExpiredFcmTokenException() : SimpleMessengerException(BAD_REQUEST, FCM_TOKEN_EXPIRED)
 

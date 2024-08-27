@@ -22,7 +22,7 @@ class DirectChatStompController(
     ) {
         when (messageDto.messageType) {
             MESSAGE -> processMessage(messageDto)
-            else -> throw RuntimeException("Not Supported Message Type.")
+            else -> throw IllegalArgumentException("지원하지 않는 메시지 타입입니다.")
         }
     }
 

@@ -19,13 +19,13 @@ class FriendRequest(
     var approved: Boolean = false
         protected set;
 
-    fun isReceiver(userId: Long) : Boolean{
-        return receiver.id == userId
-    }
+    fun approveIfPossible(userId: Long){
+        if (receiver.id != userId)
+            throw IllegalArgumentException("User(Id = ${userId})는 친구요청을 받은 사용자가 아닙니다.")
 
-    fun approve(){
         if(approved)
-            throw RuntimeException("FriendRequest already approved.")
+            throw IllegalStateException("친구 요청이 이미 승인된 상태입니다.")
+
         approved = true
     }
 }

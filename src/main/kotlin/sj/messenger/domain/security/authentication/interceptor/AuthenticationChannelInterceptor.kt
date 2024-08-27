@@ -25,11 +25,11 @@ class AuthenticationChannelInterceptor(
 
     private fun getAccessor(message: Message<*>): StompHeaderAccessor {
         return MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor::class.java)
-            ?: throw RuntimeException("MessageHeaderAccessor is null")
+            ?: throw NullPointerException("MessageHeaderAccessor가 null 입니다.")
     }
 
     private fun getAuthorizationHeader(accessor: StompHeaderAccessor): String {
         return accessor.getFirstNativeHeader("Authorization")
-            ?: throw RuntimeException("STOMP Authorization Header is empty");
+            ?: throw IllegalArgumentException("STOMP Authorization Header가 비어있습니다.");
     }
 }

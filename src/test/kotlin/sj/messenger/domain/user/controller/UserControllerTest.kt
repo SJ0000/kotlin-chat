@@ -268,8 +268,8 @@ class UserControllerTest(
         }.andExpect {
             status { isUnauthorized() }
             content {
-                jsonPath("$.code") { value(ErrorCode.HAS_NO_PERMISSION.code) }
-                jsonPath("$.message") { value(ErrorCode.HAS_NO_PERMISSION.message) }
+                jsonPath("$.code") { value(ErrorCode.PERMISSION_DENIED.code) }
+                jsonPath("$.message") { value(ErrorCode.PERMISSION_DENIED.message) }
             }
         }
     }

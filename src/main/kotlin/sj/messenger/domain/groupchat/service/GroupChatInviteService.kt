@@ -21,7 +21,7 @@ class GroupChatInviteService(
             ?: throw EntityNotFoundException(GroupChat::class, "id", groupChatId)
 
         if (!chatRoom.isParticipant(userId))
-            throw RuntimeException("User(id = ${userId}) is not participant in ChatRoom(id = ${groupChatId})")
+            throw IllegalArgumentException("User(id = ${userId}) is not participant in ChatRoom(id = ${groupChatId})")
 
         val inviter = userService.findUserById(userId)
         val key = generateRandomString() // 중복 여부 확인

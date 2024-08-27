@@ -47,8 +47,8 @@ class FriendControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$"){isArray()}
-                jsonPath("$.size()"){value(3)}
+                jsonPath("$") { isArray() }
+                jsonPath("$.size()") { value(3) }
                 jsonPath(
                     "$[*].id", Matchers.containsInAnyOrder(
                         *others.map { it.id?.toInt() }.toTypedArray()
@@ -73,8 +73,8 @@ class FriendControllerTest(
         }.andExpect {
             status { isOk() }
             content {
-                jsonPath("$"){isArray()}
-                jsonPath("$.size()"){value(3)}
+                jsonPath("$") { isArray() }
+                jsonPath("$.size()") { value(3) }
                 jsonPath(
                     "$[*].fromUser.id", Matchers.containsInAnyOrder(
                         *others.map { it.id?.toInt() }.toTypedArray()
@@ -97,10 +97,10 @@ class FriendControllerTest(
             accept = MediaType.APPLICATION_JSON
             contentType = MediaType.APPLICATION_JSON
             content = om.writeValueAsString(requestDto)
-        }.andExpect {
-            status { isCreated() }
         }.andDo {
             print()
+        }.andExpect {
+            status { isCreated() }
         }
 
         val receivedRequest = friendRequestRepository.findByFromTo(user.id!!, other.id!!)
