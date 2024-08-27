@@ -99,6 +99,8 @@ class FriendControllerTest(
             content = om.writeValueAsString(requestDto)
         }.andExpect {
             status { isCreated() }
+        }.andDo {
+            print()
         }
 
         val receivedRequest = friendRequestRepository.findByFromTo(user.id!!, other.id!!)

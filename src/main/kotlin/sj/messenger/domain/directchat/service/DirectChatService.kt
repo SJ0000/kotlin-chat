@@ -3,11 +3,9 @@ package sj.messenger.domain.directchat.service
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sj.messenger.domain.directchat.domain.DirectChat
-import sj.messenger.domain.directchat.domain.DirectMessage
-import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectChatRepository
-import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.AlreadyExistsException
 import sj.messenger.global.exception.EntityNotFoundException
 
 @Service
@@ -38,6 +36,6 @@ class DirectChatService(
 
     private fun validateAlreadyExists(userIds: Pair<Long, Long>) {
         if (directChatRepository.existsByUserIds(userIds))
-            throw RuntimeException("DirectChat already exists. users = (${userIds.first},${userIds.second})")
+            throw AlreadyExistsException(DirectChat::class, "userIds", userIds)
     }
 }

@@ -13,6 +13,7 @@ import sj.messenger.domain.groupchat.repository.GroupChatRepository
 import sj.messenger.domain.groupchat.repository.ParticipantRepository
 import sj.messenger.domain.user.dto.UserDto
 import sj.messenger.domain.user.service.UserService
+import sj.messenger.global.exception.AlreadyExistsException
 import sj.messenger.global.exception.EntityNotFoundException
 
 
@@ -32,7 +33,7 @@ class GroupChatService(
     fun joinGroupChat(groupChatId: Long, userId: Long) {
         val chatRoom = findGroupChatWithParticipants(groupChatId)
         if (chatRoom.isParticipant(userId))
-            throw RuntimeException("User(id = ${userId}) is already participant in ChatRoom(id = ${groupChatId}) ")
+            throw AlreadyExistsException(Participant::class, "userId = ${userId}, groupChatId = ${groupChatId}")
 
         val user = userService.findUserById(userId)
         chatRoom.join(user)

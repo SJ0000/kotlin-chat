@@ -9,6 +9,7 @@ import sj.messenger.domain.user.domain.User
 import sj.messenger.domain.user.dto.SignUpDto
 import sj.messenger.domain.user.dto.UpdateUserDto
 import sj.messenger.domain.user.repository.UserRepository
+import sj.messenger.global.exception.AlreadyExistsException
 import sj.messenger.global.exception.EntityNotFoundException
 
 @Service
@@ -45,7 +46,7 @@ class UserService(
         val encodedPassword = passwordEncoder.encode(signUp.password)
 
         if (existsEmail(signUp.email))
-            throw RuntimeException("email ${signUp.email} already exists")
+            throw AlreadyExistsException(User::class, "email", signUp.email)
 
         val publicIdentifier = createPublicIdentifier(signUp.name)
 
@@ -90,7 +91,7 @@ class UserService(
 
     private fun validateUniquePublicIdentifier(identifier: String) {
         if (existsPublicIdentifier(identifier))
-            throw RuntimeException("public identifier ${identifier} exists.")
+            throw AlreadyExistsException(User::class, "publicIdentifier", identifier)
     }
 
     private fun createPublicIdentifier(userName: String): String {
