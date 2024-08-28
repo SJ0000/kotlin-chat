@@ -28,13 +28,13 @@ class TestStompClient(
 
         val subscribeAction = getSubscribeAction(destination, holder);
         val sendAction = getSendAction(source, message, holder);
-
         val handler = TestSessionHandler(holder, subscribeAction, sendAction)
 
-        val stompHeaders = StompHeaders()
-        stompHeaders.set(HttpHeaders.AUTHORIZATION, accessToken)
-        stompClient.connectAsync(connectionUrl, WebSocketHttpHeaders(), stompHeaders, handler)
+        val stompHeaders = StompHeaders().apply {
+            set(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken}")
+        }
 
+        stompClient.connectAsync(connectionUrl, WebSocketHttpHeaders(), stompHeaders, handler)
         return fetchResult<T>(holder)
     }
 
