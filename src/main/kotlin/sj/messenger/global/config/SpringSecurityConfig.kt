@@ -12,14 +12,15 @@ import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import sj.messenger.domain.security.authentication.interceptor.AuthenticationChannelInterceptor
 import sj.messenger.domain.security.authentication.provider.JwtAuthenticationProvider
 import sj.messenger.domain.security.filter.JwtAuthenticationFilter
 import sj.messenger.domain.security.jwt.JwtParser
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
-class SpringSecurityConfig (
+class SpringSecurityConfig(
     private val jwtParser: JwtParser,
 ) {
 
@@ -47,8 +48,13 @@ class SpringSecurityConfig (
     }
 
     @Bean
-    fun authenticationManager(): AuthenticationManager{
+    fun authenticationManager(): AuthenticationManager {
         val jwtAuthenticationProvider = JwtAuthenticationProvider(jwtParser)
         return ProviderManager(jwtAuthenticationProvider);
+    }
+
+    @Bean
+    fun authenticationChannelInterceptor(authenticationManager: AuthenticationManager): AuthenticationChannelInterceptor {
+        return AuthenticationChannelInterceptor(authenticationManager)
     }
 }

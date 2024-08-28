@@ -11,6 +11,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
 import sj.messenger.domain.notification.interceptor.NotificationInterceptor
+import sj.messenger.domain.security.authentication.interceptor.AuthenticationChannelInterceptor
 
 @Configuration(proxyBeanMethods = false)
 @EnableWebSocketMessageBroker
@@ -18,6 +19,7 @@ import sj.messenger.domain.notification.interceptor.NotificationInterceptor
 class WebSocketConfig(
     private val properties: WebSocketProperties,
     private val notificationInterceptor: NotificationInterceptor,
+    private val authenticationChannelInterceptor: AuthenticationChannelInterceptor,
 ) : WebSocketMessageBrokerConfigurer{
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
@@ -34,6 +36,8 @@ class WebSocketConfig(
         executor.corePoolSize = properties.channelPoolSize.inbound
         executor.setAllowCoreThreadTimeOut(true)
         registration.taskExecutor(executor)
+
+        registration.interceptors(authenticationChannelInterceptor)
     }
 
     override fun configureClientOutboundChannel(registration: ChannelRegistration) {
