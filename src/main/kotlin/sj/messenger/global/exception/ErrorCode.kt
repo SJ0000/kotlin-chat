@@ -11,4 +11,6 @@ enum class ErrorCode(
 
     FCM_TOKEN_EXPIRED(101, "유효기간이 만료된 FCM 토큰입니다. 갱신이 필요합니다."),
     FCM_TOKEN_ALREADY_EXISTS(102, "사용자는 다른 FCM 토큰을 가지고 있습니다."),
+
+    UNKNOWN_ERROR(999, "서버에 문제가 발생하였습니다."),
 }
