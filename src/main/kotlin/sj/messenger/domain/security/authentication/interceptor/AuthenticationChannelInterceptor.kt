@@ -1,5 +1,6 @@
 package sj.messenger.domain.security.authentication.interceptor
 
+import org.springframework.http.HttpHeaders
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.simp.stomp.StompCommand
@@ -29,7 +30,7 @@ class AuthenticationChannelInterceptor(
     }
 
     private fun getAuthorizationHeader(accessor: StompHeaderAccessor): String {
-        return accessor.getFirstNativeHeader("Authorization")
+        return accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION)
             ?: throw IllegalArgumentException("STOMP Authorization Header가 비어있습니다.");
     }
 }

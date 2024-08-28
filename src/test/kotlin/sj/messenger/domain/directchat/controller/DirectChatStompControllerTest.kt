@@ -13,7 +13,6 @@ import sj.messenger.util.websocket.TestStompClient
 @IntegrationTest
 class DirectChatStompControllerTest(
     @Autowired val client: TestStompClient,
-    @Autowired val directMessageRepository: DirectMessageRepository,
 ) {
     @Test
     fun directMessage(){

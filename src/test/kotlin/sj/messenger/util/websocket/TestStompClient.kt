@@ -1,6 +1,7 @@
 package sj.messenger.util.websocket
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.http.HttpHeaders
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.messaging.simp.stomp.StompCommand
 import org.springframework.messaging.simp.stomp.StompHeaders
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit
 
 class TestStompClient(
     val connectionUrl: String,
+    val accessToken: String,
     objectMapper: ObjectMapper,
 ) {
     val stompClient = WebSocketStompClient(StandardWebSocketClient())
@@ -25,11 +27,13 @@ class TestStompClient(
         val holder = TestAsyncResultHolder<T>()
 
         val subscribeAction = getSubscribeAction(destination, holder);
-        val sendAction = getSendAction(source,message,holder);
+        val sendAction = getSendAction(source, message, holder);
 
         val handler = TestSessionHandler(holder, subscribeAction, sendAction)
 
-        stompClient.connectAsync(connectionUrl, WebSocketHttpHeaders(), handler)
+        val stompHeaders = StompHeaders()
+        stompHeaders.set(HttpHeaders.AUTHORIZATION, accessToken)
+        stompClient.connectAsync(connectionUrl, WebSocketHttpHeaders(), stompHeaders, handler)
 
         return fetchResult<T>(holder)
     }
