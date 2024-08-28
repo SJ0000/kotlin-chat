@@ -1,5 +1,6 @@
 package sj.messenger.domain.groupchat.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.micrometer.core.annotation.Timed
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate
@@ -12,6 +13,7 @@ import sj.messenger.domain.groupchat.dto.ClientGroupMessageDto
 import sj.messenger.domain.groupchat.repository.GroupMessageRepository
 import java.time.LocalDateTime
 
+private val logger = KotlinLogging.logger {  }
 @Service
 class GroupChatMessageService (
     private val batchingRabbitTemplate: BatchingRabbitTemplate,
@@ -32,6 +34,7 @@ class GroupChatMessageService (
     @RabbitListener(queues = ["groupMessageSaveQueue"])
     fun saveAllReceivedMessage(messages : List<GroupMessage>){
         groupMessageRepository.saveAll(messages)
+        logger.info { "saveAllReceivedMessage : ${messages.size} messages saved." }
     }
 
     fun getPreviousMessages(groupChatId: Long, dateTime: LocalDateTime): List<ServerGroupMessageDto>{

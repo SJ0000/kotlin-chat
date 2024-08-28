@@ -1,5 +1,6 @@
 package sj.messenger.domain.directchat.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.amqp.rabbit.core.BatchingRabbitTemplate
 import org.springframework.data.domain.PageRequest
@@ -11,6 +12,8 @@ import sj.messenger.domain.directchat.dto.ServerDirectMessageDto
 import sj.messenger.domain.directchat.dto.ClientDirectMessageDto
 import sj.messenger.domain.directchat.repository.DirectMessageRepository
 import java.time.LocalDateTime
+
+private val logger = KotlinLogging.logger {  }
 
 @Service
 class DirectChatMessageService(
@@ -31,15 +34,8 @@ class DirectChatMessageService(
 
     @RabbitListener(queues = ["directMessageSaveQueue"])
     fun saveAllReceivedMessage(messages : List<DirectMessage>){
-        val directMessages = messages.map {
-            DirectMessage(
-                senderId = it.senderId,
-                directChatId = it.directChatId,
-                content = it.content,
-                sentAt = it.sentAt,
-            )
-        }.toList()
-        directMessageRepository.saveAll(directMessages)
+        directMessageRepository.saveAll(messages)
+        logger.info { "saveAllReceivedMessage : ${messages.size} messages saved." }
     }
 
     fun getPreviousMessages(directChatId: Long, dateTime: LocalDateTime): List<ServerDirectMessageDto>{
