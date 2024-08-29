@@ -1,5 +1,6 @@
 package sj.messenger.global.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,6 +23,7 @@ import sj.messenger.domain.security.jwt.JwtParser
 @EnableWebSecurity
 class SpringSecurityConfig(
     private val jwtParser: JwtParser,
+    private val objectMapper: ObjectMapper,
 ) {
 
     @Bean
@@ -41,7 +43,7 @@ class SpringSecurityConfig(
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
 
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtAuthenticationFilter(authenticationManager))
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtAuthenticationFilter(authenticationManager, objectMapper))
         }
 
         return http.build()
