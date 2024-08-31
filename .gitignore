@@ -48,6 +48,7 @@ application-ci.yml
 **/src/main/generated/
 **/src/main/resources/static/docs/
 **/log/
+**/logs/
 
 **/src/main/resources/firebase/
 **/src/test/resources/firebase/

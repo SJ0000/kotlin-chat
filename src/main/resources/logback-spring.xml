@@ -1,0 +1,101 @@
+<configuration>
+    <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+    <import class="ch.qos.logback.core.ConsoleAppender"/>
+    <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
+    <import class="ch.qos.logback.classic.filter.LevelFilter"/>
+    <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"/>
+
+    <property name="LOG_PATTERN" value="%-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n" />
+    <property name="LOG_DIRECTORY" value="logs" />
+
+    <springProfile name="local">
+        <!-- SpringBoot 기본 STDOUT 로그 사용-->
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <root level="INFO">
+            <appender-ref ref="DEBUG" />
+            <appender-ref ref="INFO" />
+            <appender-ref ref="WARNING" />
+            <appender-ref ref="ERROR" />
+        </root>
+    </springProfile>
+
+    <springProfile name="production">
+        <root level="INFO">
+            <appender-ref ref="INFO" />
+            <appender-ref ref="WARNING" />
+            <appender-ref ref="ERROR" />
+        </root>
+    </springProfile>
+
+    <appender name="DEBUG" class="RollingFileAppender">
+        <file>${LOG_DIRECTORY}/debug/current.log</file>
+        <filter class="LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIRECTORY}/debug/debug.%d{yyyy-MM-dd}_%i.gz</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="INFO" class="RollingFileAppender">
+        <file>${LOG_DIRECTORY}/info/current.log</file>
+        <filter class="LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIRECTORY}/info/info.%d{yyyy-MM-dd}_%i.gz</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="WARNING" class="RollingFileAppender">
+        <file>${LOG_DIRECTORY}/warning/current.log</file>
+        <filter class="LevelFilter">
+            <level>WARNING</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIRECTORY}/warning/warning.%d{yyyy-MM-dd}_%i.gz</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR" class="RollingFileAppender">
+        <file>${LOG_DIRECTORY}/error/current.log</file>
+        <filter class="LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIRECTORY}/error/error.%d{yyyy-MM-dd}_%i.gz</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+</configuration>
