@@ -1,15 +1,15 @@
 package sj.messenger.global.controller
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.resource.NoResourceFoundException
 import sj.messenger.global.dto.ErrorResponse
 import sj.messenger.global.exception.ErrorCode
 import sj.messenger.global.exception.SimpleMessengerException
-
-// todo: info 로그 어떤거 남길지 정리 + Loki 도입 + Notion 정리
 
 private val logger = KotlinLogging.logger { }
 
@@ -41,6 +41,11 @@ class ExceptionController {
         return ResponseEntity.badRequest().body(
             ErrorResponse.of(ErrorCode.UNKNOWN_ERROR)
         )
+    }
+
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFoundException(exception: NoResourceFoundException, request: HttpServletRequest){
+        logger.error { "${exception.message}. path = ${request.requestURI}" }
     }
 
     @ExceptionHandler(Exception::class)
