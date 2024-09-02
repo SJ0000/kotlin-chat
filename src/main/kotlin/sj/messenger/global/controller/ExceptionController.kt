@@ -44,8 +44,11 @@ class ExceptionController {
     }
 
     @ExceptionHandler(NoResourceFoundException::class)
-    fun handleNoResourceFoundException(exception: NoResourceFoundException, request: HttpServletRequest){
+    fun handleNoResourceFoundException(exception: NoResourceFoundException, request: HttpServletRequest) : ResponseEntity<ErrorResponse>{
         logger.error { "${exception.message}. path = ${request.requestURI}" }
+        return ResponseEntity.badRequest().body(
+            ErrorResponse.of(ErrorCode.UNKNOWN_ERROR)
+        )
     }
 
     @ExceptionHandler(Exception::class)
