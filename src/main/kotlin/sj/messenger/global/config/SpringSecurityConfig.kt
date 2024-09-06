@@ -23,7 +23,6 @@ import sj.messenger.domain.security.jwt.JwtParser
 @EnableWebSecurity
 class SpringSecurityConfig(
     private val jwtParser: JwtParser,
-    private val objectMapper: ObjectMapper,
 ) {
 
     @Bean
@@ -43,7 +42,7 @@ class SpringSecurityConfig(
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
 
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtAuthenticationFilter(authenticationManager, objectMapper))
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(JwtAuthenticationFilter(authenticationManager))
         }
 
         return http.build()
