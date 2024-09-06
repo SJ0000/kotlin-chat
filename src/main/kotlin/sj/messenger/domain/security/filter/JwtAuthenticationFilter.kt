@@ -20,7 +20,6 @@ import sj.messenger.global.extractBearerToken
 
 class JwtAuthenticationFilter(
     private val authenticationManager: AuthenticationManager,
-    private val objectMapper: ObjectMapper
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -28,29 +27,19 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        try {
-            when (existsAuthorizationHeader(request)) {
-                true -> {
-                    val bearerToken =
-                        extractBearerToken(request) ?: throw IllegalArgumentException("Bearer Token을 가져오는데 실패하였습니다.")
-                    val authentication = authenticationManager.authenticate(JwtPreAuthenticationToken(bearerToken))
+        when (existsAuthorizationHeader(request)) {
+            true -> {
+                val bearerToken =
+                    extractBearerToken(request) ?: throw IllegalArgumentException("Bearer Token을 가져오는데 실패하였습니다.")
+                println("JwtAuthenticationFilter.doFilterInternal - bearer token = ${bearerToken}")
+                val authentication = authenticationManager.authenticate(JwtPreAuthenticationToken(bearerToken))
 
-                    SecurityContextHolder.getContext().authentication = authentication
-                }
-
-                false -> SecurityContextHolder.getContext().authentication = AuthenticatedToken(GuestUserDetails())
+                SecurityContextHolder.getContext().authentication = authentication
             }
-            filterChain.doFilter(request, response)
-        } catch (e: Exception) {
-            KotlinLogging.logger {}.error(e) { "인증에 실패하였습니다. message = ${e.message}" }
-            writeErrorResponse(response, ErrorCode.AUTHORIZE_FAILED)
-        }
-    }
 
-    private fun writeErrorResponse(response: HttpServletResponse, errorCode: ErrorCode) {
-        response.status = errorCode.code
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        objectMapper.writeValue(response.writer, ErrorResponse.of(errorCode))
+            false -> SecurityContextHolder.getContext().authentication = AuthenticatedToken(GuestUserDetails())
+        }
+        filterChain.doFilter(request, response)
     }
 
     private fun existsAuthorizationHeader(request: HttpServletRequest): Boolean {

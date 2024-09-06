@@ -6,7 +6,7 @@
     <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"/>
 
     <property name="LOG_PATTERN" value="%-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n" />
-    <property name="LOG_DIRECTORY" value="logs" />
+    <property name="LOG_DIRECTORY" value="/Users/sj-pc/logs/simple-messenger" />
 
     <springProfile name="local">
         <!-- SpringBoot 기본 STDOUT 로그 사용-->
@@ -29,6 +29,7 @@
 
     <appender name="DEBUG" class="RollingFileAppender">
         <file>${LOG_DIRECTORY}/debug/current.log</file>
+        <immediateFlush>true</immediateFlush>
         <filter class="LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -47,6 +48,7 @@
 
     <appender name="INFO" class="RollingFileAppender">
         <file>${LOG_DIRECTORY}/info/current.log</file>
+        <immediateFlush>true</immediateFlush>
         <filter class="LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
@@ -65,6 +67,7 @@
 
     <appender name="WARNING" class="RollingFileAppender">
         <file>${LOG_DIRECTORY}/warning/current.log</file>
+        <immediateFlush>true</immediateFlush>
         <filter class="LevelFilter">
             <level>WARNING</level>
             <onMatch>ACCEPT</onMatch>
@@ -83,6 +86,7 @@
 
     <appender name="ERROR" class="RollingFileAppender">
         <file>${LOG_DIRECTORY}/error/current.log</file>
+        <immediateFlush>true</immediateFlush>
         <filter class="LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
