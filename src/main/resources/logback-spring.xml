@@ -6,9 +6,9 @@
     <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"/>
 
     <property name="LOG_PATTERN" value="%-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n" />
-    <property name="LOG_DIRECTORY" value="/Users/sj-pc/logs/simple-messenger" />
 
     <springProfile name="local">
+        <property name="LOG_DIRECTORY" value="/Users/sj-pc/logs/simple-messenger" />
         <!-- SpringBoot 기본 STDOUT 로그 사용-->
         <include resource="org/springframework/boot/logging/logback/base.xml"/>
         <root level="INFO">
@@ -20,6 +20,7 @@
     </springProfile>
 
     <springProfile name="production">
+        <property name="LOG_DIRECTORY" value="logs" />
         <root level="INFO">
             <appender-ref ref="INFO" />
             <appender-ref ref="WARNING" />
